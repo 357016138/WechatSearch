@@ -39,6 +39,10 @@ public class PublishWechatGroupActivity extends BaseActivity {
     @BindView(R.id.btn_submit)
     TextView btn_submit;
 
+    private String groupImage;    //
+    private String userImage;
+
+
     @Override
     public void setContentLayout() {
         setContentView(R.layout.activity_publish_wechat_group);
