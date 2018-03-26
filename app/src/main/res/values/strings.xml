@@ -4,7 +4,7 @@
 
     <string name="title_home">首页</string>
     <string name="title_order">订单</string>
-    <string name="title_tool">工具</string>
+    <string name="title_tool">发布</string>
     <string name="title_user">我的</string>
     <string name="bottom_title">已有%s人累计贷款%s元</string>
 
