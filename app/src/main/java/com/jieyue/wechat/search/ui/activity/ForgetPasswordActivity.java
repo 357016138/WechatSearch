@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
+import com.jieyue.wechat.search.bean.DataBean;
+import com.jieyue.wechat.search.bean.UserBean;
 import com.jieyue.wechat.search.common.BaseActivity;
 import com.jieyue.wechat.search.common.Constants;
 import com.jieyue.wechat.search.network.RequestParams;
@@ -56,6 +58,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
     private String passwordS;
     private String userNameStr;
     private String codeStr;
+    private String acceptCodeStr;   //接收到的短信验证码
     private boolean isTimeing = false;//是否是倒计时状态
 
     @Override
@@ -130,7 +133,12 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
                     toast("请输入验证码");
                     return;
                 }
-                checkSMCode(userNameStr,codeStr);
+                if (acceptCodeStr.equals(codeStr)){
+                    Bundle bd = new Bundle();
+                    bd.putString("userNameS",userNameStr);
+                    bd.putString("codeStr",codeStr);
+                    goPage(ForgetPassword2Activity.class,bd,Constants.FLAG_FORGET_PASSWORD);
+                }
                 break;
             default:
                 break;
@@ -160,22 +168,17 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
     private void getCode(String name) {
 
         RequestParams params = new RequestParams(UrlConfig.URL_SIGN_IN_CODE);
-        params.add("phone", name);
-        params.add("codeType", "B");//发送类型 A-注册，B-密码找回，C-绑卡
+        params.add("phoneNumber", name);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-        startRequest(Task.SIGN_UP_CODE, params, null);
+        startRequest(Task.SIGN_UP_CODE, params, DataBean.class);
     }
 
     /**
      * 验证短信验证码
      * */
-    private void checkSMCode(String phone,String smCode){
-        RequestParams params = new RequestParams(UrlConfig.URL_CHECKSMCODE);
-        params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-        params.add("phone", phone);
-        params.add("codeType", "B");//发送类型 A-注册，B-密码找回，C-绑卡
-        params.add("smCode", smCode);
-        startRequest(Task.CHECKSMCODE, params, null);
+    private boolean checkSMCode(String phone,String smCode){
+
+        return false;
     }
 
     @Override
@@ -186,18 +189,12 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
             switch (tag){
                 case Task.SIGN_UP_CODE:
                     if (handlerRequestErr(data)) {
+                        DataBean dataBean = (DataBean) data.getBody();
+                        acceptCodeStr = dataBean.getData();
                         toast(data.getRspMsg());
                         obtianCodeMothed();
                     }
                 break;
-                case Task.CHECKSMCODE:
-                    if (handlerRequestErr(data)) {
-                        Bundle bd = new Bundle();
-                        bd.putString("userNameS",userNameStr);
-                        bd.putString("codeStr",codeStr);
-                        goPage(ForgetPassword2Activity.class,bd,Constants.FLAG_FORGET_PASSWORD);
-                    }
-                    break;
                 default:
                     break;
 

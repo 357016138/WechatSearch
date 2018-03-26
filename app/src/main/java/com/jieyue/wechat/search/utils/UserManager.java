@@ -18,6 +18,9 @@ public class UserManager {
     private static String userId; // 用户ID
     private static String isPayPass; // 是否设置支付密码（0 未设置；1 已设置）
 
+
+
+
     public static String getCity() {
         if (TextUtils.isEmpty(city)) {
             city = ShareData.getShareStringData(ShareData.USER_CITY);

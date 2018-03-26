@@ -176,7 +176,8 @@
                 android:layout_height="58dp"
                 android:layout_below="@id/signup_belowSL"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp">
+                android:layout_marginRight="20dp"
+                android:visibility="gone">
 
 
                 <ImageView
@@ -218,7 +219,8 @@
                 android:layout_height="58dp"
                 android:layout_below="@id/signup_belowCity"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp">
+                android:layout_marginRight="20dp"
+                android:visibility="gone">
 
 
                 <TextView

@@ -15,6 +15,7 @@ import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.utils.AESUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.Md5Util;
 import com.jieyue.wechat.search.utils.UserManager;
 import com.jieyue.wechat.search.utils.UtilTools;
 
@@ -143,12 +144,11 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnFocusC
 
     private void submit(String passWordOldStr, String passWord) {
 
-        RequestParams params = new RequestParams(UrlConfig.URL_FORGET_PASSWORD);
+        RequestParams params = new RequestParams(UrlConfig.URL_UPDATE_PASSWORD);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-        params.add("phone", UserManager.getPhone());
-        params.add("pwdNew", AESUtils.aesEncryptStr(passWord, UrlConfig.KEY));
-        params.add("pwdOld", AESUtils.aesEncryptStr(passWordOldStr, UrlConfig.KEY));
-        params.add("type", "1");
+        params.add("phoneNumber", UserManager.getPhone());
+        params.add("password", Md5Util.MD5(passWord));
+        params.add("oldPassword", Md5Util.MD5(passWordOldStr));
         startRequest(Task.FORGET_PASSWORD, params, null);
 
     }
@@ -159,7 +159,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnFocusC
         switch (tag) {
             case Task.FORGET_PASSWORD:
                 if (handlerRequestErr(data)) {
-                    toast("密码重置成功");
+                    toast(data.getRspMsg());
                     finish();
                 }
                 break;

@@ -22,7 +22,7 @@ public class UserBean {
      * serverTransNo:
      * userId:
      */
-
+//    json:{"data":{"id":2,"phoneNumber":15311436473,"username":null,"password":null,"codeType":0,"updateDate":null},"success":true,"message":"登录成功!"}
     private String busiCode;
     private String city;
     private String cityCode;
@@ -35,6 +35,12 @@ public class UserBean {
     private String userId;
     private String isPayPass;
 
+    private String id;
+    private String phoneNumber;
+    private String username;
+    private String password;
+    private String codeType;
+    private String updateDate;
 
     public String getBusiCode() {
         return busiCode;
@@ -123,5 +129,54 @@ public class UserBean {
 
     public void setIsPayPass(String isPayPass) {
         this.isPayPass = isPayPass;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getCodeType() {
+        return codeType;
+    }
+
+    public void setCodeType(String codeType) {
+        this.codeType = codeType;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
     }
 }

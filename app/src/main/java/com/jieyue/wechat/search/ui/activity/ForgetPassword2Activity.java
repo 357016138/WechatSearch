@@ -17,6 +17,7 @@ import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.utils.AESUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.Md5Util;
 import com.jieyue.wechat.search.utils.UtilTools;
 
 import butterknife.BindView;
@@ -151,9 +152,8 @@ public class ForgetPassword2Activity extends BaseActivity implements View.OnFocu
 
         RequestParams params = new RequestParams(UrlConfig.URL_FORGET_PASSWORD);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-        params.add("phone", userNameS);
-        params.add("pwdNew", AESUtils.aesEncryptStr(passWord, UrlConfig.KEY));
-        params.add("type", "2");
+        params.add("phoneNumber", userNameS);
+        params.add("password", Md5Util.MD5(passWord));
         startRequest(Task.FORGET_PASSWORD, params, null);
 
     }
@@ -165,12 +165,8 @@ public class ForgetPassword2Activity extends BaseActivity implements View.OnFocu
             switch (tag){
                 case Task.FORGET_PASSWORD: {
                     if (handlerRequestErr(data)) {
-                        if (data.getRspMsg() != null) {
-                            toast(data.getRspMsg());
-                        }
+                        toast(data.getRspMsg());
                         Intent intent = new Intent();
-//                        intent.putExtra("UserName", userNameS);
-//                        intent.putExtra("passWord", passwordS);
                         setResult(RESULT_OK, intent);
                         finish();
                     }

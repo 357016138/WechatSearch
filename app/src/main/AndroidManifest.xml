@@ -58,13 +58,14 @@
     <!-- 用于申请获取蓝牙信息进行室内定位 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:name=".common.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:largeHeap="true"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
         <activity
@@ -76,88 +77,69 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.LoginActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.KotlinActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.CommonWebActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
-
         <activity
             android:name=".ui.activity.RegistActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.GestureSetActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.ForgetPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.GestureUnlockActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.SettingActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ResetPasswordActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.BankCardListActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.BindBankCardActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.WithdrawDepositActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name="com.jieyue.wechat.search.ui.activity.ConsultPriceActivity"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".ui.activity.ConsultPriceActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.RecommendProductActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.ReportApplyDetailActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.ReportApplySuccessActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.PreferenceProductActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.AskPriceResultActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.MsgNoticeActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.ImageWallActivity"
             android:screenOrientation="portrait" />
@@ -175,42 +157,34 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
         <activity
             android:name="com.donkingliang.imageselector.ClipImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
         <activity
-            android:name="com.jieyue.wechat.search.ui.activity.GuideActivity"
+            android:name=".ui.activity.GuideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ForgetPassword2Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MyCapitalActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.PriceBillDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ReviseWithdrawPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SetWithdrawPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SetWithdrawPassword2Activity"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name="com.jieyue.wechat.search.ui.activity.ForgetPassword2Activity"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name="com.jieyue.wechat.search.ui.activity.MyCapitalActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name="com.jieyue.wechat.search.ui.activity.PriceBillDetailActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name="com.jieyue.wechat.search.ui.activity.ReviseWithdrawPasswordActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name="com.jieyue.wechat.search.ui.activity.SetWithdrawPasswordActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name="com.jieyue.wechat.search.ui.activity.SetWithdrawPassword2Activity"
-            android:screenOrientation="portrait"/>
-
-        <service android:name="com.jieyue.wechat.search.service.DownloadService" />
+        <service android:name=".service.DownloadService" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -221,8 +195,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-
 
         <!-- 极光推送开始 -->
         <!-- Required SDK核心功能 -->
@@ -290,7 +262,7 @@
             android:enabled="true"
             android:exported="false" />
         <receiver
-            android:name="com.jieyue.wechat.search.receiver.MyReceiver"
+            android:name=".receiver.MyReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -324,7 +296,7 @@
             android:value="baidu" />
         <!-- 友盟统计结束 -->
 
-
+        <activity android:name=".ui.activity.PublishWechatGroupActivity"></activity>
     </application>
 
 </manifest>

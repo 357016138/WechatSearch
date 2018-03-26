@@ -95,10 +95,10 @@ public class JyHandler extends BaseHandler implements Callback {
 
             //返回状态 默认"0"为成功
             //String rspCode = header.optString("retCode");
-            String rspCode = json.optString("retCode");
+            String rspCode = json.optString("success");
             //错误信息
             //String rspMsg = header.optString("errorDesc");
-            String rspMsg = json.optString("errorDesc");
+            String rspMsg = json.optString("message");
             //时间戳
             //String rspTime = header.optString("rspTime");
 
@@ -114,10 +114,10 @@ public class JyHandler extends BaseHandler implements Callback {
             if (TextUtils.isEmpty(data.getRspMsg()) || data.getRspMsg().equals("null")) {
                 data.setRspMsg("");
             }
-            if (json.has("responseBody") && !"".equals(json.getString("responseBody")) && this.type != null) {
-                data.setBody(GsonUtil.fromJson(json.getString("responseBody"), this.type));
-            } else if (json.has("responseBody") && !"".equals(json.getString("responseBody")) && this.type == null) {
-                data.setBody(json.getString("responseBody"));
+            if (json.has("data") && !"".equals(json.getString("data")) && this.type != null) {
+                data.setBody(GsonUtil.fromJson(json.getString("data"), this.type));
+            } else if (json.has("data") && !"".equals(json.getString("data")) && this.type == null) {
+                data.setBody(json.getString("data"));
             }
 
         } catch (Exception e) {

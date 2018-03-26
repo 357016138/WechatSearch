@@ -8,7 +8,11 @@ public class ErrorCode {
     /**
      * 成功
      **/
-    public static final String SUCCESS = "200";
+    public static final String SUCCESS = "true";
+    /**
+     * 失败
+     **/
+    public static final String FALSE = "false";
     /**
      * 解析错误
      **/

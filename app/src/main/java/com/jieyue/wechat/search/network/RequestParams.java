@@ -28,7 +28,7 @@ public class RequestParams {
 
     public RequestParams(String url) {
         this.url = url;
-        httpType = HttpType.POSTJSON;
+        httpType = HttpType.POST;
         params = new TreeMap<>();
     }
 

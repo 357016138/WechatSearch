@@ -21,22 +21,11 @@ public class UserUtils {
             ShareData.setShareStringData(ShareData.USER_CITY, userBean.getCity());
             ShareData.setShareStringData(ShareData.USER_CITYCODE, userBean.getCityCode());
             ShareData.setShareStringData(ShareData.USER_INVITER, userBean.getInviter());
-            ShareData.setShareStringData(ShareData.USER_PHONE, userBean.getPhone());
-            ShareData.setShareStringData(ShareData.USER_ID, userBean.getUserId());
             ShareData.setShareStringData(ShareData.USER_ISPAYPASS, userBean.getIsPayPass());
-            UserManager.clear();
 
-        }
-    }
+            ShareData.setShareStringData(ShareData.USER_ID, userBean.getId());
+            ShareData.setShareStringData(ShareData.USER_PHONE, userBean.getPhoneNumber());
 
-    public static void saveUserInfo(UserBean userBean) {
-        if (userBean != null) {
-            ShareData.setShareStringData(ShareData.USER_CITY, userBean.getCity());
-            ShareData.setShareStringData(ShareData.USER_CITYCODE, userBean.getCityCode());
-            ShareData.setShareStringData(ShareData.USER_INVITER, userBean.getInviter());
-            ShareData.setShareStringData(ShareData.USER_PHONE, userBean.getPhone());
-            ShareData.setShareStringData(ShareData.USER_ID, userBean.getUserId());
-            ShareData.setShareStringData(ShareData.USER_ISPAYPASS, userBean.getIsPayPass());
             UserManager.clear();
         }
     }
@@ -51,9 +40,10 @@ public class UserUtils {
         ShareData.setShareStringData(ShareData.USER_CITY, "");
         ShareData.setShareStringData(ShareData.USER_CITYCODE, "");
         ShareData.setShareStringData(ShareData.USER_INVITER, "");
-        ShareData.setShareStringData(ShareData.USER_PHONE, "");
-        ShareData.setShareStringData(ShareData.USER_ID, "");
         ShareData.setShareStringData(ShareData.USER_ISPAYPASS, "");
+
+        ShareData.setShareStringData(ShareData.USER_ID, "");
+        ShareData.setShareStringData(ShareData.USER_PHONE, "");
         UserManager.clear();
     }
 

@@ -20,7 +20,25 @@ public interface UrlConfig {
     //endpoint
     String ENDPOINT = ConfigUtils.getEndPoint();
 
-    String URL = IP + "/fintech-hlms/api";
+    String URL = IP ;
+
+    //注册
+    String URL_REGISTER = URL + "/user/register.json";
+
+    //登录
+    String URL_LOGIN = URL + "/user/login.json";
+
+    //版本更新接口
+    String URL_GET_NEW_VERSION = URL + "/loanApp/rest/goUpAPPVersion/v1/";
+
+    //获取验证码（注册、密码找回、绑卡、设置支付密码）
+    String URL_SIGN_IN_CODE = URL + "/user/registerCode.json";
+
+    //忘记密码(重置)
+    String URL_FORGET_PASSWORD = URL + "/user/forget/password.json";
+    //修改密码
+    String URL_UPDATE_PASSWORD = URL + "/user/update/password.json";
+
 
 
     //我的消息列表
@@ -58,21 +76,6 @@ public interface UrlConfig {
 
     //获取银行卡图标
     String URL_BANK_ICON = H5_IP + "/appStore/img/bank/";
-
-    //注册
-    String URL_REGISTER = URL + "/loanApp/rest/loginRegister/v1/";
-
-    //登录
-    String URL_LOGIN = URL + "/loanApp/rest/loginIn/v1/";
-
-    //版本更新接口
-    String URL_GET_NEW_VERSION = URL + "/loanApp/rest/goUpAPPVersion/v1/";
-
-    //获取验证码（注册、密码找回、绑卡、设置支付密码）
-    String URL_SIGN_IN_CODE = URL + "/loanApp/rest/appSMCode/v1/";
-
-    //修改密码、忘记密码(重置)
-    String URL_FORGET_PASSWORD = URL + "/loanApp/rest/appPwdReset/v1/";
 
     //查询银行卡列表信息
     String URL_QUERY_BIND_BANK_CARD_INFO = URL + "/loanApp/rest/queryBankCard/v1/";

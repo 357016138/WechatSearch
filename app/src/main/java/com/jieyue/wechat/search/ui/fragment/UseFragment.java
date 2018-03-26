@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.common.BaseFragment;
 import com.jieyue.wechat.search.network.UrlConfig;
+import com.jieyue.wechat.search.ui.activity.PublishWechatGroupActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,7 +57,7 @@ public class UseFragment extends BaseFragment {
     public void onClickEvent(View view) {
         switch (view.getId()) {
             case R.id.ll_use_1:
-                goWebPage("贷款试算", UrlConfig.URL_LOAN_CALCULATION);
+                goPage(PublishWechatGroupActivity.class);
                 break;
             case R.id.ll_use_2:
                 goWebPage("佣金试算",UrlConfig.URL_COMMISION_CALCULATION);

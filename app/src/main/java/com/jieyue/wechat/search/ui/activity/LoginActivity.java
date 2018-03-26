@@ -26,6 +26,7 @@ import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.service.MessageEvent;
 import com.jieyue.wechat.search.utils.AESUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.Md5Util;
 import com.jieyue.wechat.search.utils.PhoneNumberTextWatcher;
 import com.jieyue.wechat.search.utils.UserUtils;
 import com.jieyue.wechat.search.utils.UtilTools;
@@ -187,8 +188,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
         RequestParams params = new RequestParams(UrlConfig.URL_LOGIN);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-        params.add("phone", userNameStr);
-        params.add("password", AESUtils.aesEncryptStr(passWordStr, UrlConfig.KEY));
+        params.add("phoneNumber", userNameStr);
+        params.add("password", Md5Util.MD5(passWordStr));
         startRequest(Task.LOGIN, params, UserBean.class);
     }
 
@@ -199,35 +200,10 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             case Task.LOGIN:
                 if (handlerRequestErr(data)) {
                     UserBean userBean = (UserBean) data.getBody();
-//                    toast(userBean.getUserId());
                     UserUtils.saveLoginUserInfo(userBean);
-
-//                    String lastaAccount = ShareData.getShareStringData(ShareData.LAST_ACCOUNT);
-//                    if (!lastaAccount.equals(login_uerName.getText().toString())) {
-                        UserUtils.clearGesture();
-                        Bundle bd = new Bundle();
-                        bd.putString(KEY_GESTURE_TYPE, GestureSetActivity.TYPE_LOGIN);
-                        goPage(GestureSetActivity.class, bd);
-//                    }
-//                    else {
-//                        goPage(MainActivity.class);
-//                    }
                     ShareData.setShareStringData(ShareData.LAST_ACCOUNT, login_uerName.getText().toString());
-//                    BroadcastUtils.sendLoginSuccess(this);
-                    finish();
                     EventBus.getDefault().post(new MessageEvent(Constants.GET_NEW_MSG));
-                    EventBus.getDefault().post(new MessageEvent(Constants.GET_REFRESH_ORDER_LIST));
-
-
-                    /**
-                     * 极光推送
-                     */
-                    JPushInterface.setAlias(this, userBean.getPhone(), new TagAliasCallback() {
-                        @Override
-                        public void gotResult(int arg0, String arg1, Set<String> arg2) {
-                            // TODO Auto-generated method stub
-                        }
-                    });
+                    finish();
 
                 }
                 break;

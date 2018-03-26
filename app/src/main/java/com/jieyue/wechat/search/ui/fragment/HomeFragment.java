@@ -64,9 +64,9 @@ public class HomeFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initView(view);
         initData();
-        getBaseData();
         if (UserUtils.isLogin()) {
-            getMsgData();
+
+
         }
         return view;
     }
@@ -81,9 +81,9 @@ public class HomeFragment extends BaseFragment {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                getBaseData();
+
                 if (UserUtils.isLogin()) {
-                    getMsgData();
+
                 }
             }
         });
@@ -181,7 +181,7 @@ public class HomeFragment extends BaseFragment {
     public void onMessageEvent(MessageEvent event) {
         if (event.getTag() == Constants.GET_NEW_MSG) {
             if (UserUtils.isLogin()) {
-                getMsgData();
+//                getMsgData();
             } else {
                 iv_new_msg.setVisibility(View.INVISIBLE);
             }

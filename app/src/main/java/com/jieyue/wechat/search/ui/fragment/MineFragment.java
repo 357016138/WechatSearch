@@ -122,16 +122,15 @@ public class MineFragment extends BaseFragment {
 
         //一定要解绑 在onDestroyView里
         unbinder = ButterKnife.bind(this, view);
-
-//        EventBus.getDefault().register(this);
         bt_mine_withdraw_deposit.setOnClickListener(null);
-
         refreshLayout.isEnableLoadmore();
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 if (UserUtils.isLogin()){
-                    getFeeAccountInformation();
+                    //TODO   刷新用户账户金额信息
+                    refreshLayout.finishRefresh();
+//                    getFeeAccountInformation();
                 }else{
                     refreshLayout.finishRefresh();
                 }
@@ -148,7 +147,7 @@ public class MineFragment extends BaseFragment {
             ll_mine_login.setVisibility(View.GONE);
             String phone = ShareData.getShareStringData(ShareData.USER_PHONE);
             tv_mine_phone.setText(StringUtils.getUserName(phone));
-            getFeeAccountInformation();
+//            getFeeAccountInformation();
         } else {
             iv_mine_header.setVisibility(View.GONE);
             ll_mine_logined.setVisibility(View.GONE);
@@ -165,17 +164,14 @@ public class MineFragment extends BaseFragment {
                 if (!isLogin()) return;
                 goPage(SettingActivity.class);
                 break;
-
             case R.id.btn_sign_out:          //登录
                 if (!isLogin()) return;
                 goPage(LoginActivity.class);
                 break;
-
             case R.id.mine_tv_capital:        //我的资产
 //                if (!isLogin()) return;
 //                goPage(MyCapitalActivity.class);
                 break;
-
             case R.id.mine_iv_show:        //显示与隐藏资金
                 if (!isLogin()) return;
                 if (ShareData.getShareBooleanData(ShareData.SHOW_AMOUNT)){
@@ -184,9 +180,9 @@ public class MineFragment extends BaseFragment {
                     ShareData.setShareBooleanData(ShareData.SHOW_AMOUNT, true);
                 }
                 if (!ShareData.getShareBooleanData(ShareData.SHOW_AMOUNT)) {
-                    mine_tv_capital.setText(formatString(mUserAccount.getAccountBalance()));
-                    mine_tv_earned.setText(formatString(mUserAccount.getTotalReturnFee()));
-                    mine_tv_duein.setText(formatString(mUserAccount.getAmountToReturn()));
+//                    mine_tv_capital.setText(formatString(mUserAccount.getAccountBalance()));
+//                    mine_tv_earned.setText(formatString(mUserAccount.getTotalReturnFee()));
+//                    mine_tv_duein.setText(formatString(mUserAccount.getAmountToReturn()));
                     mine_iv_show.setImageResource(R.drawable.icon_mine_2_2);
                 } else {
                     mine_tv_capital.setText("****");

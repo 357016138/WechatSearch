@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
+import com.jieyue.wechat.search.bean.DataBean;
 import com.jieyue.wechat.search.bean.OpenCityBean;
 import com.jieyue.wechat.search.bean.UserBean;
 import com.jieyue.wechat.search.common.BaseActivity;
@@ -34,6 +35,7 @@ import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.service.MessageEvent;
 import com.jieyue.wechat.search.utils.AESUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.Md5Util;
 import com.jieyue.wechat.search.utils.PhoneNumberTextWatcher;
 import com.jieyue.wechat.search.utils.UserUtils;
 import com.jieyue.wechat.search.utils.UtilTools;
@@ -98,7 +100,7 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
     private List<OpenCityBean.CityBean> cityList;
     private String cityCode;
     private boolean isTimeing = false;//是否是倒计时状态
-
+    private String acceptCodeStr;   //接收到的短信验证码
 
 
     @Override
@@ -220,10 +222,9 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
     private void getCode(String phoneStr) {
 
         RequestParams params = new RequestParams(UrlConfig.URL_SIGN_IN_CODE);
-        params.add("phone", phoneStr);
-        params.add("codeType", "A");//发送类型 A-注册，B-密码找回，C-绑卡
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-        startRequest(Task.SIGN_UP_CODE, params, null);
+        params.add("phoneNumber", phoneStr);
+        startRequest(Task.SIGN_UP_CODE, params, DataBean.class);
     }
 
     private boolean obtianCodeMothed() {
@@ -316,29 +317,18 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
             toast("请输入验证码");
             return;
         }
-
-        if (cityCode == null){
-            toast("请选择城市");
-            return;
-        }
-
         if (!isAgree) {
             toast("请勾选协议");
             return;
         }
+        if (acceptCodeStr.equals(codeStr)){
+            RequestParams params = new RequestParams(UrlConfig.URL_REGISTER);
+            params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+            params.add("phoneNumber", userNameStr);
+            params.add("password", Md5Util.MD5(passWordStr));
+            startRequest(Task.REGISTER, params, UserBean.class);
+        }
 
-        userNameS = userNameStr;
-        passwordS = passWordStr;
-
-        RequestParams params = new RequestParams(UrlConfig.URL_REGISTER);
-        params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-        params.add("phone", userNameStr);
-        params.add("password", AESUtils.aesEncryptStr(passWordStr, UrlConfig.KEY));
-        params.add("cityCode", cityCode);
-        params.add("inviter", inviterStr);
-        params.add("smCode", codeStr);
-        params.add("codeType", "A");//发送类型 A-注册，B-密码找回，C-绑卡
-        startRequest(Task.REGISTER, params, UserBean.class);
     }
 
     @Override
@@ -348,23 +338,17 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
             switch (tag) {
                 case Task.REGISTER:
                     if (handlerRequestErr(data)) {
-//                        toast(data.getRspMsg());
                         UserBean userBean = (UserBean) data.getBody();
                         UserUtils.saveLoginUserInfo(userBean);
-                        ShareData.setShareStringData(ShareData.USER_ISPAYPASS,"0");
-                        UserUtils.clearGesture();
-                        Bundle bd = new Bundle();
-                        bd.putString(KEY_GESTURE_TYPE, GestureSetActivity.TYPE_LOGIN);
-                        goPage(GestureSetActivity.class, bd);
-
                         ShareData.setShareStringData(ShareData.LAST_ACCOUNT, signup_uerName.getText().toString());
-                        finish();
                         EventBus.getDefault().post(new MessageEvent(Constants.GET_NEW_MSG));
-                        EventBus.getDefault().post(new MessageEvent(Constants.GET_REFRESH_ORDER_LIST));
+                        finish();
                     }
                     break;
                 case Task.SIGN_UP_CODE:
                     if (handlerRequestErr(data)) {
+                        DataBean dataBean = (DataBean) data.getBody();
+                        acceptCodeStr = dataBean.getData();
                         toast(data.getRspMsg());
                         obtianCodeMothed();
                     }

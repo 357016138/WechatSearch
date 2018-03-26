@@ -4,13 +4,13 @@ package com.jieyue.wechat.search.utils;
  * 配置文件类
  */
 public class ConfigUtils {
-    public static final ConfigType configType = ConfigType.UAT;
+    public static final ConfigType configType = ConfigType.DEV;
 
 
     public static String getIp() {
         switch (configType) {
             case DEV:
-                return "http://172.18.101.14:8080";
+                return "http://www.vxsousuo.com";
             case CS:
                 return "http://172.18.101.14:8080";
             case UAT:
