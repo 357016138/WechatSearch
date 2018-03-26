@@ -39,7 +39,8 @@ public interface Task {
     int BIND_BANK_CARD_INFO = 0X0016;
     //获取银行信息
     int QUERY_BANK_INFO = 0X0017;
-
+    //发布微信群信息
+    int PUBLISH_WECHAT_GROUP = 0X0017;
 
     //绑定银行卡
     int CHECK_BANK_CARD = 0X0018;

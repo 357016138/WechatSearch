@@ -38,7 +38,8 @@ public interface UrlConfig {
     String URL_FORGET_PASSWORD = URL + "/user/forget/password.json";
     //修改密码
     String URL_UPDATE_PASSWORD = URL + "/user/update/password.json";
-
+    //发布微信群信息
+    String URL_PUBLISH_WECHAT_GROUP = URL + "/upload/groupInfo.json";
 
 
     //我的消息列表
