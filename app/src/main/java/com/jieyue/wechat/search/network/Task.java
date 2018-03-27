@@ -41,6 +41,14 @@ public interface Task {
     int QUERY_BANK_INFO = 0X0017;
     //发布微信群信息
     int PUBLISH_WECHAT_GROUP = 0X0017;
+    //图片上传接口
+    int UPLOAD_IMAGE = 0X0018;
+    //获得省级区域列表
+    int GET_PROVINCE_LIST = 0X0019;
+    //获得省级区域列表
+    int GET_CITY_LIST = 0X0020;
+
+
 
     //绑定银行卡
     int CHECK_BANK_CARD = 0X0018;
