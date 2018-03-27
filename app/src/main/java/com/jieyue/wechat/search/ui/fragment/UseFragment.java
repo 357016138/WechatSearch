@@ -57,6 +57,7 @@ public class UseFragment extends BaseFragment {
     public void onClickEvent(View view) {
         switch (view.getId()) {
             case R.id.ll_use_1:
+                if (!isLogin()) return;
                 goPage(PublishWechatGroupActivity.class);
                 break;
             case R.id.ll_use_2:

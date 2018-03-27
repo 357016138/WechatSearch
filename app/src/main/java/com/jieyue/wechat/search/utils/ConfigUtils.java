@@ -80,7 +80,7 @@ public class ConfigUtils {
             case CS:
             case UAT:
             case RELEASE:
-                return true;
+                return false;
         }
         return true;
     }
