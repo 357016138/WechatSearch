@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class IsPayPasswordBean implements Serializable {
 
-    private String isPayPass;
+    private String isPayPass;   //是否设置支付密码 0未设置  1已设置
 
     public String getIsPayPass() {
         return isPayPass;
