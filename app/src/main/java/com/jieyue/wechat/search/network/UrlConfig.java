@@ -38,8 +38,18 @@ public interface UrlConfig {
     String URL_FORGET_PASSWORD = URL + "/user/forget/password.json";
     //修改密码
     String URL_UPDATE_PASSWORD = URL + "/user/update/password.json";
+
+    //图片上传接口
+    String URL_UPLOAD_IMAGE = URL + "/upload/qiuniuupload.json";
     //发布微信群信息
     String URL_PUBLISH_WECHAT_GROUP = URL + "/upload/groupInfo.json";
+
+    //获得省级区域列表
+    String URL_GET_PROVINCE_LIST = URL + "/area/province.json";
+    //获得市级区域列表
+    String URL_GET_CITY_LIST = URL + "/area/city.json";
+
+
 
 
     //我的消息列表
