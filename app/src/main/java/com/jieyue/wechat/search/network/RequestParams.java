@@ -3,6 +3,7 @@ package com.jieyue.wechat.search.network;
 import android.text.TextUtils;
 
 
+import com.jieyue.wechat.search.common.ShareData;
 import com.jieyue.wechat.search.utils.ConfigUtils;
 
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public class RequestParams {
         this.url = url;
         httpType = HttpType.POST;
         params = new TreeMap<>();
+        addHeader("Cookie", ShareData.getShareStringData(ShareData.USER_COOKIE));
     }
 
     /***

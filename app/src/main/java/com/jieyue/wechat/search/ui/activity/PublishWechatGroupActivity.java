@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.common.BaseActivity;
@@ -23,6 +24,7 @@ import com.jieyue.wechat.search.network.ResultData;
 import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.LogUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -39,7 +41,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -94,8 +98,8 @@ public class PublishWechatGroupActivity extends BaseActivity {
     @Override
     public void dealLogicAfterInitView() {
 
-        getProvinceList();
-        getCityList("2");
+//        getProvinceList();
+//        getCityList("2");
 
 
     }
@@ -146,7 +150,6 @@ public class PublishWechatGroupActivity extends BaseActivity {
         String tag = et_tag.getText().toString().trim();
         String des = et_des.getText().toString().trim();
 
-
         RequestParams params = new RequestParams(UrlConfig.URL_PUBLISH_WECHAT_GROUP);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
         params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
@@ -170,8 +173,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
     public  void uploadImg(File file, String type) {
         RequestParams params = new RequestParams(UrlConfig.URL_UPLOAD_IMAGE);
         params.setHttpType(HttpType.UPLOAD);
-        params.setContentType("file");
-        params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+        params.setContentType("image/png");
         params.add("file", file);
         params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
         params.add("type", type);
@@ -240,12 +242,6 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 uploadImg(compressImage(bitmap),"1");
                 //保存到SharedPreferences
 //                saveBitmapToSharedPreferences(bitmap);
-            }
-            try {
-                // 将临时文件删除
-//                tempFile.delete();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -318,4 +314,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
             }
         }
     }
+
+
+
 }

@@ -18,6 +18,7 @@ public class ShareData {
     public static final String USER_AUTHSTATE = "user_authstate";
     public static final String USER_ACCOUNT_PWD_FLAG = "user_account_pwd_flag";
     public static final String USER_TOKEN = "user_token";
+    public static final String USER_COOKIE = "user_cookie";
 
     public static final String USER_CITY = "user_city";
     public static final String USER_CITYCODE = "user_city_code";

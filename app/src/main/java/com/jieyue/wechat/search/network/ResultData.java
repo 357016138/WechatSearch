@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class ResultData implements Serializable {
     private String rspCode = "";
     private String rspMsg = "";
-    private String rspTime = "";
+    private String header = "";
     private Object body;
 
     public String getRspCode() {
@@ -27,12 +27,12 @@ public class ResultData implements Serializable {
         this.rspMsg = rspMsg;
     }
 
-    public String getRspTime() {
-        return rspTime;
+    public String getHeader() {
+        return header;
     }
 
-    public void setRspTime(String rspTime) {
-        this.rspTime = rspTime;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
     public Object getBody() {

@@ -144,19 +144,27 @@ public class NetManager {
             }
         }
         for (Map.Entry<String, Object> entry : params.getParams().entrySet()) {
-            try {
-                File file = new File(entry.getValue() + "");
-                RequestBody fileBody;
-                fileBody = RequestBody.create(MediaType.parse(params.getContentType()), file);
-                requestBody.addFormDataPart(entry.getKey(), file.getName(), fileBody);
-            } catch (Exception e) {
-                e.printStackTrace();
+
+            if ("file".equals(entry.getKey())){
+                try {
+                    File file = new File(entry.getValue() + "");
+                    RequestBody fileBody;
+                    fileBody = RequestBody.create(MediaType.parse(params.getContentType()), file);
+                    requestBody.addFormDataPart(entry.getKey(), file.getName(), fileBody);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else{
+                requestBody.addFormDataPart(entry.getKey(),entry.getValue()+"");
             }
+
         }
         Request request = requestBuilder.post(requestBody.build()).build();
         Call call = client.newCall(request);
         call.enqueue(callback);
         return call;
+
+
     }
 
     public Call postJson(Context context, RequestParams params, Callback callback) {
