@@ -47,7 +47,12 @@ public interface Task {
     int GET_PROVINCE_LIST = 0X0019;
     //获得省级区域列表
     int GET_CITY_LIST = 0X0020;
-
+    //获取用户微币数量
+    int GET_TINY_COIN_NUM = 0X0021;
+    //获取订单详情
+    int GET_ORDER_DES = 0X0022;
+    //用微币支付
+    int PAY_BY_COIN = 0X0023;
 
 
     //绑定银行卡

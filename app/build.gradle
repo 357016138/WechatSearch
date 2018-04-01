@@ -41,6 +41,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
 }
 
 dependencies {
@@ -73,7 +80,8 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     //butterknife注解 √
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-
+    //第三方支付
+    compile(name:'paysdk-release-1.2.1', ext:'aar')//paysdk-release-1.2.1(sdk名称)
     //注解 √
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

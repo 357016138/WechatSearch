@@ -26,6 +26,7 @@ public class UserUtils {
             ShareData.setShareStringData(ShareData.USER_ID, userBean.getId());
             ShareData.setShareStringData(ShareData.USER_PHONE, userBean.getPhoneNumber());
 
+
             UserManager.clear();
         }
     }
@@ -44,6 +45,7 @@ public class UserUtils {
 
         ShareData.setShareStringData(ShareData.USER_ID, "");
         ShareData.setShareStringData(ShareData.USER_PHONE, "");
+        ShareData.setShareStringData(ShareData.USER_COOKIE, "");
         UserManager.clear();
     }
 

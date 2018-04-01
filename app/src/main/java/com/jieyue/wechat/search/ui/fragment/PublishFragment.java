@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.common.BaseFragment;
-import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.ui.activity.PublishWechatGroupActivity;
 
 import butterknife.BindView;
@@ -21,22 +20,14 @@ import butterknife.Unbinder;
  * 应用
  * Created by song on 2018/1/30.
  */
-public class UseFragment extends BaseFragment {
+public class PublishFragment extends BaseFragment {
 
     Unbinder unbinder;
-    @BindView(R.id.ll_use_1)
-    LinearLayout ll_use_1;
-    @BindView(R.id.ll_use_2)
-    LinearLayout ll_use_2;
-    @BindView(R.id.ll_use_5)
-    LinearLayout ll_use_5;
-    @BindView(R.id.ll_use_6)
-    LinearLayout ll_use_6;
-    @BindView(R.id.ll_use_7)
-    LinearLayout ll_use_7;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_use, container, false);
+        View view = inflater.inflate(R.layout.fragment_publish, container, false);
         initView(view);
         initData();
 
@@ -52,24 +43,15 @@ public class UseFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.ll_use_1,R.id.ll_use_2,R.id.ll_use_5,R.id.ll_use_6,R.id.ll_use_7})
+    @OnClick({R.id.ll_publish_1,R.id.ll_publish_2})
     @Override
     public void onClickEvent(View view) {
         switch (view.getId()) {
-            case R.id.ll_use_1:
+            case R.id.ll_publish_1:
                 if (!isLogin()) return;
                 goPage(PublishWechatGroupActivity.class);
                 break;
-            case R.id.ll_use_2:
-                goWebPage("佣金试算",UrlConfig.URL_COMMISION_CALCULATION);
-                break;
-            case R.id.ll_use_5:
-                toast("敬请期待");
-                break;
-            case R.id.ll_use_6:
-                toast("敬请期待");
-                break;
-            case R.id.ll_use_7:
+            case R.id.ll_publish_2:
                 toast("敬请期待");
                 break;
             default:

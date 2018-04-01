@@ -17,7 +17,7 @@ import com.jieyue.wechat.search.common.Keys;
 import com.jieyue.wechat.search.ui.fragment.BillFragment;
 import com.jieyue.wechat.search.ui.fragment.HomeFragment;
 import com.jieyue.wechat.search.ui.fragment.MineFragment;
-import com.jieyue.wechat.search.ui.fragment.UseFragment;
+import com.jieyue.wechat.search.ui.fragment.PublishFragment;
 import com.jieyue.wechat.search.utils.LogUtils;
 
 import java.util.List;
@@ -193,7 +193,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case USE:
                 if (useFragment == null) {
-                    useFragment = new UseFragment();
+                    useFragment = new PublishFragment();
                 }
                 fragment = useFragment;
                 break;

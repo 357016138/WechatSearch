@@ -1,13 +1,10 @@
 package com.jieyue.wechat.search.ui.activity;
 
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
-import android.util.Base64;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
+import com.jieyue.wechat.search.bean.DataBean;
 import com.jieyue.wechat.search.common.BaseActivity;
 import com.jieyue.wechat.search.common.ShareData;
 import com.jieyue.wechat.search.network.HttpType;
@@ -22,27 +20,20 @@ import com.jieyue.wechat.search.network.RequestParams;
 import com.jieyue.wechat.search.network.ResultData;
 import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
+import com.jieyue.wechat.search.utils.DateUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.FileUtils;
+import com.jieyue.wechat.search.utils.UserManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MultipartBody;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class PublishWechatGroupActivity extends BaseActivity {
     @BindView(R.id.et_title)
@@ -65,12 +56,13 @@ public class PublishWechatGroupActivity extends BaseActivity {
     LinearLayout ll_btn;
     @BindView(R.id.btn_submit)
     TextView btn_submit;
-    private static final int PHOTO_REQUEST_GALLERY = 2;// 从相册中选择
+    private static final int PHOTO_REQUEST_GROUP = 1;// 图片选择
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
     private File tempFile;
+    private String type = "1";
 
-    private String groupImage ="https://snailhouse.static.iqianjindai.com/appStore/img/bank/102.png";    //微信群二维码图片地址
-    private String userImage = "https://snailhouse.static.iqianjindai.com/appStore/img/bank/103.png";     //封面图片地址
+    private String groupImage ;    //微信群二维码图片地址
+    private String coverImage ;     //封面图片地址
 
 
     @Override
@@ -93,29 +85,31 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
     @Override
     public void dealLogicAfterInitView() {
-
-        getProvinceList();
-        getCityList("2");
-
+        getAddressList();
 
     }
     @OnClick({R.id.iv_group_qcode, R.id.iv_cover, R.id.btn_submit})
     @Override
     public void onClickEvent(View view) {
+        Intent intent =null;
         switch (view.getId()) {
             case R.id.iv_group_qcode:             //微信群二维码图片地址
                 // 激活系统图库，选择一张图片
-                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GALLERY
-                startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
+                type = "1";    //设置图片上传类型  1.二维码 2.封面
+                // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GROUP
+                startActivityForResult(intent, PHOTO_REQUEST_GROUP);
                 break;
 
             case R.id.iv_cover:                 //封面图片地址
-                if (!isLogin()) return;
-                goPage(SettingActivity.class);
+                // 激活系统图库，选择一张图片
+                intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                type = "2"; //设置图片上传类型  1.二维码 2.封面
+                // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GROUP
+                startActivityForResult(intent, PHOTO_REQUEST_GROUP);
                 break;
-
             case R.id.btn_submit:                 //提交
                 if (!isLogin()) return;
                 submitInfo();
@@ -141,8 +135,6 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
         String title = et_title.getText().toString().trim();
         String wechat_num = et_wechat_num.getText().toString().trim();
-        String category = et_category.getText().toString().trim();
-        String address = et_address.getText().toString().trim();
         String tag = et_tag.getText().toString().trim();
         String des = et_des.getText().toString().trim();
 
@@ -152,47 +144,39 @@ public class PublishWechatGroupActivity extends BaseActivity {
         params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
         params.add("groupName", title);
         params.add("groupImage", groupImage);
-        params.add("userImage", userImage);
+        params.add("userImage", coverImage);
         params.add("userWechat", wechat_num);
         params.add("tags", tag);
         params.add("description", des);
-        params.add("provinceId", "1");
-        params.add("cityId","1");
+        params.add("provinceId", "2");
+        params.add("cityId","54");
         params.add("parentCategory", "1");
-        params.add("cityId","1");
-        startRequest(Task.PUBLISH_WECHAT_GROUP, params, null);
+        params.add("category","16");
+        startRequest(Task.PUBLISH_WECHAT_GROUP, params, DataBean.class);
 
     }
 
     /**
      * 上传头像
      */
-    public  void uploadImg(File file, String type) {
+    public  void uploadImg(String file) {
         RequestParams params = new RequestParams(UrlConfig.URL_UPLOAD_IMAGE);
         params.setHttpType(HttpType.UPLOAD);
-        params.setContentType("file");
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+        params.setContentType("multipart/form-data");
         params.add("file", file);
         params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
-        params.add("type", type);
-        startRequest(Task.UPLOAD_IMAGE, params, null);
+        params.add("type", "1");
+        startRequest(Task.UPLOAD_IMAGE, params, DataBean.class);
     }
 
 
     /**
-     * 获得省级区域列表
+     * 获得城市列表
      */
-    public  void getProvinceList() {
+    public  void getAddressList() {
         RequestParams params = new RequestParams(UrlConfig.URL_GET_PROVINCE_LIST);
         startRequest(Task.GET_PROVINCE_LIST, params, null);
-    }
-    /**
-     * 获得市级区域列表
-     */
-    public  void getCityList(String provinceId) {
-        RequestParams params = new RequestParams(UrlConfig.URL_GET_CITY_LIST);
-        params.add("provinceId", provinceId);
-        startRequest(Task.GET_CITY_LIST, params, null);
     }
 
 
@@ -204,11 +188,27 @@ public class PublishWechatGroupActivity extends BaseActivity {
         switch (tag) {
             case Task.PUBLISH_WECHAT_GROUP:
                 if (handlerRequestErr(data)) {
+                    //发布成功
+                    DataBean dataBean = (DataBean) data.getBody();
+                    String orderId = dataBean.getData();
+                    Bundle bd = new Bundle();
+                    bd.putString("orderId", orderId);
+                    goPage(PayActivity.class);
 
                 }
                 break;
             case Task.UPLOAD_IMAGE:
                 if (handlerRequestErr(data)) {
+
+                    DataBean dataBean = (DataBean) data.getBody();
+                    String url = dataBean.getData();
+                    if ("1".equals(type)){
+                        groupImage = url;
+                    }else if ("2".equals(type)){
+                        coverImage = url;
+                    }else {
+                        return;
+                    }
 
                 }
                 break;
@@ -224,7 +224,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PHOTO_REQUEST_GALLERY) {
+        if (requestCode == PHOTO_REQUEST_GROUP) {
             // 从相册返回的数据
             if (data != null) {
                 // 得到图片的全路径
@@ -234,18 +234,20 @@ public class PublishWechatGroupActivity extends BaseActivity {
         } else if (requestCode == PHOTO_REQUEST_CUT) {
             // 从剪切图片返回的数据
             if (data != null) {
+
                 Bitmap bitmap = data.getParcelableExtra("data");
-                iv_group_qcode.setImageBitmap(bitmap);
+
+                if ("1".equals(type)){
+                    iv_group_qcode.setImageBitmap(bitmap);
+                }else if ("2".equals(type)){
+                    iv_cover.setImageBitmap(bitmap);
+                }
+
                 //压缩并上传图片
-                uploadImg(compressImage(bitmap),"1");
+                compressImage(bitmap);
+
                 //保存到SharedPreferences
 //                saveBitmapToSharedPreferences(bitmap);
-            }
-            try {
-                // 将临时文件删除
-//                tempFile.delete();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -277,7 +279,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
      * 压缩图片（质量压缩）
      * @param bitmap
      */
-    public static File compressImage(Bitmap bitmap) {
+    public void compressImage(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
         int options = 100;
@@ -287,24 +289,41 @@ public class PublishWechatGroupActivity extends BaseActivity {
             bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
             long length = baos.toByteArray().length;
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        Date date = new Date(System.currentTimeMillis());
-        String filename = format.format(date);
-        File file = new File(Environment.getExternalStorageDirectory(),filename+".png");
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            try {
-                fos.write(baos.toByteArray());
-                fos.flush();
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+
+        checkPermission(new CheckPermListener(){
+            @Override
+            public void superPermission() {
+                try {
+                    String filePath = FileUtils.TEMP + UserManager.getUserId()
+                            + DateUtils.format(System.currentTimeMillis(), "yyyyMMddkkmmssSSS") + ".png";
+                    File file = new File(filePath);
+
+                    if (!file.exists()) {
+                        File fileParentDir = file.getParentFile();
+                        if (!fileParentDir.exists()) {
+                            fileParentDir.mkdirs();
+                        }
+                        file.createNewFile();
+                    }
+
+                    FileOutputStream fos = new FileOutputStream(file);
+                    try {
+                        fos.write(baos.toByteArray());
+                        fos.flush();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    uploadImg(filePath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+       //        recycleBitmap(bitmap);
+
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-//        recycleBitmap(bitmap);
-        return file;
+        }, R.string.ask_again, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
     }
 
 

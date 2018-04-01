@@ -296,6 +296,7 @@
                         android:id="@+id/iv_group_qcode"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
+                        android:src="@drawable/icon_add_img"
                         android:layout_marginTop="@dimen/dp_5"/>
 
                 </LinearLayout>
@@ -317,6 +318,7 @@
                         android:id="@+id/iv_cover"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
+                        android:src="@drawable/icon_add_img"
                         android:layout_marginTop="@dimen/dp_5"/>
 
                 </LinearLayout>
@@ -352,7 +354,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/dp_10"
                 android:paddingTop="@dimen/dp_10"
-                android:text="提交"
+                android:text="下一步"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:clickable="true"

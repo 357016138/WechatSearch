@@ -19,6 +19,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.ConnectionPool;
 import okhttp3.FormBody;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -127,6 +128,7 @@ public class NetManager {
      * @return call 请求句柄
      */
     public Call upload(Context context, RequestParams params, Callback callback) {
+
         if (params == null) {
             return null;
         }
@@ -145,10 +147,15 @@ public class NetManager {
         }
         for (Map.Entry<String, Object> entry : params.getParams().entrySet()) {
             try {
-                File file = new File(entry.getValue() + "");
-                RequestBody fileBody;
-                fileBody = RequestBody.create(MediaType.parse(params.getContentType()), file);
-                requestBody.addFormDataPart(entry.getKey(), file.getName(), fileBody);
+                if ("file".equals(entry.getKey())){
+                    File file = new File(entry.getValue() + "");
+                    RequestBody fileBody;
+                    fileBody = RequestBody.create(MediaType.parse(params.getContentType()), file);
+                    requestBody.addFormDataPart(entry.getKey(), file.getName(), fileBody);
+                }else{
+                    requestBody.addFormDataPart(entry.getKey(), entry.getValue()+"");
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

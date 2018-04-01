@@ -15,7 +15,7 @@ public class FileUtils {
 
     public static String SDCardPathRoot = Environment.getExternalStorageDirectory() + File.separator;
 
-    public static String ROOT = SDCardPathRoot + "houseloanagent" + File.separator;
+    public static String ROOT = SDCardPathRoot + "wechatsearch" + File.separator;
     public static String TEMP = ROOT + "temp" + File.separator;
     public static String CAMERA = TEMP + "camera" + File.separator;
     public static String CACHE = ROOT + "cache" + File.separator;

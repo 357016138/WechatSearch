@@ -7,6 +7,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.base.bj.paysdk.utils.TrPay;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.bean.VersionBean;
 import com.jieyue.wechat.search.common.BaseActivity;
@@ -85,11 +86,23 @@ public class StartActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        /**
+
+         * 初始化PaySdk(context请传入当前Activity对象(如：MainActivity.this))
+
+         * 第一个参数:是您在trPay后面应用的appkey（需要先提交应用资料(若应用未上线，需上传测试APK文件)，审核通过后appkey生效）
+
+         * 第二个参数:是您的渠道，一般是baidu,360,xiaomi等
+
+         */
+
+        TrPay.getInstance(StartActivity.this).initPaySdk("48b8f3bf366148a9aa0ba89e2b5d3ec1","baidu");
     }
 
     @Override
     public void dealLogicAfterInitView() {
-        getNewVersion();   //查看是否有新版本
+        nextPage();
+//        getNewVersion();   //查看是否有新版本
     }
 
     @Override

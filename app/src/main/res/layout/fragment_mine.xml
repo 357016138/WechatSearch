@@ -52,12 +52,12 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="284dp">
+                    android:layout_height="229dp">
 
                     <LinearLayout
                         android:id="@+id/ll_mine_logined"
                         android:layout_width="match_parent"
-                        android:layout_height="267dp"
+                        android:layout_height="212dp"
                         android:layout_alignParentBottom="true"
                         android:background="@drawable/bg_loading_dialog"
                         android:gravity="center_horizontal"
@@ -157,20 +157,6 @@
                             </LinearLayout>
 
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/bt_mine_withdraw_deposit"
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/bg_button_disable"
-                            android:gravity="center"
-                            android:text="提现"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_big_xx" />
 
 
                     </LinearLayout>

@@ -98,8 +98,6 @@ public class MineFragment extends BaseFragment {
     ImageView mine_iv_show;
     @BindView(R.id.tv_mine_phone)
     TextView tv_mine_phone;
-    @BindView(R.id.bt_mine_withdraw_deposit)
-    TextView bt_mine_withdraw_deposit;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
 
@@ -122,7 +120,6 @@ public class MineFragment extends BaseFragment {
 
         //一定要解绑 在onDestroyView里
         unbinder = ButterKnife.bind(this, view);
-        bt_mine_withdraw_deposit.setOnClickListener(null);
         refreshLayout.isEnableLoadmore();
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -156,7 +153,7 @@ public class MineFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.iv_setting, R.id.btn_sign_out, R.id.bt_mine_withdraw_deposit, R.id.mine_tv_capital, R.id.mine_iv_show, R.id.ll_mine_4, R.id.ll_mine_5, R.id.ll_mine_6, R.id.ll_mine_7, R.id.ll_mine_8, R.id.ll_mine_9, R.id.ll_mine_10, R.id.ll_mine_11, R.id.ll_mine_12, R.id.ll_mine_13, R.id.ll_mine_14})
+    @OnClick({R.id.iv_setting, R.id.btn_sign_out, R.id.mine_tv_capital, R.id.mine_iv_show, R.id.ll_mine_4, R.id.ll_mine_5, R.id.ll_mine_6, R.id.ll_mine_7, R.id.ll_mine_8, R.id.ll_mine_9, R.id.ll_mine_10, R.id.ll_mine_11, R.id.ll_mine_12, R.id.ll_mine_13, R.id.ll_mine_14})
     @Override
     public void onClickEvent(View view) {
         switch (view.getId()) {
@@ -240,10 +237,10 @@ public class MineFragment extends BaseFragment {
                         UserManager.getUserId()));
                 break;
 
-            case R.id.bt_mine_withdraw_deposit: // 提现
-                isBindBankCard();
+//            case R.id.bt_mine_withdraw_deposit: // 提现
+//                isBindBankCard();
 //                goPage(WithdrawDepositActivity.class);
-                break;
+//                break;
 
             default:
                 break;
@@ -366,14 +363,6 @@ public class MineFragment extends BaseFragment {
                         mine_tv_capital.setText(formatString(accountBalance));
                         mine_tv_earned.setText(formatString(mUserAccount.getTotalReturnFee()));
                         mine_tv_duein.setText(formatString(mUserAccount.getAmountToReturn()));
-
-                        if (!StringUtils.isEmpty(accountBalance+"") && accountBalance > 0){
-                            bt_mine_withdraw_deposit.setBackground(getResources().getDrawable(R.drawable.bg_login_button));
-                            bt_mine_withdraw_deposit.setOnClickListener(this);
-                        }else{
-                            bt_mine_withdraw_deposit.setBackground(getResources().getDrawable(R.drawable.bg_button_disable));
-                            bt_mine_withdraw_deposit.setOnClickListener(null);
-                        }
 
                     } else {
                         mine_tv_capital.setText("****");

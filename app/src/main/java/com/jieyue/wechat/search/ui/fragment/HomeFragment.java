@@ -19,6 +19,8 @@ import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.service.MessageEvent;
 import com.jieyue.wechat.search.ui.activity.ConsultPriceActivity;
 import com.jieyue.wechat.search.ui.activity.MsgNoticeActivity;
+import com.jieyue.wechat.search.ui.activity.PayActivity;
+import com.jieyue.wechat.search.ui.activity.ReportApplySuccessActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.StringUtils;
 import com.jieyue.wechat.search.utils.UserManager;
@@ -45,16 +47,6 @@ import okhttp3.Call;
  */
 public class HomeFragment extends BaseFragment {
     Unbinder unbinder;
-    @BindView(R.id.tv_consult_price)
-    TextView tvConsultPrice;
-    @BindView(R.id.tv_highest_loan)
-    TextView tvHighestLoan;
-    @BindView(R.id.tv_customer_manager)
-    TextView tvCustomerManager;
-    @BindView(R.id.tv_make_commission)
-    TextView tvMakeCommission;
-    @BindView(R.id.tv_bottom_title)
-    TextView tvBottomTitle;
     @BindView(R.id.iv_msg_new)
     ImageView iv_new_msg;
     @BindView(R.id.refreshLayout)
@@ -64,10 +56,6 @@ public class HomeFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initView(view);
         initData();
-        if (UserUtils.isLogin()) {
-
-
-        }
         return view;
     }
 
@@ -82,9 +70,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
 
-                if (UserUtils.isLogin()) {
-
-                }
+                refreshLayout.finishRefresh();
             }
         });
     }
@@ -96,24 +82,21 @@ public class HomeFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.rl_msg,R.id.tv_consult_price,R.id.ll_loan_strategy,R.id.ll_commission_trial})
+    @OnClick({R.id.rl_msg})
     @Override
     public void onClickEvent(View view) {
         switch (view.getId()) {
             case R.id.rl_msg:
                 if (!isLogin()) return;
-                goPage(MsgNoticeActivity.class);
+//                goPage(MsgNoticeActivity.class);
+                goPage(PayActivity.class);
+
+
                 break;
-            case R.id.tv_consult_price:
-                if (!isLogin()) return;
-                goPage(ConsultPriceActivity.class);
-                break;
-            case R.id.ll_loan_strategy:
-                goWebPage("贷款攻略", UrlConfig.URL_LOAN_RAIDERS);
-                break;
-            case R.id.ll_commission_trial:
-                goWebPage("佣金试算", UrlConfig.URL_COMMISION_CALCULATION);
-                break;
+//            case R.id.tv_consult_price:
+//                if (!isLogin()) return;
+//                goPage(ConsultPriceActivity.class);
+//                break;
             default:
                 break;
         }
@@ -126,19 +109,6 @@ public class HomeFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    private void getBaseData() {
-        RequestParams params = new RequestParams(UrlConfig.URL_GET_APP_BASE_DATA);
-//        params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
-//        params.add("userId", UserManager.getUserId());
-        startRequest(Task.APP_BASE_DATA, params, AppBaseDataBean.class, false);
-    }
-
-    private void getMsgData() {
-        RequestParams params = new RequestParams(UrlConfig.URL_GET_MSG_DATA);
-        params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
-        params.add("userId", UserManager.getUserId());
-        startRequest(Task.APP_MSG_DATA, params, IsHasNewMsgNotice.class, false);
-    }
 
     @Override
     public void onRefresh(Call call, int tag, ResultData data) {
@@ -149,12 +119,6 @@ public class HomeFragment extends BaseFragment {
                 if (handlerRequestErr(data)) {
                     AppBaseDataBean dataBean = (AppBaseDataBean) data.getBody();
                     if (dataBean != null) {
-                        tvHighestLoan.setText(StringUtils.formatNumberStr(dataBean.getHighestLoan()));
-                        tvCustomerManager.setText(StringUtils.formatNumberStr(dataBean.getCustomerManagers()));
-                        tvMakeCommission.setText(StringUtils.formatNumberStr(dataBean.getLimitBrokerage()));
-                        tvBottomTitle.setText(String.format(Locale.US, getString(R.string.bottom_title),
-                                StringUtils.emptyDispose(dataBean.getAccumulatedBorrower()),
-                                StringUtils.formatNumberStr(dataBean.getLimitLoan())));
                     }
                 }
                 break;

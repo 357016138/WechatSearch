@@ -83,6 +83,8 @@ public class JyHandler extends BaseHandler implements Callback {
             String resultStr = response.body().string();
 //          String realResult= AESCrypt.getInstance().decrypt(resultStr);
 
+            String headerStr = response.header("Set-Cookie");
+
             if (isEncrypt) {
                 JSONObject encryptObj = new JSONObject(resultStr);
                 String encryptStr = encryptObj.optString("aesResponse");
@@ -109,7 +111,8 @@ public class JyHandler extends BaseHandler implements Callback {
 
             data.setRspCode(rspCode);
             data.setRspMsg(rspMsg);
-            //data.setRspTime(rspTime);
+            data.setHeader(headerStr);
+            //data.setHeader(rspTime);
 
             if (TextUtils.isEmpty(data.getRspMsg()) || data.getRspMsg().equals("null")) {
                 data.setRspMsg("");

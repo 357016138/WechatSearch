@@ -98,15 +98,15 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         super.onResume();
         setSwitchButton();
         //没设置过提现密码的情况
-        if ("0".equals(UserManager.getIsPayPass())) {
-            RequestParams params = new RequestParams(UrlConfig.URL_WHETHER_SET_PAYMENT_PASSWORD);
-            params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-            params.add("userId", UserManager.getUserId());
-            startRequest(Task.WHETHER_SET_PAY_PASSWORD, params, IsPayPasswordBean.class);
-        } else {
-            tv_reset_withdraw.setVisibility(View.GONE);
-            tv_revise_withdraw.setVisibility(View.VISIBLE);
-        }
+//        if ("0".equals(UserManager.getIsPayPass())) {
+//            RequestParams params = new RequestParams(UrlConfig.URL_WHETHER_SET_PAYMENT_PASSWORD);
+//            params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+//            params.add("userId", UserManager.getUserId());
+//            startRequest(Task.WHETHER_SET_PAY_PASSWORD, params, IsPayPasswordBean.class);
+//        } else {
+//            tv_reset_withdraw.setVisibility(View.GONE);
+//            tv_revise_withdraw.setVisibility(View.VISIBLE);
+//        }
     }
 
     @OnClick({R.id.tv_reset_login, R.id.tv_reset_gesture, R.id.tv_reset_withdraw, R.id.tv_revise_withdraw, R.id.btn_sign_out, R.id.btn_gestureTV})
@@ -207,9 +207,9 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
 
                     IsPayPasswordBean isPayPasswordBean = (IsPayPasswordBean) data.getBody();
                     if ("0".equals(isPayPasswordBean.getIsPayPass())) {
-                        tv_reset_withdraw.setVisibility(View.VISIBLE);
+                        tv_reset_withdraw.setVisibility(View.GONE);
                     } else if ("1".equals(isPayPasswordBean.getIsPayPass())) {
-                        tv_revise_withdraw.setVisibility(View.VISIBLE);
+                        tv_revise_withdraw.setVisibility(View.GONE);
                     }
 
                 }

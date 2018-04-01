@@ -48,8 +48,12 @@ public interface UrlConfig {
     String URL_GET_PROVINCE_LIST = URL + "/area/province.json";
     //获得市级区域列表
     String URL_GET_CITY_LIST = URL + "/area/city.json";
-
-
+    //获取用户微币数量
+    String URL_GET_TINY_COIN_NUM = URL + "/vcoin/get.json";
+    //获取订单详情
+    String URL_GET_ORDER_DES = URL + "/order/getByOrderId.json";
+    //用微币支付
+    String URL_PAY_BY_COIN = URL + "/order/pay/self.json";
 
 
     //我的消息列表

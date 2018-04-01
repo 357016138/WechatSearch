@@ -36,14 +36,9 @@
     <string name="bill_top_2">贷款订单</string>
 
     <!--工具界面start-->
-    <string name="use_title">工具</string>
-    <string name="use_title_1">试算工具</string>
-    <string name="use_title_2">查询工具</string>
-    <string name="use_1">贷款试算</string>
-    <string name="use_2">佣金试算</string>
-    <string name="use_5">建委查询</string>
-    <string name="use_6">公证处查询</string>
-    <string name="use_7">征信查询</string>
+    <string name="use_title">发布</string>
+    <string name="use_1">发布微信群</string>
+    <string name="use_2">发布公众号</string>
     <!--工具界面end-->
 
     <!--我的界面start-->

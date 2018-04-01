@@ -504,6 +504,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+
     public enum BasePageSet {
         /**
          * 无Topbar和缺省页面配置，将会调用系统的setContentView方法
