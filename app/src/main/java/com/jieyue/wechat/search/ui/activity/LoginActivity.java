@@ -203,6 +203,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     UserUtils.saveLoginUserInfo(userBean);
                     ShareData.setShareStringData(ShareData.USER_COOKIE, data.getHeader());
                     ShareData.setShareStringData(ShareData.LAST_ACCOUNT, login_uerName.getText().toString());
+                    ShareData.setShareStringData(ShareData.USER_COOKIE, data.getHeader());
                     EventBus.getDefault().post(new MessageEvent(Constants.GET_NEW_MSG));
                     finish();
 
