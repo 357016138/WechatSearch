@@ -53,6 +53,13 @@ public interface Task {
     int GET_ORDER_DES = 0X0022;
     //用微币支付
     int PAY_BY_COIN = 0X0023;
+    //获取分类类目
+    int GET_CATEGORY = 0X0024;
+
+
+
+
+
 
 
     //绑定银行卡

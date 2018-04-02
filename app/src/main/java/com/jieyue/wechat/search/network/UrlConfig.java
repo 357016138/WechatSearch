@@ -54,6 +54,11 @@ public interface UrlConfig {
     String URL_GET_ORDER_DES = URL + "/order/getByOrderId.json";
     //用微币支付
     String URL_PAY_BY_COIN = URL + "/order/pay/self.json";
+    //获取分类类目
+    String URL_GET_CATEGORY = URL + "/category/all.json";
+
+
+
 
 
     //我的消息列表

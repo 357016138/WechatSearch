@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.adapter.CityArrayWheelAdapter;
 import com.jieyue.wechat.search.adapter.ProvinceArrayWheelAdapter;
+import com.jieyue.wechat.search.bean.CategoryBean;
 import com.jieyue.wechat.search.bean.ProvinceBean;
 import com.jieyue.wechat.search.bean.DataBean;
 import com.jieyue.wechat.search.common.BaseActivity;
@@ -117,7 +118,13 @@ public class PublishWechatGroupActivity extends BaseActivity {
     public void dealLogicAfterInitView() {
         //获取城市列表
         getAddressList("city.json",this);
+        //获取分类类目
+        getCategoryList();
+
     }
+
+
+
     @OnClick({R.id.iv_group_qcode, R.id.iv_cover, R.id.btn_submit, R.id.ll_publish_address})
     @Override
     public void onClickEvent(View view) {
@@ -212,6 +219,17 @@ public class PublishWechatGroupActivity extends BaseActivity {
         startRequest(Task.UPLOAD_IMAGE, params, DataBean.class);
     }
 
+    /**
+     * 获取分类类目
+     */
+    private void getCategoryList() {
+
+        RequestParams params = new RequestParams(UrlConfig.URL_GET_CATEGORY);
+        params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+        startRequest(Task.GET_CATEGORY, params, new TypeToken<List<CategoryBean>>() {}.getType());
+
+    }
+
     @Override
     public void onRefresh(Call call, int tag, ResultData data) {
         super.onRefresh(call, tag, data);
@@ -224,6 +242,15 @@ public class PublishWechatGroupActivity extends BaseActivity {
                     Bundle bd = new Bundle();
                     bd.putString("orderId", orderId);
                     goPage(PayActivity.class);
+
+                }
+                break;
+            case Task.GET_CATEGORY:     //获取分类类目
+                if (handlerRequestErr(data)) {
+                    List<CategoryBean> categoryList = (List<CategoryBean>) data.getBody();
+
+                    toast(categoryList.size()+"");
+
 
                 }
                 break;

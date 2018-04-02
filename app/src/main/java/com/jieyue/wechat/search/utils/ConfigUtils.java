@@ -10,7 +10,7 @@ public class ConfigUtils {
     public static String getIp() {
         switch (configType) {
             case DEV:
-                return "http://www.vxsousuo.com";
+                return "http://140.143.167.122";
             case CS:
                 return "http://172.18.101.14:8080";
             case UAT:
