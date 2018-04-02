@@ -108,7 +108,7 @@ public class OpenCityBean {
 
         @Override
         public String toString() {
-            return "CityBean{" +
+            return "ProvinceBean{" +
                     "city='" + city + '\'' +
                     ", cityCode='" + cityCode + '\'' +
                     '}';
