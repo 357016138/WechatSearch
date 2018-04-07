@@ -55,7 +55,10 @@ public interface Task {
     int PAY_BY_COIN = 0X0023;
     //获取分类类目
     int GET_CATEGORY = 0X0024;
-
+    //获取搜索列表
+    int GET_SEARCH_LIST = 0X0025;
+    //获取首页最新列表
+    int GET_NEW_DATA_LIST = 0X0026;
 
 
 

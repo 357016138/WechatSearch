@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -47,12 +48,21 @@ public class PayActivity extends BaseActivity {
     RelativeLayout rl_payment_wechat;
     @BindView(R.id.rl_payment_tiny_coin)
     RelativeLayout rl_payment_tiny_coin;
+
+    @BindView(R.id.cb_pay_1)
+    CheckBox cb_pay_1;                //支付宝支付
+    @BindView(R.id.cb_pay_2)
+    CheckBox cb_pay_2;                //微信支付
+    @BindView(R.id.cb_pay_3)
+    CheckBox cb_pay_3;                //微币支付
+
+
     @BindView(R.id.ll_btn)
     LinearLayout ll_btn;
     @BindView(R.id.btn_submit)
     TextView btn_submit;
 
-    private static final String NOTIFYURL = "http://www.vxsousuo.com/order/pay/notify.json";
+    private static final String NOTIFYURL = "http://140.143.167.122/order/pay/notify.json";
     private String orderId;
     private OrderBean orderBean;
 
@@ -63,9 +73,13 @@ public class PayActivity extends BaseActivity {
 
     @Override
     public void dealLogicBeforeInitView() {
-        orderId = getIntentData().getString("orderId");
-
-        orderId = "b184f2828eaa44bdbb1f369970b76e68";
+        Bundle bundle = getIntentData();
+        orderId = bundle.getString("orderId");
+//        orderId = "0ab08fbb7fd248afac5ba385bd6ca22a";
+        if (StringUtils.isEmpty(orderId)){
+            toast("请获取正确的订单信息");
+            return;
+        }
 
     }
 
@@ -92,19 +106,37 @@ public class PayActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.rl_payment_alipay:                  //支付宝支付
 
-                goToPayByAliPay(orderBean.getOrderName(),orderId,orderBean.getPayMoney(),"0",NOTIFYURL,ShareData.getShareStringData(ShareData.USER_ID));
+                cb_pay_1.setChecked(true);
+                cb_pay_2.setChecked(false);
+                cb_pay_3.setChecked(false);
 
                 break;
             case R.id.rl_payment_wechat:                 //微信支付
-
-                goToPayByWechat(orderBean.getOrderName(),orderId,orderBean.getPayMoney(),"0",NOTIFYURL,ShareData.getShareStringData(ShareData.USER_ID));
-
+                cb_pay_1.setChecked(false);
+                cb_pay_2.setChecked(true);
+                cb_pay_3.setChecked(false);
                 break;
             case R.id.rl_payment_tiny_coin:              //微币支付
-                goToPayByCoin();
+
+                cb_pay_1.setChecked(false);
+                cb_pay_2.setChecked(false);
+                cb_pay_3.setChecked(true);
                 break;
             case R.id.btn_submit:                 //提交
 
+                if (orderBean == null){
+                    toast("非法方式");
+                    return;
+                }
+                if (cb_pay_1.isChecked()){           //支付宝支付
+                    goToPayByAliPay(orderBean.getOrderName(),orderId,orderBean.getPayMoney(),"0",NOTIFYURL,ShareData.getShareStringData(ShareData.USER_ID));
+                }else if (cb_pay_2.isChecked()){     //微信支付
+                    goToPayByWechat(orderBean.getOrderName(),orderId,orderBean.getPayMoney(),"0",NOTIFYURL,ShareData.getShareStringData(ShareData.USER_ID));
+                }else if (cb_pay_3.isChecked()){     //微币支付
+                    goToPayByCoin();
+                }else{
+                    return;
+                }
 
                 break;
             default:
@@ -195,7 +227,7 @@ public class PayActivity extends BaseActivity {
             case Task.GET_ORDER_DES:
                 if (handlerRequestErr(data)) {
                     orderBean = (OrderBean) data.getBody();
-                    long payMoney = orderBean.getPayMoney()/100;
+                    float payMoney = (float)orderBean.getPayMoney()/100;
                     tv_money_num.setText("¥"+formatString(payMoney));
                 }
                 break;
@@ -210,7 +242,7 @@ public class PayActivity extends BaseActivity {
         }
     }
 
-    public String formatString(long data) {
+    public String formatString(float data) {
         DecimalFormat df = new DecimalFormat("0.00");
         return df.format(data);
     }

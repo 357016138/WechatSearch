@@ -21,7 +21,6 @@ import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.service.MessageEvent;
 import com.jieyue.wechat.search.ui.activity.ConsultPriceActivity;
-import com.jieyue.wechat.search.ui.activity.PreferenceProductActivity;
 import com.jieyue.wechat.search.ui.activity.PriceBillDetailActivity;
 import com.jieyue.wechat.search.ui.activity.RecommendProductActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
@@ -45,9 +44,9 @@ import butterknife.Unbinder;
 import okhttp3.Call;
 
 /**
- * 询价订单（全部）
+ * 询价订单（询价中）
  */
-public class PriceBillAllFragment extends BaseFragment implements OperateListener {
+public class BillUnpaidFragment extends BaseFragment implements OperateListener {
 
     private Unbinder unbinder;
     @BindView(R.id.no_data_refreshLayout)
@@ -59,13 +58,14 @@ public class PriceBillAllFragment extends BaseFragment implements OperateListene
     @BindView(R.id.fragmentBill_recyclerview)
     RecyclerView fragmentBill_recyclerview;
 
+    private List<PriceBillBean.InquiryList> inquiryList;
     private PriceBillAdapter adapter;
     private int curPage = 1;             // 当前页码
     private final int PAGESIZE = 15;// 每页条数
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_price_bill_all, container, false);
+        View view = inflater.inflate(R.layout.fragment_price_bill_progress, container, false);
         initView(view);
         initData();
         return view;
@@ -75,11 +75,9 @@ public class PriceBillAllFragment extends BaseFragment implements OperateListene
      * 初始化控件 用ButterKnife 简约
      */
     private void initView(View view) {
-
         //一定要解绑 在onDestroyView里
         unbinder = ButterKnife.bind(this, view);
         EventBus.getDefault().register(this);
-//        fragmentBill_refreshLayout.autoRefresh();
         //recyclerview 布局设置start
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayout.VERTICAL);
@@ -88,7 +86,7 @@ public class PriceBillAllFragment extends BaseFragment implements OperateListene
         fragmentBill_recyclerview.addItemDecoration(new RecyclerViewItemDecoration(spacingInPixels));
         //recyclerview 布局设置end
 
-        adapter = new PriceBillAdapter(getActivity(), 0);
+        adapter = new PriceBillAdapter(getActivity(), 1);
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
 
@@ -99,7 +97,7 @@ public class PriceBillAllFragment extends BaseFragment implements OperateListene
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "0", false);
+                getListData(curPage, PAGESIZE, "1", false);
             }
         });
 
@@ -109,9 +107,8 @@ public class PriceBillAllFragment extends BaseFragment implements OperateListene
         fragmentBill_refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-
                 curPage += 1;
-                getListData(curPage, PAGESIZE, "0", false);
+                getListData(curPage, PAGESIZE, "1", false);
             }
         });
 
@@ -126,24 +123,16 @@ public class PriceBillAllFragment extends BaseFragment implements OperateListene
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "0", false);
+                getListData(curPage, PAGESIZE, "1", false);
             }
         });
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
-
-        getListData(curPage, PAGESIZE, "0", true);
-
+        getListData(curPage, PAGESIZE, "1", true);
     }
 
     @Override
@@ -167,6 +156,7 @@ public class PriceBillAllFragment extends BaseFragment implements OperateListene
         params.add("userId", UserManager.getUserId());
         params.add("curPage", curPage);
         params.add("pageSize", pageSize);
+        params.add("inquiryStatus", inquiryStatus);
         startRequest(Task.PRICE_BILL, params, PriceBillBean.class, showDialog);
     }
 
@@ -196,10 +186,10 @@ public class PriceBillAllFragment extends BaseFragment implements OperateListene
                         adapter.getData().addAll(dataListProm);
                     }
                     //如果返回数据不够10条，就不能继续上拉加载更多
-                    fragmentBill_refreshLayout.setEnableLoadmore(dataListProm.size() >= PAGESIZE);
                     if (priceBillBean.getTotalPages() == 1 || dataListProm.size() >= PAGESIZE) {
                         fragmentBill_refreshLayout.setEnableLoadmore(false);
                     }
+
                     adapter.notifyDataSetChanged();
 
                 } else {
@@ -225,19 +215,15 @@ public class PriceBillAllFragment extends BaseFragment implements OperateListene
 
     @Override
     public void operate(String operateType, Object bean) {
-        Bundle bd = new Bundle();
-        PriceBillBean.InquiryList inquiryBean = (PriceBillBean.InquiryList) bean;
-        bd.putString("inquiryCode", inquiryBean.getInquiryCode());
-        bd.putString("isRecProduct", inquiryBean.getIsRecProduct());
         switch (operateType) {
             case "1":              //条目点击事件
+                Bundle bd = new Bundle();
+                PriceBillBean.InquiryList inquiryBean = (PriceBillBean.InquiryList) bean;
+                bd.putString("inquiryCode", inquiryBean.getInquiryCode());
                 goPage(PriceBillDetailActivity.class, bd);
                 break;
             case "2":           //推荐产品
-                goPage(RecommendProductActivity.class, bd);
-                break;
-            case "3":           //优选产品
-                goPage(PreferenceProductActivity.class, bd);
+                goPage(RecommendProductActivity.class);
                 break;
             default:
                 break;
@@ -249,11 +235,8 @@ public class PriceBillAllFragment extends BaseFragment implements OperateListene
         if (event.getTag() == Constants.GET_REFRESH_ORDER_LIST) {
             if (UserUtils.isLogin()) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "0", false);
+                getListData(curPage, PAGESIZE, "1", false);
             }
-
         }
     }
-
-
 }

@@ -37,7 +37,6 @@ import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.utils.DateUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.FileUtils;
-import com.jieyue.wechat.search.utils.StringUtils;
 import com.jieyue.wechat.search.utils.UserManager;
 import com.jieyue.wechat.search.view.wheelview.adapter.ArrayWheelAdapter;
 import com.jieyue.wechat.search.view.wheelview.widget.WheelView;
@@ -49,6 +48,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,12 +59,13 @@ import butterknife.OnClick;
 import okhttp3.Call;
 
 public class PublishWechatGroupActivity extends BaseActivity {
+
     @BindView(R.id.et_title)
     EditText et_title;
     @BindView(R.id.et_wechat_num)
     EditText et_wechat_num;
-    @BindView(R.id.et_category)
-    EditText et_category;
+    @BindView(R.id.tv_category)
+    TextView tv_category;
     @BindView(R.id.tv_address)
     TextView tv_address;
     @BindView(R.id.et_tag)
@@ -90,11 +93,24 @@ public class PublishWechatGroupActivity extends BaseActivity {
     private String coverImage ;     //封面图片地址
     private List<ProvinceBean> mProvinceList;        //省份列表
     private List<ProvinceBean.CityBean> mCityList;  //市或区列表
+    private List<String> mProvinceNameList = new ArrayList<>();
+
+    private HashMap<String, List<String>> mProvinceMap = new HashMap<String, List<String>>();
+
+
+
     private String mCurrentProvinceId;   //当前省份的id
     private String mCurrentCityId;      //当前市区的id
 
 
 
+    private List<CategoryBean> mCategoryList;
+    private List<CategoryBean.TwoLevelBean> mTwoLevelList;
+    private List<String> mCategoryNameList = new ArrayList<>();
+    private HashMap<String, List<String>> mCategoryMap = new HashMap<String, List<String>>();
+
+    private String mCurrentCategoryId;      //当前分类的id
+    private String mCurrentTwoLevelId;      //当前子分类的id
 
     @Override
     public void setContentLayout() {
@@ -125,17 +141,25 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
 
 
-    @OnClick({R.id.iv_group_qcode, R.id.iv_cover, R.id.btn_submit, R.id.ll_publish_address})
+    @OnClick({R.id.iv_group_qcode, R.id.iv_cover, R.id.btn_submit, R.id.ll_publish_address,R.id.ll_publish_category})
     @Override
     public void onClickEvent(View view) {
         Intent intent =null;
         switch (view.getId()) {
             case R.id.ll_publish_address:                 //选择城市
-                if (mProvinceList.size() == 0) {
+                if (mProvinceNameList.size() == 0) {
                     getAddressList("city.json",this);
                     return;
                 }
-                initDialog(mProvinceList);
+                initProvinceDialog(mProvinceNameList);
+                break;
+
+            case R.id.ll_publish_category:                 //选择分类
+                if (mCategoryNameList.size() == 0) {
+                    getCategoryList();
+                    return;
+                }
+                initCategoryDialog(mCategoryNameList);
                 break;
             case R.id.iv_group_qcode:             //微信群二维码图片地址
                 // 激活系统图库，选择一张图片
@@ -182,10 +206,10 @@ public class PublishWechatGroupActivity extends BaseActivity {
         String tag = et_tag.getText().toString().trim();
         String des = et_des.getText().toString().trim();
 
-        if (StringUtils.isEmpty(mCurrentProvinceId)||StringUtils.isEmpty(mCurrentCityId)){
-            toast("请选择地区");
-            return;
-        }
+//        if (StringUtils.isEmpty(mCurrentProvinceId)||StringUtils.isEmpty(mCurrentCityId)){
+//            toast("请选择地区");
+//            return;
+//        }
 
 
         RequestParams params = new RequestParams(UrlConfig.URL_PUBLISH_WECHAT_GROUP);
@@ -193,14 +217,14 @@ public class PublishWechatGroupActivity extends BaseActivity {
         params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
         params.add("groupName", title);
         params.add("groupImage", groupImage);
-        params.add("userImage", coverImage);
+        params.add("coverImage", coverImage);
         params.add("userWechat", wechat_num);
         params.add("tags", tag);
         params.add("description", des);
-        params.add("provinceId", "2");
-        params.add("cityId","54");
-        params.add("parentCategory", "1");
-        params.add("category","16");
+        params.add("provinceId", mCurrentProvinceId);
+        params.add("cityId",mCurrentCityId);
+        params.add("parentCategory", mCurrentCategoryId);
+        params.add("category",mCurrentTwoLevelId);
         startRequest(Task.PUBLISH_WECHAT_GROUP, params, DataBean.class);
 
     }
@@ -235,26 +259,40 @@ public class PublishWechatGroupActivity extends BaseActivity {
         super.onRefresh(call, tag, data);
         switch (tag) {
             case Task.PUBLISH_WECHAT_GROUP:
-                if (handlerRequestErr(data)) {
-                    //发布成功
+                if (handlerRequestErr(data)) {       //发布成功
+
                     DataBean dataBean = (DataBean) data.getBody();
                     String orderId = dataBean.getData();
                     Bundle bd = new Bundle();
                     bd.putString("orderId", orderId);
-                    goPage(PayActivity.class);
+                    goPage(PayActivity.class, bd);
+                    finish();
 
                 }
                 break;
-            case Task.GET_CATEGORY:     //获取分类类目
+            case Task.GET_CATEGORY:            //获取分类类目
                 if (handlerRequestErr(data)) {
-                    List<CategoryBean> categoryList = (List<CategoryBean>) data.getBody();
+                    mCategoryList = (List<CategoryBean>) data.getBody();
 
-                    toast(categoryList.size()+"");
+
+                    if (mCategoryList != null && mCategoryList.size() > 0) {
+
+                        for (int i = 0; i < mCategoryList.size(); i++) {
+                            mCategoryNameList.add(mCategoryList.get(i).getCategoryName());
+                            List<CategoryBean.TwoLevelBean> twoLevelList = mCategoryList.get(i).getTwoLevel();
+                            List<String> mTwoLeveNameList = new ArrayList<>();
+                            for (int j = 0; j < twoLevelList.size(); j++){
+                                mTwoLeveNameList.add(twoLevelList.get(j).getCategoryName());
+                            }
+                            mCategoryMap.put(mCategoryList.get(i).getCategoryName(),mTwoLeveNameList);
+
+                        }
+                    }
 
 
                 }
                 break;
-            case Task.UPLOAD_IMAGE:
+            case Task.UPLOAD_IMAGE:          //上传图片
                 if (handlerRequestErr(data)) {
 
                     DataBean dataBean = (DataBean) data.getBody();
@@ -418,54 +456,56 @@ public class PublishWechatGroupActivity extends BaseActivity {
             Type listType = new TypeToken<List<ProvinceBean>>() {}.getType();
             //这里的json是字符串类型 = jsonArray.toString();
             mProvinceList = new Gson().fromJson(stringBuilder.toString(), listType );
+
+
+        if (mProvinceList != null && mProvinceList.size() > 0) {
+
+            for (int i = 0; i < mProvinceList.size(); i++) {
+                mProvinceNameList.add(mProvinceList.get(i).getAreaName());
+                List<ProvinceBean.CityBean> cityList = mProvinceList.get(i).getCity();
+                List<String> mCityNameList = new ArrayList<>();
+                for (int j = 0; j < cityList.size(); j++){
+                    mCityNameList.add(cityList.get(j).getAreaName());
+                }
+                mProvinceMap.put(mProvinceList.get(i).getAreaName(),mCityNameList);
+
+            }
+        }
+
     }
+
 
     /**
      * 展示城市选择框
      * */
 
-    private void initDialog(List<ProvinceBean> mProvinceList) {
+    private void initProvinceDialog(List<String> mProvinceNameList) {
         final Dialog selectStoreDialog = new Dialog(this, R.style.bottom_dialog);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_regist_choose, null);
-        final WheelView wv_province = view.findViewById(R.id.wv_province);
-        final WheelView wv_city = view.findViewById(R.id.wv_city);
+        WheelView wv_province = view.findViewById(R.id.wv_province);
 
-        ProvinceArrayWheelAdapter adapter = new ProvinceArrayWheelAdapter(this);
-        adapter.setData(mProvinceList);
-        wv_province.setWheelAdapter(adapter);
-
-        CityArrayWheelAdapter mCityadapter = new CityArrayWheelAdapter(this);
-        wv_city.setWheelAdapter(mCityadapter);
-        //根据省份选择加载相应的市区
-        wv_province.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
-            @Override
-            public void onItemSelected(int position, Object o) {
-                ProvinceBean mProvinceBean = mProvinceList.get(position);
-                mCityList = mProvinceBean.getCity();
-                mCityadapter.setData(mCityList);
-
-
-            }
-        });
-
-        if (mProvinceList.size() >= 5) {
-            wv_province.setWheelSize(5);
-            wv_province.setSelection(3);
-        } else {
-            wv_province.setWheelSize(3);
-            wv_province.setSelection(2);
-        }
-        wv_province.setDrawSelectorOnTop(true);
-        wv_province.setSkin(WheelView.Skin.Holo); //设置背景颜色
-//        wv_city.setDrawSelectorOnTop(true);
-//        wv_city.setSkin(WheelView.Skin.Holo);
-        WheelView.WheelViewStyle style = new WheelView.WheelViewStyle();
-        style.holoBorderColor = getResources().getColor(R.color.color_CCCCCC);
-        style.textSize = 24;
-        style.selectedTextColor = getResources().getColor(R.color.color_374953);
-        style.textColor = getResources().getColor(R.color.color_6E757F);
+        wv_province.setWheelAdapter(new ArrayWheelAdapter(this));  //设置滚轮数据适配器s
+        wv_province.setSkin(WheelView.Skin.Holo);  //设置背景颜色
+        wv_province.setWheelData(mProvinceNameList); //设置滚轮数据
+        WheelView.WheelViewStyle style = new WheelView.WheelViewStyle(); //设置选中与未选中字体的样式
+        style.selectedTextSize = 20;
+        style.textSize = 16;
         wv_province.setStyle(style);
-//        wv_city.setStyle(style);
+
+        WheelView wv_city = view.findViewById(R.id.wv_city);
+        wv_city.setSkin(WheelView.Skin.Holo);
+        wv_city.setWheelAdapter(new ArrayWheelAdapter(this));
+        wv_city.setWheelData(mProvinceMap.get(mProvinceNameList.get(wv_province.getSelection())));
+        wv_city.setStyle(style);
+        wv_province.join(wv_city);            //连接副WheelView  市
+        wv_province.joinDatas(mProvinceMap); //副WheelView 市数据
+
+
+        wv_province.setWheelSize(5);
+        wv_province.setSelection(2);
+        wv_city.setWheelSize(5);
+        wv_city.setSelection(2);
+
         selectStoreDialog.setContentView(view);
         view.findViewById(R.id.bt_cancel).setOnClickListener(v -> selectStoreDialog.dismiss());
 
@@ -473,13 +513,13 @@ public class PublishWechatGroupActivity extends BaseActivity {
             //获得当前选择的省市位置
             int provincePosition = wv_province.getCurrentPosition();
             int cityPosition = wv_city.getCurrentPosition();
-           //根据位置取出实体类
+            //根据位置取出实体类
             ProvinceBean mCurrentProvinceBean = mProvinceList.get(provincePosition);
-            ProvinceBean.CityBean mCurrentCityBean = mCityList.get(cityPosition);
+            ProvinceBean.CityBean mCurrentCityBean = mCurrentProvinceBean.getCity().get(cityPosition);
 
             mCurrentProvinceId = mCurrentCityBean.getParentId();
             mCurrentCityId= mCurrentCityBean.getId();
-            tv_address.setText(mCurrentProvinceBean.getAreaName()+""+mCurrentCityBean.getAreaName());
+            tv_address.setText(mCurrentProvinceBean.getAreaName()+" "+mCurrentCityBean.getAreaName());
 
             selectStoreDialog.dismiss();
         });
@@ -499,5 +539,67 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
     }
 
+    /**
+     * 展示分类选择框
+     * */
+
+    private void initCategoryDialog(List<String> mCategoryNameList) {
+        final Dialog selectStoreDialog = new Dialog(this, R.style.bottom_dialog);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_regist_choose, null);
+        WheelView wv_province = view.findViewById(R.id.wv_province);
+
+        wv_province.setWheelAdapter(new ArrayWheelAdapter(this));  //设置滚轮数据适配器s
+        wv_province.setSkin(WheelView.Skin.Holo);  //设置背景颜色
+        wv_province.setWheelData(mCategoryNameList); //设置滚轮数据
+        WheelView.WheelViewStyle style = new WheelView.WheelViewStyle(); //设置选中与未选中字体的样式
+        style.selectedTextSize = 20;
+        style.textSize = 16;
+        wv_province.setStyle(style);
+
+        WheelView wv_city = view.findViewById(R.id.wv_city);
+        wv_city.setSkin(WheelView.Skin.Holo);
+        wv_city.setWheelAdapter(new ArrayWheelAdapter(this));
+        wv_city.setWheelData(mCategoryMap.get(mCategoryNameList.get(wv_province.getSelection())));
+        wv_city.setStyle(style);
+        wv_province.join(wv_city);            //连接副WheelView  市
+        wv_province.joinDatas(mCategoryMap); //副WheelView 市数据
+
+        wv_province.setWheelSize(5);
+        wv_province.setSelection(2);
+        wv_city.setWheelSize(5);
+        wv_city.setSelection(2);
+
+        selectStoreDialog.setContentView(view);
+        view.findViewById(R.id.bt_cancel).setOnClickListener(v -> selectStoreDialog.dismiss());
+
+        view.findViewById(R.id.bt_conform).setOnClickListener(v -> {
+            //获得当前选择的省市位置
+            int provincePosition = wv_province.getCurrentPosition();
+            int cityPosition = wv_city.getCurrentPosition();
+            //根据位置取出实体类
+            CategoryBean mCurrentProvinceBean = mCategoryList.get(provincePosition);
+            CategoryBean.TwoLevelBean mCurrentCityBean = mCurrentProvinceBean.getTwoLevel().get(cityPosition);
+
+            mCurrentCategoryId = mCurrentCityBean.getParentId();
+            mCurrentTwoLevelId= mCurrentCityBean.getId();
+            tv_category.setText(mCurrentProvinceBean.getCategoryName()+" "+mCurrentCityBean.getCategoryName());
+
+            selectStoreDialog.dismiss();
+        });
+        DisplayMetrics dm = new DisplayMetrics();
+        int height = dm.heightPixels;
+        Window window = selectStoreDialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        window.setWindowAnimations(R.style.bottom_dialog_window_style);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.x = 0;
+        lp.y = height;
+        lp.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        selectStoreDialog.setCanceledOnTouchOutside(false);
+        selectStoreDialog.show();
+
+    }
 
 }

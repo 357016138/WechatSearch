@@ -1,25 +1,17 @@
-package com.jieyue.wechat.search.ui.fragment;
+package com.jieyue.wechat.search.ui.activity;
 
-import android.content.Context;
-import android.graphics.Point;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.adapter.PriceBillPagerAdapter;
-import com.jieyue.wechat.search.common.BaseFragment;
-import com.jieyue.wechat.search.common.Constants;
-import com.jieyue.wechat.search.service.MessageEvent;
-import com.jieyue.wechat.search.utils.LogUtils;
-
-import org.greenrobot.eventbus.EventBus;
+import com.jieyue.wechat.search.common.BaseActivity;
+import com.jieyue.wechat.search.ui.fragment.BillAllFragment;
+import com.jieyue.wechat.search.ui.fragment.BillProgressFragment;
+import com.jieyue.wechat.search.ui.fragment.BillUnpaidFragment;
+import com.jieyue.wechat.search.ui.fragment.BillCompleteFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +19,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
-/**
- * 询价订单（全部、询价中、询价完成、询价终止）
- * Created by song on 2018/2/11
- */
-public class PriceBillFragment extends BaseFragment implements View.OnTouchListener {
+public class MyPublishListActivity extends BaseActivity {
 
-    private Unbinder unbinder;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
     @BindView(R.id.tv_all)
@@ -46,6 +32,7 @@ public class PriceBillFragment extends BaseFragment implements View.OnTouchListe
     TextView tv_complete;
     @BindView(R.id.tv_stop)
     TextView tv_stop;
+
 
     private List<Fragment> mFragments = new ArrayList<Fragment>();
     private BillAllFragment allFragment; // 全部
@@ -59,25 +46,27 @@ public class PriceBillFragment extends BaseFragment implements View.OnTouchListe
     public static final int STOP = 3;
     private int currentItem;
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_price_bill, container, false);
-        initView(view);
-        initData();
-        return view;
+    public void setContentLayout() {
+        setContentView(R.layout.activity_my_publish_list);
     }
 
-    /**
-     * 初始化控件 用ButterKnife 简约
-     */
-    private void initView(View view) {
-        //一定要解绑 在onDestroyView里
-        unbinder = ButterKnife.bind(this, view);
+    @Override
+    public void dealLogicBeforeInitView() {
 
-        allFragment = new BillAllFragment();                    //全部
-        progressFragment = new BillUnpaidFragment();          //待支付
-        completeFragment = new BillProgressFragment();        //审核中
-        stopFragment = new BillCompleteFragment();          //审核完成
+    }
+
+    @Override
+    public void initView() {
+        ButterKnife.bind(this);
+        topBar.setTitle("我的发布");
+        topBar.setLineVisible(true);
+
+        allFragment = new BillAllFragment();                     //全部
+        progressFragment = new BillUnpaidFragment();            //待支付
+        completeFragment = new BillProgressFragment();          //审核中
+        stopFragment = new BillCompleteFragment();            //审核完成
 
         mFragments.add(allFragment);
         mFragments.add(progressFragment);
@@ -87,18 +76,18 @@ public class PriceBillFragment extends BaseFragment implements View.OnTouchListe
         /**
          * 初始化Adapter
          */
-        PriceBillPagerAdapter mAdapter = new PriceBillPagerAdapter(getActivity().getSupportFragmentManager(), mFragments);
+        PriceBillPagerAdapter mAdapter = new PriceBillPagerAdapter(getSupportFragmentManager(), mFragments);
         viewpager.setOffscreenPageLimit(3);                               // 使ViewPager至少保持两个页面不被销毁
         viewpager.setAdapter(mAdapter);
         viewpager.setOnPageChangeListener(new MyOnPageChangeListener()); // 设置页面滑动监听
-        viewpager.setOnTouchListener(this);
+//        viewpager.setOnTouchListener(this);
+
+
+
     }
 
-    /**
-     * 初始化数据
-     */
-    private void initData() {
-        // tvTitle.setText("账单");
+    @Override
+    public void dealLogicAfterInitView() {
 
     }
 
@@ -132,9 +121,13 @@ public class PriceBillFragment extends BaseFragment implements View.OnTouchListe
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    public void OnTopLeftClick() {
+              finish();
+    }
+
+    @Override
+    public void OnTopRightClick() {
+
     }
 
     /***
@@ -159,40 +152,6 @@ public class PriceBillFragment extends BaseFragment implements View.OnTouchListe
             currentItem = index;
         }
     }
-
-    float startX;
-    float startY;
-    float endX;
-    float endY;
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                startX = event.getX();
-                startY = event.getY();
-                break;
-
-            case MotionEvent.ACTION_UP:
-                endX = event.getX();
-                endY = event.getY();
-                WindowManager windowManager = (WindowManager) getActivity().getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-                //获取屏幕的宽度
-                Point size = new Point();
-                windowManager.getDefaultDisplay().getSize(size);
-                int width = size.x;
-                LogUtils.e("currentItem=====" + currentItem + "startX=====" + startX + "endX=====" + endX + "width=====" + width);
-                //首先要确定的是，是否到了最后一页，然后判断是否向左滑动，并且滑动距离是否符合，我这里的判断距离是屏幕宽度的4分之一（这里可以适当控制）
-                if (currentItem == 3 && startX - endX > 0 && startX - endX >= (width / 5)) {
-                    LogUtils.e("进入了触摸");
-                    EventBus.getDefault().post(new MessageEvent(Constants.JUMP_TO_LOAN_LIST));
-                }
-                break;
-
-        }
-        return false;
-    }
-
     /***
      * 设置字体颜色
      */
@@ -232,5 +191,4 @@ public class PriceBillFragment extends BaseFragment implements View.OnTouchListe
         }
 
     }
-
 }

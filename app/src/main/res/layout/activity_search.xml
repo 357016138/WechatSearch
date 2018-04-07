@@ -1,10 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_F6F6F6"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/rl_search"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:padding="@dimen/dp_5"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/ic_back"/>
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:hint="搜索"
+            android:textColor="@color/color_666666"
+            android:textColorHint="@color/color_D6D3D3"
+            android:textCursorDrawable="@drawable/edittext_cursor_color"
+            android:cursorVisible="true"
+            android:maxLength="15"
+            android:singleLine="true"
+            android:ellipsize="start"
+            android:imeOptions="actionSearch"
+            android:background="@drawable/btn_mid_disable"/>
+
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/dp_5"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/ic_search"/>
+
+    </RelativeLayout>
+
+
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,18 +85,19 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="20dp"
                 android:paddingTop="20dp"
-                android:text="您还没有订单"
+                android:text="没有匹配的结果\n可更换关键词搜索"
                 android:textColor="@color/color_38415C"
+                android:gravity="center_horizontal"
                 android:textSize="@dimen/text_size_big" />
 
-            <Button
+        <!--    <Button
                 android:id="@+id/btn_apply"
                 android:layout_width="156dp"
                 android:layout_height="40dp"
                 android:background="@drawable/bg_repay"
                 android:text="去发布"
                 android:textColor="@color/color_0C9BFF"
-                android:textSize="@dimen/text_size_big" />
+                android:textSize="@dimen/text_size_big" />-->
         </LinearLayout>
         <com.scwang.smartrefresh.layout.footer.ClassicsFooter
             android:layout_width="match_parent"
@@ -82,5 +130,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
 
 </LinearLayout>

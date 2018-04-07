@@ -27,6 +27,7 @@ import com.jieyue.wechat.search.response.WhetherSetPaymentPasswordResponse;
 import com.jieyue.wechat.search.ui.activity.BankCardListActivity;
 import com.jieyue.wechat.search.ui.activity.BindBankCardActivity;
 import com.jieyue.wechat.search.ui.activity.LoginActivity;
+import com.jieyue.wechat.search.ui.activity.MyPublishListActivity;
 import com.jieyue.wechat.search.ui.activity.SetWithdrawPasswordActivity;
 import com.jieyue.wechat.search.ui.activity.SettingActivity;
 import com.jieyue.wechat.search.ui.activity.WithdrawDepositActivity;
@@ -190,7 +191,8 @@ public class MineFragment extends BaseFragment {
                 break;
 
             case R.id.ll_mine_4:        //资金管理
-                toast("敬请期待");
+                if (!isLogin()) return;
+                goPage(MyPublishListActivity.class);
                 break;
 
             case R.id.ll_mine_5:      //返佣管理

@@ -45,9 +45,9 @@ import butterknife.Unbinder;
 import okhttp3.Call;
 
 /**
- * 询价订单（完成）
+ * 询价订单（全部）
  */
-public class PriceBillCompleteFragment extends BaseFragment implements OperateListener {
+public class BillAllFragment extends BaseFragment implements OperateListener {
 
     private Unbinder unbinder;
     @BindView(R.id.no_data_refreshLayout)
@@ -59,10 +59,9 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
     @BindView(R.id.fragmentBill_recyclerview)
     RecyclerView fragmentBill_recyclerview;
 
-    private List<PriceBillBean.InquiryList> inquiryList;
     private PriceBillAdapter adapter;
-    private int curPage = 1;             //当前页码
-    private final int PAGESIZE = 15;//每页条数
+    private int curPage = 1;             // 当前页码
+    private final int PAGESIZE = 15;// 每页条数
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,9 +75,11 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
      * 初始化控件 用ButterKnife 简约
      */
     private void initView(View view) {
+
         //一定要解绑 在onDestroyView里
         unbinder = ButterKnife.bind(this, view);
         EventBus.getDefault().register(this);
+//        fragmentBill_refreshLayout.autoRefresh();
         //recyclerview 布局设置start
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayout.VERTICAL);
@@ -87,7 +88,7 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
         fragmentBill_recyclerview.addItemDecoration(new RecyclerViewItemDecoration(spacingInPixels));
         //recyclerview 布局设置end
 
-        adapter = new PriceBillAdapter(getActivity(), 2);
+        adapter = new PriceBillAdapter(getActivity(), 0);
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
 
@@ -98,7 +99,7 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "2", false);
+                getListData(curPage, PAGESIZE, "0", false);
             }
         });
 
@@ -108,8 +109,9 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
         fragmentBill_refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
+
                 curPage += 1;
-                getListData(curPage, PAGESIZE, "2", false);
+                getListData(curPage, PAGESIZE, "0", false);
             }
         });
 
@@ -124,16 +126,24 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "2", false);
+                getListData(curPage, PAGESIZE, "0", false);
             }
         });
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
-        getListData(curPage, PAGESIZE, "2", true);
+
+        getListData(curPage, PAGESIZE, "0", true);
+
     }
 
     @Override
@@ -157,7 +167,6 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
         params.add("userId", UserManager.getUserId());
         params.add("curPage", curPage);
         params.add("pageSize", pageSize);
-        params.add("inquiryStatus", inquiryStatus);
         startRequest(Task.PRICE_BILL, params, PriceBillBean.class, showDialog);
     }
 
@@ -187,10 +196,10 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
                         adapter.getData().addAll(dataListProm);
                     }
                     //如果返回数据不够10条，就不能继续上拉加载更多
+                    fragmentBill_refreshLayout.setEnableLoadmore(dataListProm.size() >= PAGESIZE);
                     if (priceBillBean.getTotalPages() == 1 || dataListProm.size() >= PAGESIZE) {
                         fragmentBill_refreshLayout.setEnableLoadmore(false);
                     }
-
                     adapter.notifyDataSetChanged();
 
                 } else {
@@ -199,7 +208,6 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
                     }
                 }
                 break;
-
             default:
                 break;
         }
@@ -220,19 +228,17 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
         Bundle bd = new Bundle();
         PriceBillBean.InquiryList inquiryBean = (PriceBillBean.InquiryList) bean;
         bd.putString("inquiryCode", inquiryBean.getInquiryCode());
+        bd.putString("isRecProduct", inquiryBean.getIsRecProduct());
         switch (operateType) {
             case "1":              //条目点击事件
                 goPage(PriceBillDetailActivity.class, bd);
                 break;
-
             case "2":           //推荐产品
                 goPage(RecommendProductActivity.class, bd);
                 break;
-
             case "3":           //优选产品
                 goPage(PreferenceProductActivity.class, bd);
                 break;
-
             default:
                 break;
         }
@@ -243,9 +249,11 @@ public class PriceBillCompleteFragment extends BaseFragment implements OperateLi
         if (event.getTag() == Constants.GET_REFRESH_ORDER_LIST) {
             if (UserUtils.isLogin()) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "2", false);
+                getListData(curPage, PAGESIZE, "0", false);
             }
+
         }
     }
+
 
 }

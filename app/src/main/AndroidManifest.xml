@@ -58,9 +58,8 @@
 
     <!-- 第三方支付 要求的权限 start -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
     <!-- 第三方支付 要求的权限 end -->
-
-
     <application
         android:name=".common.BaseApplication"
         android:allowBackup="true"
@@ -283,9 +282,12 @@
         <meta-data
             android:name="JPUSH_CHANNEL"
             android:value="developer-default" />
-        <meta-data
+        <!--
+            <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="38972926ef6ca4f4568f5024" /> <!-- 值来自开发者平台取得的AppKey -->
+            android:value="38972926ef6ca4f4568f5024" />
+        -->
+        <!-- 值来自开发者平台取得的AppKey -->
         <!-- 极光推送结束 -->
 
 
@@ -299,7 +301,9 @@
         <!-- 友盟统计结束 -->
 
         <activity android:name=".ui.activity.PublishWechatGroupActivity" />
-        <activity android:name=".ui.activity.PayActivity"></activity>
+        <activity android:name=".ui.activity.PayActivity" />
+        <activity android:name=".ui.activity.MyPublishListActivity" />
+        <activity android:name=".ui.activity.SearchActivity"></activity>
     </application>
 
 </manifest>

@@ -44,9 +44,9 @@ import butterknife.Unbinder;
 import okhttp3.Call;
 
 /**
- * 询价订单（询价中）
+ * 询价订单（询价终止）
  */
-public class PriceBillProgressFragment extends BaseFragment implements OperateListener {
+public class BillCompleteFragment extends BaseFragment implements OperateListener {
 
     private Unbinder unbinder;
     @BindView(R.id.no_data_refreshLayout)
@@ -86,7 +86,7 @@ public class PriceBillProgressFragment extends BaseFragment implements OperateLi
         fragmentBill_recyclerview.addItemDecoration(new RecyclerViewItemDecoration(spacingInPixels));
         //recyclerview 布局设置end
 
-        adapter = new PriceBillAdapter(getActivity(), 1);
+        adapter = new PriceBillAdapter(getActivity(), 3);
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
 
@@ -97,7 +97,7 @@ public class PriceBillProgressFragment extends BaseFragment implements OperateLi
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "1", false);
+                getListData(curPage, PAGESIZE, "3", false);
             }
         });
 
@@ -108,7 +108,7 @@ public class PriceBillProgressFragment extends BaseFragment implements OperateLi
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 curPage += 1;
-                getListData(curPage, PAGESIZE, "1", false);
+                getListData(curPage, PAGESIZE, "3", false);
             }
         });
 
@@ -123,7 +123,7 @@ public class PriceBillProgressFragment extends BaseFragment implements OperateLi
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "1", false);
+                getListData(curPage, PAGESIZE, "3", false);
             }
         });
     }
@@ -132,7 +132,7 @@ public class PriceBillProgressFragment extends BaseFragment implements OperateLi
      * 初始化数据
      */
     private void initData() {
-        getListData(curPage, PAGESIZE, "1", true);
+        getListData(curPage, PAGESIZE, "3", true);
     }
 
     @Override
@@ -198,6 +198,7 @@ public class PriceBillProgressFragment extends BaseFragment implements OperateLi
                     }
                 }
                 break;
+
             default:
                 break;
         }
@@ -215,16 +216,18 @@ public class PriceBillProgressFragment extends BaseFragment implements OperateLi
 
     @Override
     public void operate(String operateType, Object bean) {
+        Bundle bd = new Bundle();
+        PriceBillBean.InquiryList inquiryBean = (PriceBillBean.InquiryList) bean;
+        bd.putString("inquiryCode", inquiryBean.getInquiryCode());
         switch (operateType) {
             case "1":              //条目点击事件
-                Bundle bd = new Bundle();
-                PriceBillBean.InquiryList inquiryBean = (PriceBillBean.InquiryList) bean;
-                bd.putString("inquiryCode", inquiryBean.getInquiryCode());
                 goPage(PriceBillDetailActivity.class, bd);
                 break;
+
             case "2":           //推荐产品
-                goPage(RecommendProductActivity.class);
+                goPage(RecommendProductActivity.class, bd);
                 break;
+
             default:
                 break;
         }
@@ -235,8 +238,9 @@ public class PriceBillProgressFragment extends BaseFragment implements OperateLi
         if (event.getTag() == Constants.GET_REFRESH_ORDER_LIST) {
             if (UserUtils.isLogin()) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "1", false);
+                getListData(curPage, PAGESIZE, "3", false);
             }
         }
     }
+
 }

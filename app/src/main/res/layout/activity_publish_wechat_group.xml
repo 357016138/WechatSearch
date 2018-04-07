@@ -42,7 +42,7 @@
                 <EditText
                     android:id="@+id/et_title"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textSize="@dimen/sp_18"
                     android:textColor="@color/color_29354D"
                     android:background="@null"
@@ -85,7 +85,7 @@
                 <EditText
                     android:id="@+id/et_wechat_num"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textSize="@dimen/sp_16"
                     android:textColor="@color/color_29354D"
                     android:background="@null"
@@ -108,6 +108,7 @@
                 android:background="@color/color_E7E9EA"/>
 
             <LinearLayout
+                android:id="@+id/ll_publish_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/dp_20"
@@ -124,10 +125,10 @@
                     android:text="分类"
                     android:layout_gravity="center_vertical"/>
 
-                <EditText
-                    android:id="@+id/et_category"
+                <TextView
+                    android:id="@+id/tv_category"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textSize="@dimen/sp_16"
                     android:textColor="@color/color_29354D"
                     android:background="@null"
@@ -170,7 +171,7 @@
                 <TextView
                     android:id="@+id/tv_address"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textSize="@dimen/sp_16"
                     android:textColor="@color/color_29354D"
                     android:background="@null"
@@ -209,7 +210,7 @@
                 <EditText
                     android:id="@+id/et_tag"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textSize="@dimen/sp_16"
                     android:textColor="@color/color_29354D"
                     android:background="@null"

@@ -18,7 +18,9 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import java.lang.reflect.Method;
 import java.net.Inet4Address;
@@ -167,6 +169,16 @@ public class DeviceUtils {
 //            }
 //        }
         return deviceId;
+    }
+
+    /**
+     * EditText获取焦点并显示软键盘
+     */
+    public static void showSoftInputFromWindow(Activity activity, EditText editText) {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     /**

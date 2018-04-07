@@ -21,6 +21,7 @@ import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.service.MessageEvent;
 import com.jieyue.wechat.search.ui.activity.ConsultPriceActivity;
+import com.jieyue.wechat.search.ui.activity.PreferenceProductActivity;
 import com.jieyue.wechat.search.ui.activity.PriceBillDetailActivity;
 import com.jieyue.wechat.search.ui.activity.RecommendProductActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
@@ -44,9 +45,9 @@ import butterknife.Unbinder;
 import okhttp3.Call;
 
 /**
- * 询价订单（询价终止）
+ * 询价订单（完成）
  */
-public class PriceBillStopFragment extends BaseFragment implements OperateListener {
+public class BillProgressFragment extends BaseFragment implements OperateListener {
 
     private Unbinder unbinder;
     @BindView(R.id.no_data_refreshLayout)
@@ -60,8 +61,8 @@ public class PriceBillStopFragment extends BaseFragment implements OperateListen
 
     private List<PriceBillBean.InquiryList> inquiryList;
     private PriceBillAdapter adapter;
-    private int curPage = 1;             // 当前页码
-    private final int PAGESIZE = 15;// 每页条数
+    private int curPage = 1;             //当前页码
+    private final int PAGESIZE = 15;//每页条数
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,7 +87,7 @@ public class PriceBillStopFragment extends BaseFragment implements OperateListen
         fragmentBill_recyclerview.addItemDecoration(new RecyclerViewItemDecoration(spacingInPixels));
         //recyclerview 布局设置end
 
-        adapter = new PriceBillAdapter(getActivity(), 3);
+        adapter = new PriceBillAdapter(getActivity(), 2);
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
 
@@ -97,7 +98,7 @@ public class PriceBillStopFragment extends BaseFragment implements OperateListen
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "3", false);
+                getListData(curPage, PAGESIZE, "2", false);
             }
         });
 
@@ -108,7 +109,7 @@ public class PriceBillStopFragment extends BaseFragment implements OperateListen
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 curPage += 1;
-                getListData(curPage, PAGESIZE, "3", false);
+                getListData(curPage, PAGESIZE, "2", false);
             }
         });
 
@@ -123,7 +124,7 @@ public class PriceBillStopFragment extends BaseFragment implements OperateListen
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "3", false);
+                getListData(curPage, PAGESIZE, "2", false);
             }
         });
     }
@@ -132,7 +133,7 @@ public class PriceBillStopFragment extends BaseFragment implements OperateListen
      * 初始化数据
      */
     private void initData() {
-        getListData(curPage, PAGESIZE, "3", true);
+        getListData(curPage, PAGESIZE, "2", true);
     }
 
     @Override
@@ -228,6 +229,10 @@ public class PriceBillStopFragment extends BaseFragment implements OperateListen
                 goPage(RecommendProductActivity.class, bd);
                 break;
 
+            case "3":           //优选产品
+                goPage(PreferenceProductActivity.class, bd);
+                break;
+
             default:
                 break;
         }
@@ -238,7 +243,7 @@ public class PriceBillStopFragment extends BaseFragment implements OperateListen
         if (event.getTag() == Constants.GET_REFRESH_ORDER_LIST) {
             if (UserUtils.isLogin()) {
                 curPage = 1;
-                getListData(curPage, PAGESIZE, "3", false);
+                getListData(curPage, PAGESIZE, "2", false);
             }
         }
     }

@@ -56,8 +56,10 @@ public interface UrlConfig {
     String URL_PAY_BY_COIN = URL + "/order/pay/self.json";
     //获取分类类目
     String URL_GET_CATEGORY = URL + "/category/all.json";
-
-
+    //获取搜索列表
+    String URL_GET_SEARCH_LIST = URL + "/search/group.json";
+    //获取首页最新列表
+    String URL_GET_NEW_DATA_LIST = URL + "/search/group/new.json";
 
 
 
