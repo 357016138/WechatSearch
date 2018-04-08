@@ -27,7 +27,7 @@ public class ConfigUtils {
     public static String getH5Ip() {
         switch (configType) {
             case DEV:
-                return "http://172.18.101.14";
+                return "http://140.143.167.122";
             case CS:
                 return "http://172.18.101.14";
             case UAT:

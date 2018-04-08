@@ -66,7 +66,7 @@ public class DownloadService extends IntentService {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "");
-        builder.setTicker("蜗牛好房正在下载");
+        builder.setTicker("微信搜索正在下载");
         builder.setContentTitle("下载");
         builder.setContentText("正在下载");
         builder.setSmallIcon(R.mipmap.ic_launcher);

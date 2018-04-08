@@ -28,14 +28,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <com.youth.banner.Banner
                     android:id="@+id/banner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:layout_alignParentTop="true"
-                    android:src="@drawable/icon_banner"/>
+                    android:layout_height="240dp"
+                    app:is_auto_play="true"/>
 
 
                 <android.support.v7.widget.RecyclerView

@@ -474,7 +474,6 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
     }
 
-
     /**
      * 展示城市选择框
      * */

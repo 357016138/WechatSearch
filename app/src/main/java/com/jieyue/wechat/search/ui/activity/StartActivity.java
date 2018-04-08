@@ -102,7 +102,7 @@ public class StartActivity extends BaseActivity {
     @Override
     public void dealLogicAfterInitView() {
         nextPage();
-//        getNewVersion();   //查看是否有新版本
+        getNewVersion();   //查看是否有新版本
     }
 
     @Override
@@ -123,7 +123,7 @@ public class StartActivity extends BaseActivity {
     private void getNewVersion() {
         RequestParams params = new RequestParams(UrlConfig.URL_GET_NEW_VERSION);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-        params.add("appVersion", DeviceUtils.getCurrentAppVersionCode(this));
+        params.add("version", DeviceUtils.getCurrentAppVersionCode(this));
         params.add("operatSystem", "android");
         startRequest(Task.NEW_VERSION, params, VersionBean.class, false);
     }
@@ -159,11 +159,9 @@ public class StartActivity extends BaseActivity {
             case KEY_NO_UPDATE:
                 mHandler.sendEmptyMessage(KEY_TO_MAIN);
                 break;
-
             case KEY_CAN_UPDATE:
                 showUpdate(versionBean, false);
                 break;
-
             case KEY_FORCE_UPDATE:
                 showUpdate(versionBean, true);
                 break;

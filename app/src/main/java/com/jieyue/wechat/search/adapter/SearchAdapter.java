@@ -67,6 +67,13 @@ public class SearchAdapter extends RecyclerView.Adapter {
               myViewHolder.tv_des.setText(description);
               myViewHolder.tv_tags.setText(tags);
 
+            myViewHolder.rl_price_bill_item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.operate("1", productBean.getUniqueId());
+                }
+            });
+
         }
     }
 
@@ -81,6 +88,7 @@ public class SearchAdapter extends RecyclerView.Adapter {
         private TextView tv_title;
         private TextView tv_des;
         private TextView tv_tags;
+        private RelativeLayout rl_price_bill_item;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -88,6 +96,8 @@ public class SearchAdapter extends RecyclerView.Adapter {
               tv_title = itemView.findViewById(R.id.tv_title);
               tv_des = itemView.findViewById(R.id.tv_des);
               tv_tags = itemView.findViewById(R.id.tv_tags);
+              rl_price_bill_item = itemView.findViewById(R.id.rl_price_bill_item);
+
 
         }
 

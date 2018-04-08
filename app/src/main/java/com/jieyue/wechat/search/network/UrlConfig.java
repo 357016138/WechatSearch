@@ -24,26 +24,20 @@ public interface UrlConfig {
 
     //注册
     String URL_REGISTER = URL + "/user/register.json";
-
     //登录
     String URL_LOGIN = URL + "/user/login.json";
-
     //版本更新接口
-    String URL_GET_NEW_VERSION = URL + "/loanApp/rest/goUpAPPVersion/v1/";
-
+    String URL_GET_NEW_VERSION = URL + "/version/new.json";
     //获取验证码（注册、密码找回、绑卡、设置支付密码）
     String URL_SIGN_IN_CODE = URL + "/user/registerCode.json";
-
     //忘记密码(重置)
     String URL_FORGET_PASSWORD = URL + "/user/forget/password.json";
     //修改密码
     String URL_UPDATE_PASSWORD = URL + "/user/update/password.json";
-
     //图片上传接口
     String URL_UPLOAD_IMAGE = URL + "/upload/qiuniuupload.json";
     //发布微信群信息
     String URL_PUBLISH_WECHAT_GROUP = URL + "/upload/groupInfo.json";
-
     //获得省级区域列表
     String URL_GET_PROVINCE_LIST = URL + "/area/province.json";
     //获得市级区域列表
@@ -60,6 +54,25 @@ public interface UrlConfig {
     String URL_GET_SEARCH_LIST = URL + "/search/group.json";
     //获取首页最新列表
     String URL_GET_NEW_DATA_LIST = URL + "/search/group/new.json";
+    //获取详情页数据
+    String URL_PRODUCT_DETAIL = URL + "/groupInfo/getById.json";
+    //增加商品浏览量
+    String URL_ADD_LOOK_COUNT = URL + "/exter/add/lookCount.json";
+    //获取banner信息
+    String URL_BANNER_DATA = URL + "/banner/get.json";
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

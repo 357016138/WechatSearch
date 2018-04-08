@@ -5,18 +5,15 @@ import java.io.Serializable;
 
 public class VersionBean implements Serializable {
 
-    /**
-     * appURL :
-     * forceState :
-     * newAppVersion :
-     * versionContent :
-     * versionName :
-     */
+    private String id ;
     private String appURL = "";
-    private String forceState = ""; // 强制升级（0-不升级； 1-非强制； 2-强制）
-    private String newAppVersion = ""; // 最新版本号
-    private String versionContent = ""; //版本内容
-    private String versionName = ""; // 版本名称
+    private String forceState = "";      // 强制升级（0-不升级； 1-非强制； 2-强制）
+    private String newAppVersion = "";   // 最新版本号
+    private String versionContent = "";  //版本内容
+    private String versionName = "";     // 版本名称
+    private String updateDate = "";      // 更新日期
+    private String codeType = "";       //
+
 
     public String getAppURL() {
         return appURL;
@@ -58,4 +55,27 @@ public class VersionBean implements Serializable {
         this.versionName = versionName;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getCodeType() {
+        return codeType;
+    }
+
+    public void setCodeType(String codeType) {
+        this.codeType = codeType;
+    }
 }

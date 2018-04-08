@@ -59,6 +59,14 @@ public interface Task {
     int GET_SEARCH_LIST = 0X0025;
     //获取首页最新列表
     int GET_NEW_DATA_LIST = 0X0026;
+    //获取详情页数据
+    int PRODUCT_DETAIL = 0X0027;
+    //增加商品浏览量
+    int ADD_LOOK_COUNT = 0X0028;
+    //获取banner信息
+    int BANNER_DATA = 0X0029;
+
+
 
 
 
