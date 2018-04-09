@@ -1,6 +1,7 @@
 package com.jieyue.wechat.search.ui.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.adapter.SearchAdapter;
@@ -31,6 +33,7 @@ import com.jieyue.wechat.search.ui.activity.MsgNoticeActivity;
 import com.jieyue.wechat.search.ui.activity.ProductDetailActivity;
 import com.jieyue.wechat.search.ui.activity.SearchActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.StringUtils;
 import com.jieyue.wechat.search.utils.UserUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -38,6 +41,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
+import com.youth.banner.loader.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -94,17 +98,20 @@ public class HomeFragment extends BaseFragment implements OperateListener {
         activity = getActivity();
         EventBus.getDefault().register(this);
 
+        //recyclerview 布局设置start
         LinearLayoutManager llm = new LinearLayoutManager(activity);
         llm.setOrientation(LinearLayout.VERTICAL);
         fragmentBill_recyclerview.setLayoutManager(llm);
-//        int spacingInPixels = 12;
-//        fragmentBill_recyclerview.addItemDecoration(new RecyclerViewItemDecoration(spacingInPixels));
         //recyclerview 布局设置end
 
         adapter = new SearchAdapter(activity, 0);
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
 
+        //设置轮播图配置
+        banner.setImageLoader(new GlideImageLoader());
+        banner.setDelayTime(2000);//设置轮播时间
+        banner.start();
 
         /**
          * 下拉刷新
@@ -127,16 +134,6 @@ public class HomeFragment extends BaseFragment implements OperateListener {
             }
         });
 
-
-//
-//        scrollview.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//
-//            }
-//        });
-
-
     }
 
     /**
@@ -157,12 +154,7 @@ public class HomeFragment extends BaseFragment implements OperateListener {
             case R.id.rl_msg:
                 if (!isLogin()) return;
                 goPage(MsgNoticeActivity.class);
-//                goPage(PayActivity.class);
                 break;
-//            case R.id.tv_consult_price:
-//                if (!isLogin()) return;
-//                goPage(ConsultPriceActivity.class);
-//                break;
             default:
                 break;
         }
@@ -230,19 +222,11 @@ public class HomeFragment extends BaseFragment implements OperateListener {
 
                 }
                 break;
-            case Task.BANNER_DATA:
+            case Task.BANNER_DATA:             //轮播图数据
                 if (handlerRequestErr(data)) {
                     List<BannerBean> bannerBeanList = (List<BannerBean>) data.getBody();
                     if (bannerBeanList != null&& bannerBeanList.size() > 0) {
-                        List<String> bannerList = new ArrayList<>();
-                        for(BannerBean bannerItem : bannerBeanList) {
-                            if(bannerItem != null) {
-                                bannerList.add(bannerItem.getImageUrl());
-                            }
-                        }
-                        banner.update(bannerList);
-//                        BANNER_ITEMS.clear();
-//                        BANNER_ITEMS.addAll(bannerBeanList);
+                        banner.update(bannerBeanList);
                         banner.setOnBannerListener(new OnBannerListener() {
                             @Override
                             public void OnBannerClick(int position) {
@@ -259,6 +243,21 @@ public class HomeFragment extends BaseFragment implements OperateListener {
             default:
                 break;
 
+        }
+    }
+
+    /**
+     * 轮播图图片适配器
+     * */
+    public class GlideImageLoader extends ImageLoader {
+        @Override
+        public void displayImage(Context context, Object path, ImageView imageView) {
+            String imgUrl = ((BannerBean) path).getImageUrl();
+            if(StringUtils.isEmpty(imgUrl))
+                Glide.with(context).load(R.drawable.icon_banner_default).into(imageView);
+            else
+                Glide.with(context).load(imgUrl).into(imageView);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         }
     }
 
@@ -288,21 +287,6 @@ public class HomeFragment extends BaseFragment implements OperateListener {
         }
     }
 
-    public static class BannerItem {
-
-        public String url;
-        public String title;
-        public String linkUrl;
-
-        public BannerItem() {
-        }
-
-        public BannerItem(String title, String url, String linkUrl) {
-            this.url = url;
-            this.title = title;
-            this.linkUrl = linkUrl;
-        }
-    }
     @Override
     public void onStart() {
         super.onStart();
