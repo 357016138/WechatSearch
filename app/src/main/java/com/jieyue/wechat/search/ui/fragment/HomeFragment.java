@@ -33,8 +33,10 @@ import com.jieyue.wechat.search.ui.activity.MsgNoticeActivity;
 import com.jieyue.wechat.search.ui.activity.ProductDetailActivity;
 import com.jieyue.wechat.search.ui.activity.SearchActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.LogUtils;
 import com.jieyue.wechat.search.utils.StringUtils;
 import com.jieyue.wechat.search.utils.UserUtils;
+import com.jieyue.wechat.search.view.MyScrollView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -60,7 +62,7 @@ import okhttp3.Call;
  * 首页
  * Created by song on 2018/1/30.
  */
-public class HomeFragment extends BaseFragment implements OperateListener {
+public class HomeFragment extends BaseFragment implements OperateListener,MyScrollView.OnScrollListener {
     Unbinder unbinder;
     @BindView(R.id.iv_msg_new)
     ImageView iv_new_msg;
@@ -71,7 +73,7 @@ public class HomeFragment extends BaseFragment implements OperateListener {
     @BindView(R.id.fragmentBill_recyclerview)
     RecyclerView fragmentBill_recyclerview;
     @BindView(R.id.scrollview)
-    ScrollView scrollview;
+    MyScrollView scrollview;
     @BindView(R.id.banner)
     Banner banner;
     private List<BannerBean> BANNER_ITEMS = new ArrayList<>();
@@ -107,6 +109,9 @@ public class HomeFragment extends BaseFragment implements OperateListener {
         adapter = new SearchAdapter(activity, 0);
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
+
+        rl_search.getBackground().setAlpha(0);
+        scrollview.setScrolListener(this);
 
         //设置轮播图配置
         banner.setImageLoader(new GlideImageLoader());
@@ -246,6 +251,8 @@ public class HomeFragment extends BaseFragment implements OperateListener {
         }
     }
 
+
+
     /**
      * 轮播图图片适配器
      * */
@@ -273,6 +280,9 @@ public class HomeFragment extends BaseFragment implements OperateListener {
         }
     }
 
+    /**
+     * 列表布局的回调
+     * */
     @Override
     public void operate(String operateType, Object str) {
         Bundle bd = new Bundle();
@@ -284,6 +294,21 @@ public class HomeFragment extends BaseFragment implements OperateListener {
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * Scroll 滑动距离的回调
+     * */
+    @Override
+    public void onScroll(int scrollY) {
+        LogUtils.e(scrollY+"");
+        if(scrollY < 100){
+            rl_search.getBackground().setAlpha(0);
+        }else if(scrollY >= 100 && scrollY < 860){
+            rl_search.getBackground().setAlpha((scrollY-100)/3);
+        }else{
+            rl_search.getBackground().setAlpha(255);
         }
     }
 

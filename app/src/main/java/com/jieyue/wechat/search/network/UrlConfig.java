@@ -55,7 +55,7 @@ public interface UrlConfig {
     //获取首页最新列表
     String URL_GET_NEW_DATA_LIST = URL + "/search/group/new.json";
     //获取详情页数据
-    String URL_PRODUCT_DETAIL = URL + "/groupInfo/getById.json";
+    String URL_PRODUCT_DETAIL = URL + "/group/get/id.json";
     //增加商品浏览量
     String URL_ADD_LOOK_COUNT = URL + "/exter/add/lookCount.json";
     //获取banner信息

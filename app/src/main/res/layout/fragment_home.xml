@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:srlEnableAutoLoadmore="true"
-    app:srlEnableOverScrollBounce="false"
-    android:orientation="vertical">
+    app:srlEnableOverScrollBounce="false">
     <!-- android:background="@color/color_4F83FE"-->
 
     <com.scwang.smartrefresh.layout.header.ClassicsHeader
@@ -16,9 +15,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <ScrollView
+        <com.jieyue.wechat.search.view.MyScrollView
             android:id="@+id/scrollview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,12 +43,13 @@
 
             </RelativeLayout>
 
-        </ScrollView>
+        </com.jieyue.wechat.search.view.MyScrollView>
 
         <RelativeLayout
             android:id="@+id/rl_search"
             android:layout_width="match_parent"
-            android:layout_height="70dp">
+            android:layout_height="70dp"
+            android:background="@color/white">
 
             <TextView
                 android:layout_width="match_parent"
