@@ -118,7 +118,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/card_holder_label"
                 android:textColor="@color/color_6E757F"
                 android:textSize="@dimen/text_size_mid" />
 
@@ -152,7 +151,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/identity_label"
                 android:textColor="@color/color_6E757F"
                 android:textSize="@dimen/text_size_mid" />
 
@@ -187,7 +185,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/bank_card_label"
                 android:textColor="@color/color_6E757F"
                 android:textSize="@dimen/text_size_mid" />
 
@@ -225,7 +222,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/bank_name"
                 android:textColor="@color/color_6E757F"
                 android:textSize="@dimen/text_size_mid" />
 
@@ -267,7 +263,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/mobile_number"
                 android:textColor="@color/color_6E757F"
                 android:textSize="@dimen/text_size_mid" />
 
@@ -303,7 +298,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/verification_code_label"
                 android:textColor="@color/color_6E757F"
                 android:textSize="@dimen/text_size_mid" />
 

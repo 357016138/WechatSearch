@@ -1,6 +1,7 @@
 package com.jieyue.wechat.search.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,8 +22,10 @@ import com.jieyue.wechat.search.network.RequestParams;
 import com.jieyue.wechat.search.network.ResultData;
 import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
+import com.jieyue.wechat.search.utils.CodeUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.PhoneNumberTextWatcher;
+import com.jieyue.wechat.search.utils.StringUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -53,7 +56,13 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
     ImageView iv_del_obtainCode;
     @BindView(R.id.ll_btn)
     LinearLayout ll_btn;
+    @BindView(R.id.iv_pic_code)
+    ImageView iv_pic_code;
+    @BindView(R.id.et_pic_code)
+    EditText et_pic_code;
 
+
+    private String picCode="";   //图片验证码
     private String userNameS;
     private String passwordS;
     private String userNameStr;
@@ -86,7 +95,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
 
     @Override
     public void dealLogicAfterInitView() {
-
+        createPicCode();
     }
 
     @Override
@@ -99,7 +108,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
 
     }
 
-    @OnClick({R.id.forgetPassWord_obtainCode, R.id.forgetPassWord_button, R.id.iv_del_username, R.id.iv_del_obtainCode})
+    @OnClick({R.id.iv_pic_code,R.id.forgetPassWord_obtainCode, R.id.forgetPassWord_button, R.id.iv_del_username, R.id.iv_del_obtainCode})
     @Override
     public void onClickEvent(View view) {
 
@@ -110,8 +119,18 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
             case R.id.iv_del_obtainCode:
                 forgetPassWord_code_input.setText("");
                 break;
+            case R.id.iv_pic_code:
+                createPicCode();     //生成图片验证码
+                break;
             case R.id.forgetPassWord_obtainCode:
-                obtainCode();
+                if (codeTime == 60){
+                    String mPicCode = et_pic_code.getText().toString().replace(" ","");
+                    if (StringUtils.isEmpty(mPicCode)||!picCode.equals(mPicCode)) {
+                        toast("请输入正确图片验证码");
+                        return;
+                    }
+                    obtainCode();
+                }
                 break;
             case R.id.forgetPassWord_button:
                 userNameStr = forgetPassWord_uerName.getText().toString().replace(" ","");
@@ -144,8 +163,17 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
                 break;
         }
     }
-
-
+    /**
+     * 创建图片验证码
+     * */
+    private void createPicCode(){
+        Bitmap bp = CodeUtils.getInstance().createBitmap();
+        iv_pic_code.setImageBitmap(bp);
+        picCode = CodeUtils.getInstance().getCode();
+    }
+    /**
+     * 发送验证码
+     * */
     private void obtainCode() {
 
         String userNameStr = forgetPassWord_uerName.getText().toString().replace(" ","");

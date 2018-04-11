@@ -304,7 +304,8 @@
         <activity android:name=".ui.activity.PayActivity" />
         <activity android:name=".ui.activity.MyPublishListActivity" />
         <activity android:name=".ui.activity.SearchActivity" />
-        <activity android:name=".ui.activity.ProductDetailActivity"></activity>
+        <activity android:name=".ui.activity.ProductDetailActivity" />
+        <activity android:name=".ui.activity.RechargeActivity"></activity>
     </application>
 
 </manifest>

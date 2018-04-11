@@ -28,6 +28,7 @@ import com.jieyue.wechat.search.ui.activity.BankCardListActivity;
 import com.jieyue.wechat.search.ui.activity.BindBankCardActivity;
 import com.jieyue.wechat.search.ui.activity.LoginActivity;
 import com.jieyue.wechat.search.ui.activity.MyPublishListActivity;
+import com.jieyue.wechat.search.ui.activity.RechargeActivity;
 import com.jieyue.wechat.search.ui.activity.SetWithdrawPasswordActivity;
 import com.jieyue.wechat.search.ui.activity.SettingActivity;
 import com.jieyue.wechat.search.ui.activity.WithdrawDepositActivity;
@@ -168,7 +169,7 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.mine_tv_capital:        //我的资产
 //                if (!isLogin()) return;
-//                goPage(MyCapitalActivity.class);
+                goPage(RechargeActivity.class);
                 break;
             case R.id.mine_iv_show:        //显示与隐藏资金
                 if (!isLogin()) return;

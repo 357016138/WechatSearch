@@ -55,12 +55,6 @@
     <string name="mine_14">我要吐槽</string>
     <!--我的界面end-->
 
-    <string name="card_holder_label">持卡人&#160;&#160;&#160;&#160;</string>
-    <string name="identity_label">身份证&#160;&#160;&#160;&#160;</string>
-    <string name="bank_card_label">银行卡号</string>
-    <string name="bank_name">开户行&#160;&#160;&#160;&#160;</string>
-    <string name="mobile_number">手机号&#160;&#160;&#160;&#160;</string>
-    <string name="verification_code_label">验证码&#160;&#160;&#160;&#160;</string>
     <!--我的资产界面start-->
     <string name="capital_1">我的资产</string>
     <string name="capital_2">资产总额(元)</string>
@@ -76,7 +70,18 @@
     <string name="price_bill_detail_bill_info">订单信息</string>
     <!--询价订单详情end-->
 
-    <string name="loan_user">借款人&#160;&#160;&#160;&#160;</string>
-    <string name="withdraw_deposit_amount">提现金额&#160;&#160;&#160;&#160;</string>
-    <string name="fetch_code">获取验证码</string>
+
+    <!--充值界面start-->
+    <string name="recharge_title">发布</string>
+    <string name="recharge_1">10</string>
+    <string name="recharge_2">30</string>
+    <string name="recharge_3">50</string>
+    <string name="recharge_4">80</string>
+    <string name="recharge_5">100</string>
+    <string name="recharge_6">150</string>
+    <string name="recharge_7">200</string>
+    <string name="recharge_8">300</string>
+    <!--充值界面end-->
+
+
 </resources>

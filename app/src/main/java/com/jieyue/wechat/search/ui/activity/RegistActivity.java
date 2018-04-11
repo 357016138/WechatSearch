@@ -1,6 +1,7 @@
 package com.jieyue.wechat.search.ui.activity;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -34,9 +35,12 @@ import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.service.MessageEvent;
 import com.jieyue.wechat.search.utils.AESUtils;
+import com.jieyue.wechat.search.utils.CodeUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.LogUtils;
 import com.jieyue.wechat.search.utils.Md5Util;
 import com.jieyue.wechat.search.utils.PhoneNumberTextWatcher;
+import com.jieyue.wechat.search.utils.StringUtils;
 import com.jieyue.wechat.search.utils.UserUtils;
 import com.jieyue.wechat.search.utils.UtilTools;
 import com.jieyue.wechat.search.view.wheelview.adapter.ArrayWheelAdapter;
@@ -90,9 +94,14 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
     ImageView iv_del_PassWord;
     @BindView(R.id.iv_del_inviter)
     ImageView iv_del_inviter;
+    @BindView(R.id.iv_pic_code)
+    ImageView iv_pic_code;
+    @BindView(R.id.et_pic_code)
+    EditText et_pic_code;
     @BindView(R.id.ll_btn)
     LinearLayout ll_btn;
 
+    private String picCode="";   //图片验证码
     private String phoneNum;//记录获取验证码的手机号和注册的手机号对比验证。
     private String userNameS;
     private String passwordS;
@@ -136,7 +145,7 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
 
     @Override
     public void dealLogicAfterInitView() {
-
+        createPicCode();
     }
 
     @Override
@@ -149,13 +158,22 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
 
     }
 
-    @OnClick({R.id.signup_obtainCode, R.id.signup_signupButton, R.id.signup_belowFiv, R.id.signup_go_login, R.id.rl_choses_city, R.id.iv_del_username, R.id.iv_del_obtainCode, R.id.iv_del_PassWord, R.id.iv_del_inviter})
+    @OnClick({R.id.iv_pic_code,R.id.signup_obtainCode, R.id.signup_signupButton, R.id.signup_belowFiv, R.id.signup_go_login, R.id.rl_choses_city, R.id.iv_del_username, R.id.iv_del_obtainCode, R.id.iv_del_PassWord, R.id.iv_del_inviter})
     @Override
     public void onClickEvent(View view) {
         switch (view.getId()) {
             case R.id.signup_obtainCode:
-                if (codeTime == 60)
+                if (codeTime == 60){
+                    String mPicCode = et_pic_code.getText().toString().replace(" ","");
+                    if (StringUtils.isEmpty(mPicCode)||!picCode.equals(mPicCode)) {
+                        toast("请输入正确图片验证码");
+                        return;
+                    }
                     obtainCode();
+                }
+                break;
+            case R.id.iv_pic_code:
+                createPicCode();     //生成图片验证码
                 break;
             case R.id.signup_signupButton:
                 signUpMethod();
@@ -186,6 +204,14 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
                 break;
         }
     }
+    /**
+     * 创建图片验证码
+     * */
+    private void createPicCode(){
+        Bitmap bp = CodeUtils.getInstance().createBitmap();
+        iv_pic_code.setImageBitmap(bp);
+        picCode = CodeUtils.getInstance().getCode();
+    }
 
     /**
      * 获取城市列表
@@ -200,7 +226,6 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
     }
 
     private void obtainCode() {
-
         String userNameStr = signup_uerName.getText().toString().replace(" ","");
         if (userNameStr == null || userNameStr.trim().length() == 0) {
             toast("请输入手机号码");

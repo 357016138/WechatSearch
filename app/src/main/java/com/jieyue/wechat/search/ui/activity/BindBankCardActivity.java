@@ -454,7 +454,7 @@ public class BindBankCardActivity extends BaseActivity {
                     tvCode.setText(time + "s");
                     time--;
                     if (time < 0) {
-                        tvCode.setText(weakReference.get().getResources().getString(R.string.fetch_code));
+//                        tvCode.setText(weakReference.get().getResources().getString(R.string.fetch_code));
                         isTimeing = false;
                         setObtainCodeColor();
                     } else {
