@@ -31,6 +31,7 @@ import com.jieyue.wechat.search.ui.activity.MyPublishListActivity;
 import com.jieyue.wechat.search.ui.activity.RechargeActivity;
 import com.jieyue.wechat.search.ui.activity.SetWithdrawPasswordActivity;
 import com.jieyue.wechat.search.ui.activity.SettingActivity;
+import com.jieyue.wechat.search.ui.activity.TestActivity;
 import com.jieyue.wechat.search.ui.activity.WithdrawDepositActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.LogUtils;
@@ -197,6 +198,7 @@ public class MineFragment extends BaseFragment {
                 break;
 
             case R.id.ll_mine_5:      //返佣管理
+//                goPage(TestActivity.class);
                 toast("敬请期待");
                 break;
 
