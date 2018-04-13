@@ -101,7 +101,7 @@ public class StartActivity extends BaseActivity {
 
     @Override
     public void dealLogicAfterInitView() {
-        nextPage();
+//        nextPage();
         getNewVersion();   //查看是否有新版本
     }
 
