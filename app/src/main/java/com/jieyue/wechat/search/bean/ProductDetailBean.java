@@ -36,7 +36,7 @@ public class ProductDetailBean implements Serializable {
     private String tags;                   //标签
     private String description;             //描述
     private String codeType;               //标示位
-    private String updateDate;              //最后变更时间时间戳
+    private long updateDate;              //最后变更时间时间戳
     private String province;                //一级区域名称
     private String city;                    // 二级区域名称
     private String parentCategory;          //一级类目名称
@@ -123,11 +123,11 @@ public class ProductDetailBean implements Serializable {
         this.codeType = codeType;
     }
 
-    public String getUpdateDate() {
+    public long getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(String updateDate) {
+    public void setUpdateDate(long updateDate) {
         this.updateDate = updateDate;
     }
 

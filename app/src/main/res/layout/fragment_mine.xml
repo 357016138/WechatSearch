@@ -97,7 +97,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="账户余额(元)"
+                            android:text="账户微币数(个)"
                             android:textColor="@color/color_999999"
                             android:textSize="@dimen/sp_14" />
 
@@ -107,57 +107,22 @@
                             android:layout_marginTop="@dimen/dp_10"
                             android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center_horizontal"
-                                android:orientation="vertical">
 
-                                <TextView
-                                    android:id="@+id/mine_tv_earned"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="--"
-                                    android:textColor="@color/color_3F3F3F"
-                                    android:textSize="@dimen/sp_20" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="已赚收益(元)"
-                                    android:textColor="@color/color_999999"
-                                    android:textSize="@dimen/sp_14" />
-
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center_horizontal"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/mine_tv_duein"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="--"
-                                    android:textColor="@color/color_3F3F3F"
-                                    android:textSize="@dimen/sp_20" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="待收收益(元)"
-                                    android:textColor="@color/color_999999"
-                                    android:textSize="@dimen/sp_14" />
-
-                            </LinearLayout>
+                            <TextView
+                                android:id="@+id/bt_manage_publish"
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/bg_login_button"
+                                android:gravity="center"
+                                android:text="管理我的发布"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_size_big_xx" />
 
                         </LinearLayout>
-
 
                     </LinearLayout>
 

@@ -139,6 +139,8 @@ public class HomeFragment extends BaseFragment implements OperateListener,MyScro
             }
         });
 
+
+
     }
 
     /**
@@ -237,7 +239,7 @@ public class HomeFragment extends BaseFragment implements OperateListener,MyScro
                             public void OnBannerClick(int position) {
                                 if(bannerBeanList.get(position).getPageUrl() != null){
 //                                    goWebPage("", bannerBeanList.get(position).getPageUrl());
-                                    goWebPage("", "https://www.baidu.com/");
+                                    goWebPage("", bannerBeanList.get(position).getPageUrl());
                                 }
                             }
                         });

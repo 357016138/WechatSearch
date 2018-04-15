@@ -62,7 +62,7 @@ public class SearchAdapter extends RecyclerView.Adapter {
               String description = productBean.getDescription();         //描述
               String tags = productBean.getTags();                       //tag
 
-              Glide.with(context).load(coverImage).into(myViewHolder.iv_cover).onLoadFailed(context.getResources().getDrawable(R.drawable.icon_load_img_fail));
+              Glide.with(context).load(coverImage).into(myViewHolder.iv_cover);
               myViewHolder.tv_title.setText(groupName);
               myViewHolder.tv_des.setText(description);
               myViewHolder.tv_tags.setText(tags);

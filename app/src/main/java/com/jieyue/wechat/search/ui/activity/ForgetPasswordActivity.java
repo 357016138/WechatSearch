@@ -198,6 +198,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
         RequestParams params = new RequestParams(UrlConfig.URL_SIGN_IN_CODE);
         params.add("phoneNumber", name);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+        params.add("sendType", 1);
         startRequest(Task.SIGN_UP_CODE, params, DataBean.class);
     }
 

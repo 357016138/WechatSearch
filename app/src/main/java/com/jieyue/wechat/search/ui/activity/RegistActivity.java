@@ -249,6 +249,7 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
         RequestParams params = new RequestParams(UrlConfig.URL_SIGN_IN_CODE);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
         params.add("phoneNumber", phoneStr);
+        params.add("sendType", 0);
         startRequest(Task.SIGN_UP_CODE, params, DataBean.class);
     }
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.bean.BindBankCardInfoBean;
+import com.jieyue.wechat.search.bean.CoinBean;
 import com.jieyue.wechat.search.bean.UserAccount;
 import com.jieyue.wechat.search.common.BaseFragment;
 import com.jieyue.wechat.search.common.ShareData;
@@ -69,6 +70,8 @@ public class MineFragment extends BaseFragment {
     LinearLayout ll_mine_logined;
     @BindView(R.id.ll_mine_login)
     LinearLayout ll_mine_login;
+    @BindView(R.id.bt_manage_publish)
+    TextView bt_manage_publish;
     @BindView(R.id.ll_mine_4)
     LinearLayout ll_mine_4;
     @BindView(R.id.ll_mine_5)
@@ -93,18 +96,12 @@ public class MineFragment extends BaseFragment {
     LinearLayout ll_mine_14;
     @BindView(R.id.mine_tv_capital)
     TextView mine_tv_capital;
-    @BindView(R.id.mine_tv_earned)
-    TextView mine_tv_earned;
-    @BindView(R.id.mine_tv_duein)
-    TextView mine_tv_duein;
     @BindView(R.id.mine_iv_show)
     ImageView mine_iv_show;
     @BindView(R.id.tv_mine_phone)
     TextView tv_mine_phone;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-
-    private UserAccount mUserAccount;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,7 +127,7 @@ public class MineFragment extends BaseFragment {
                 if (UserUtils.isLogin()){
                     //TODO   刷新用户账户金额信息
                     refreshLayout.finishRefresh();
-//                    getFeeAccountInformation();
+                    getTinyCoinNum();
                 }else{
                     refreshLayout.finishRefresh();
                 }
@@ -147,7 +144,7 @@ public class MineFragment extends BaseFragment {
             ll_mine_login.setVisibility(View.GONE);
             String phone = ShareData.getShareStringData(ShareData.USER_PHONE);
             tv_mine_phone.setText(StringUtils.getUserName(phone));
-//            getFeeAccountInformation();
+            getTinyCoinNum();
         } else {
             iv_mine_header.setVisibility(View.GONE);
             ll_mine_logined.setVisibility(View.GONE);
@@ -156,7 +153,7 @@ public class MineFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.iv_setting, R.id.btn_sign_out, R.id.mine_tv_capital, R.id.mine_iv_show, R.id.ll_mine_4, R.id.ll_mine_5, R.id.ll_mine_6, R.id.ll_mine_7, R.id.ll_mine_8, R.id.ll_mine_9, R.id.ll_mine_10, R.id.ll_mine_11, R.id.ll_mine_12, R.id.ll_mine_13, R.id.ll_mine_14})
+    @OnClick({R.id.iv_setting, R.id.btn_sign_out, R.id.mine_tv_capital,R.id.bt_manage_publish, R.id.mine_iv_show, R.id.ll_mine_4, R.id.ll_mine_5, R.id.ll_mine_6, R.id.ll_mine_7, R.id.ll_mine_8, R.id.ll_mine_9, R.id.ll_mine_10, R.id.ll_mine_11, R.id.ll_mine_12, R.id.ll_mine_13, R.id.ll_mine_14})
     @Override
     public void onClickEvent(View view) {
         switch (view.getId()) {
@@ -172,6 +169,10 @@ public class MineFragment extends BaseFragment {
 //                if (!isLogin()) return;
                 goPage(RechargeActivity.class);
                 break;
+            case R.id.bt_manage_publish:        //我的发布
+                if (!isLogin()) return;
+                goPage(MyPublishListActivity.class);
+                break;
             case R.id.mine_iv_show:        //显示与隐藏资金
                 if (!isLogin()) return;
                 if (ShareData.getShareBooleanData(ShareData.SHOW_AMOUNT)){
@@ -186,8 +187,6 @@ public class MineFragment extends BaseFragment {
                     mine_iv_show.setImageResource(R.drawable.icon_mine_2_2);
                 } else {
                     mine_tv_capital.setText("****");
-                    mine_tv_earned.setText("****");
-                    mine_tv_duein.setText("****");
                     mine_iv_show.setImageResource(R.drawable.icon_mine_2_1);
                 }
                 break;
@@ -253,6 +252,17 @@ public class MineFragment extends BaseFragment {
         }
     }
 
+
+    /***
+     * 查询微币数量
+     * */
+    private void getTinyCoinNum() {
+        RequestParams params = new RequestParams(UrlConfig.URL_GET_TINY_COIN_NUM);
+        params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
+        params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
+        startRequest(Task.GET_TINY_COIN_NUM, params, CoinBean.class);
+
+    }
     private void getFeeAccountInformation(){
         RequestParams params = new RequestParams(UrlConfig.URL_QUERY_RETURN_FEE_ACCOUNT);
         params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
@@ -350,7 +360,6 @@ public class MineFragment extends BaseFragment {
                     if (response.getIsPayPass().equals("1")) {
                         Bundle bundle = new Bundle();
                         bundle.putString("balanceOfAccount", mine_tv_capital.getText().toString());
-                        bundle.putDouble("balanceValue", mUserAccount.getAccountBalance());
                         goPage(WithdrawDepositActivity.class, bundle);
                     } else {
                         showVerificationDialog("您需要先设置支付密码才可提现", 2);
@@ -358,21 +367,15 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
 
-            case Task.QUERY_RETURN_FEE_ACCOUNT:
+            case Task.GET_TINY_COIN_NUM:
                 refreshLayout.finishRefresh();
                 if (handlerRequestErr(data)){
-                    mUserAccount = (UserAccount)data.getBody();
+                    //获取微币数量
+                    CoinBean coinBean = (CoinBean) data.getBody();
                     if (!ShareData.getShareBooleanData(ShareData.SHOW_AMOUNT)){
-                        mine_tv_capital.setText(formatString(mUserAccount.getAccountBalance()));
-                        double accountBalance = mUserAccount.getAccountBalance();
-                        mine_tv_capital.setText(formatString(accountBalance));
-                        mine_tv_earned.setText(formatString(mUserAccount.getTotalReturnFee()));
-                        mine_tv_duein.setText(formatString(mUserAccount.getAmountToReturn()));
-
+                        mine_tv_capital.setText(coinBean.getVcoin());
                     } else {
                         mine_tv_capital.setText("****");
-                        mine_tv_earned.setText("****");
-                        mine_tv_duein.setText("****");
                     }
                 }
                 break;

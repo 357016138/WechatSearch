@@ -1,5 +1,9 @@
 package com.jieyue.wechat.search.ui.activity;
 
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.bean.ProductDetailBean;
 import com.jieyue.wechat.search.common.BaseActivity;
@@ -14,11 +19,13 @@ import com.jieyue.wechat.search.network.RequestParams;
 import com.jieyue.wechat.search.network.ResultData;
 import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
+import com.jieyue.wechat.search.utils.DateUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.UserManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.Call;
 
 
@@ -31,15 +38,20 @@ public class ProductDetailActivity extends BaseActivity {
     private String uniqueId;
     @BindView(R.id.iv_pic1)
     ImageView iv_pic1;
+    @BindView(R.id.tv_detail_title)
+    TextView tv_detail_title;
     @BindView(R.id.tv_detail_des)
     TextView tv_detail_des;
+    @BindView(R.id.tv_detail_look)
+    TextView tv_detail_look;
+    @BindView(R.id.tv_detail_time)
+    TextView tv_detail_time;
     @BindView(R.id.tv_detail_category)
     TextView tv_detail_category;
     @BindView(R.id.tv_detail_address)
     TextView tv_detail_address;
     @BindView(R.id.tv_detail_tag)
     TextView tv_detail_tag;
-
 
 
 
@@ -58,7 +70,7 @@ public class ProductDetailActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
-        topBar.setTitle("产品详情");
+        topBar.setTitle("详情");
         topBar.setLineVisible(true);
     }
 
@@ -68,8 +80,18 @@ public class ProductDetailActivity extends BaseActivity {
         addLookCount(uniqueId);
     }
 
+    @OnClick({R.id.tv_add})
     @Override
     public void onClickEvent(View view) {
+
+        switch (view.getId()) {
+            case R.id.tv_add:                //跳转到微信
+                toWeChatScanDirect();
+                break;
+            default:
+                break;
+
+        }
 
     }
 
@@ -140,10 +162,46 @@ public class ProductDetailActivity extends BaseActivity {
      * */
     private void updateDetailInfo(ProductDetailBean dataBean) {
 
+        tv_detail_title.setText(dataBean.getGroupName());
+        tv_detail_des.setText(dataBean.getDescription());
+        tv_detail_look.setText(dataBean.getLookCount()+" 个关注");
+        tv_detail_time.setText("发布于"+ DateUtils.formatDate(dataBean.getUpdateDate()));
+        tv_detail_category.setText(dataBean.getParentCategory()+" "+dataBean.getCategory());
+        tv_detail_address.setText(dataBean.getProvince()+" "+dataBean.getCity());
+        tv_detail_tag.setText(dataBean.getTags());
+        Glide.with(this).load(dataBean.getGroupImage()).into(iv_pic1);
 
 
+    }
 
 
+    /**
+     * 跳转到微信
+     */
+    private void getWechatApi(){
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            ComponentName cmp = new ComponentName("com.tencent.mm","com.tencent.mm.ui.LauncherUI");
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setComponent(cmp);
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            // TODtO: handle exception
+            toast("检查到您手机没有安装微信，请安装后使用该功能");
+        }
+    }
+
+    public void toWeChatScanDirect() {
+        try {
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI"));
+            intent.putExtra("LauncherUI.From.Scaner.Shortcut", true);
+            intent.setFlags(335544320);
+            intent.setAction("android.intent.action.VIEW");
+            startActivity(intent);
+        } catch (Exception e) {
+        }
     }
 
 }
