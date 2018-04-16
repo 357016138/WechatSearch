@@ -17,11 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.jieyue.wechat.search.view.MyScrollView
-            android:id="@+id/scrollview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scrollbars="none">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -43,7 +38,6 @@
 
             </RelativeLayout>
 
-        </com.jieyue.wechat.search.view.MyScrollView>
 
         <RelativeLayout
             android:id="@+id/rl_search"

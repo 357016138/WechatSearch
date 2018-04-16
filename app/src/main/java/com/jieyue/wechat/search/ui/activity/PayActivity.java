@@ -27,6 +27,7 @@ import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.StringUtils;
+import com.jieyue.wechat.search.utils.ToastUtils;
 
 import java.text.DecimalFormat;
 
@@ -233,8 +234,12 @@ public class PayActivity extends BaseActivity {
                 break;
             case Task.PAY_BY_COIN:
                 if (handlerRequestErr(data)) {
+                   Bundle bd = new Bundle();
+                   bd.putString("orderId",orderId);
+                   goPage(PayResultActivity.class,bd);
+                   finish();
+                }else {
                     toast(data.getRspMsg());
-                    finish();
                 }
                 break;
             default:
@@ -272,9 +277,13 @@ public class PayActivity extends BaseActivity {
             @Override
             public void onPayFinish(Context context, String outtradeno, int resultCode, String resultString, int payType, Long                                                           amount, String tradename) {
                 if (resultCode == TrPayResult.RESULT_CODE_SUCC.getId()) {
+                    Bundle bd = new Bundle();
+                    bd.putString("orderId",orderId);
+                    goPage(PayResultActivity.class,bd);
                     //支付成功逻辑处理
                 } else if (resultCode == TrPayResult.RESULT_CODE_FAIL.getId()) {
                     //支付失败逻辑处理
+                    toast("支付宝支付未成功");
                 }
             }
         });
@@ -308,8 +317,13 @@ public class PayActivity extends BaseActivity {
             public void onPayFinish(Context context, String outtradeno, int resultCode, String resultString, int payType, Long                                                           amount, String tradename) {
                 if (resultCode == TrPayResult.RESULT_CODE_SUCC.getId()) {
                     //支付成功逻辑处理
+                    Bundle bd = new Bundle();
+                    bd.putString("orderId",orderId);
+                    goPage(PayResultActivity.class,bd);
+                    toast("微信支付成功");
                 } else if (resultCode == TrPayResult.RESULT_CODE_FAIL.getId()) {
                     //支付失败逻辑处理
+                    toast("微信支付未成功");
                 }
             }
         });

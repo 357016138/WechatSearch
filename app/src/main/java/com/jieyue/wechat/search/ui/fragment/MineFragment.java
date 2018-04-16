@@ -102,6 +102,7 @@ public class MineFragment extends BaseFragment {
     TextView tv_mine_phone;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    private CoinBean coinBean;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -153,7 +154,7 @@ public class MineFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.iv_setting, R.id.btn_sign_out, R.id.mine_tv_capital,R.id.bt_manage_publish, R.id.mine_iv_show, R.id.ll_mine_4, R.id.ll_mine_5, R.id.ll_mine_6, R.id.ll_mine_7, R.id.ll_mine_8, R.id.ll_mine_9, R.id.ll_mine_10, R.id.ll_mine_11, R.id.ll_mine_12, R.id.ll_mine_13, R.id.ll_mine_14})
+    @OnClick({R.id.iv_setting, R.id.btn_sign_out, R.id.mine_tv_capital,R.id.bt_manage_publish, R.id.mine_iv_show,R.id.ll_mine_1,R.id.ll_mine_2,R.id.ll_mine_3,R.id.ll_mine_4, R.id.ll_mine_5, R.id.ll_mine_6, R.id.ll_mine_7, R.id.ll_mine_8, R.id.ll_mine_9, R.id.ll_mine_10, R.id.ll_mine_11, R.id.ll_mine_12, R.id.ll_mine_13, R.id.ll_mine_14})
     @Override
     public void onClickEvent(View view) {
         switch (view.getId()) {
@@ -164,10 +165,6 @@ public class MineFragment extends BaseFragment {
             case R.id.btn_sign_out:          //登录
                 if (!isLogin()) return;
                 goPage(LoginActivity.class);
-                break;
-            case R.id.mine_tv_capital:        //我的资产
-//                if (!isLogin()) return;
-                goPage(RechargeActivity.class);
                 break;
             case R.id.bt_manage_publish:        //我的发布
                 if (!isLogin()) return;
@@ -181,9 +178,7 @@ public class MineFragment extends BaseFragment {
                     ShareData.setShareBooleanData(ShareData.SHOW_AMOUNT, true);
                 }
                 if (!ShareData.getShareBooleanData(ShareData.SHOW_AMOUNT)) {
-//                    mine_tv_capital.setText(formatString(mUserAccount.getAccountBalance()));
-//                    mine_tv_earned.setText(formatString(mUserAccount.getTotalReturnFee()));
-//                    mine_tv_duein.setText(formatString(mUserAccount.getAmountToReturn()));
+                    mine_tv_capital.setText(coinBean.getVcoin());
                     mine_iv_show.setImageResource(R.drawable.icon_mine_2_2);
                 } else {
                     mine_tv_capital.setText("****");
@@ -191,14 +186,28 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
 
-            case R.id.ll_mine_4:        //资金管理
+            case R.id.ll_mine_1:        //充值
                 if (!isLogin()) return;
-                goPage(MyPublishListActivity.class);
+                goPage(RechargeActivity.class);
+                break;
+
+            case R.id.ll_mine_2:        //联系客服
+                goWebPage("联系我们", UrlConfig.URL_CONTACT_US);
+                break;
+
+            case R.id.ll_mine_3:        //我要吐槽
+                if (!isLogin()) return;
+                goWebPage("我要吐槽", String.format(Locale.US, UrlConfig.URL_SUGGEST,
+                        DeviceUtils.getDeviceUniqueId(getActivity()),
+                        UserManager.getUserId()));
+                break;
+
+            case R.id.ll_mine_4:        //关于我们
+                goWebPage("关于我们", UrlConfig.URL_ABOUT_US);
                 break;
 
             case R.id.ll_mine_5:      //返佣管理
-//                goPage(TestActivity.class);
-                toast("敬请期待");
+
                 break;
 
             case R.id.ll_mine_6:      //账单
@@ -206,8 +215,7 @@ public class MineFragment extends BaseFragment {
                 break;
 
             case R.id.ll_mine_7:     //银行卡
-                if (!isLogin()) return;
-                goPage(BankCardListActivity.class);
+                toast("敬请期待");
                 break;
 
             case R.id.ll_mine_8:    //邀请好友
@@ -227,24 +235,16 @@ public class MineFragment extends BaseFragment {
                 break;
 
             case R.id.ll_mine_12:     //关于我们
-                goWebPage("关于我们", UrlConfig.URL_ABOUT_US);
+
                 break;
 
             case R.id.ll_mine_13:    //联系我们
-                goWebPage("联系我们", UrlConfig.URL_CONTACT_US);
+
                 break;
 
             case R.id.ll_mine_14:   //我要吐槽
-                if (!isLogin()) return;
-                goWebPage("我要吐槽", String.format(Locale.US, UrlConfig.URL_SUGGEST,
-                        DeviceUtils.getDeviceUniqueId(getActivity()),
-                        UserManager.getUserId()));
-                break;
 
-//            case R.id.bt_mine_withdraw_deposit: // 提现
-//                isBindBankCard();
-//                goPage(WithdrawDepositActivity.class);
-//                break;
+                break;
 
             default:
                 break;
@@ -262,21 +262,6 @@ public class MineFragment extends BaseFragment {
         params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
         startRequest(Task.GET_TINY_COIN_NUM, params, CoinBean.class);
 
-    }
-    private void getFeeAccountInformation(){
-        RequestParams params = new RequestParams(UrlConfig.URL_QUERY_RETURN_FEE_ACCOUNT);
-        params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
-        params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
-        startRequest(Task.QUERY_RETURN_FEE_ACCOUNT, params, UserAccount.class, false);
-    }
-
-    private void isBindBankCard() {
-        RequestParams params = new RequestParams(UrlConfig.URL_QUERY_BIND_BANK_CARD_INFO);
-        params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
-        params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
-        params.add("curPage", 1);
-        params.add("pageSize", 10);
-        startRequest(Task.BIND_BANK_CARD_INFO, params, BankCardListResponse.class, true);
     }
 
     private void isSetPayPassword() {
@@ -371,7 +356,7 @@ public class MineFragment extends BaseFragment {
                 refreshLayout.finishRefresh();
                 if (handlerRequestErr(data)){
                     //获取微币数量
-                    CoinBean coinBean = (CoinBean) data.getBody();
+                    coinBean = (CoinBean) data.getBody();
                     if (!ShareData.getShareBooleanData(ShareData.SHOW_AMOUNT)){
                         mine_tv_capital.setText(coinBean.getVcoin());
                     } else {

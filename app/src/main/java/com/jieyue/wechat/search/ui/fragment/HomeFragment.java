@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
@@ -36,7 +35,6 @@ import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.LogUtils;
 import com.jieyue.wechat.search.utils.StringUtils;
 import com.jieyue.wechat.search.utils.UserUtils;
-import com.jieyue.wechat.search.view.MyScrollView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -62,7 +60,7 @@ import okhttp3.Call;
  * 首页
  * Created by song on 2018/1/30.
  */
-public class HomeFragment extends BaseFragment implements OperateListener,MyScrollView.OnScrollListener {
+public class HomeFragment extends BaseFragment implements OperateListener{
     Unbinder unbinder;
     @BindView(R.id.iv_msg_new)
     ImageView iv_new_msg;
@@ -72,8 +70,6 @@ public class HomeFragment extends BaseFragment implements OperateListener,MyScro
     RelativeLayout rl_search;
     @BindView(R.id.fragmentBill_recyclerview)
     RecyclerView fragmentBill_recyclerview;
-    @BindView(R.id.scrollview)
-    MyScrollView scrollview;
     @BindView(R.id.banner)
     Banner banner;
     private List<BannerBean> BANNER_ITEMS = new ArrayList<>();
@@ -111,7 +107,6 @@ public class HomeFragment extends BaseFragment implements OperateListener,MyScro
         adapter.setOperateListener(this);
 
         rl_search.getBackground().setAlpha(0);
-        scrollview.setScrolListener(this);
 
         //设置轮播图配置
         banner.setImageLoader(new GlideImageLoader());
@@ -299,20 +294,20 @@ public class HomeFragment extends BaseFragment implements OperateListener,MyScro
         }
     }
 
-    /**
-     * Scroll 滑动距离的回调
-     * */
-    @Override
-    public void onScroll(int scrollY) {
-        LogUtils.e(scrollY+"");
-        if(scrollY < 100){
-            rl_search.getBackground().setAlpha(0);
-        }else if(scrollY >= 100 && scrollY < 860){
-            rl_search.getBackground().setAlpha((scrollY-100)/3);
-        }else{
-            rl_search.getBackground().setAlpha(255);
-        }
-    }
+//    /**
+//     * Scroll 滑动距离的回调
+//     * */
+//    @Override
+//    public void onScroll(int scrollY) {
+//        LogUtils.e(scrollY+"");
+//        if(scrollY < 100){
+//            rl_search.getBackground().setAlpha(0);
+//        }else if(scrollY >= 100 && scrollY < 860){
+//            rl_search.getBackground().setAlpha((scrollY-100)/3);
+//        }else{
+//            rl_search.getBackground().setAlpha(255);
+//        }
+//    }
 
     @Override
     public void onStart() {
