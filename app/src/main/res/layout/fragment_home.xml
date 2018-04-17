@@ -18,25 +18,14 @@
         android:layout_height="wrap_content">
 
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <com.youth.banner.Banner
-                    android:id="@+id/banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    app:is_auto_play="true"/>
 
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/fragmentBill_recyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/banner"
                     android:overScrollMode="never"/>
 
-            </RelativeLayout>
 
 
         <RelativeLayout

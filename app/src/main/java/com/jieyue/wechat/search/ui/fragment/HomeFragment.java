@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
+import com.jieyue.wechat.search.adapter.HomeAdapter;
 import com.jieyue.wechat.search.adapter.SearchAdapter;
 import com.jieyue.wechat.search.bean.BannerBean;
 import com.jieyue.wechat.search.bean.ProvinceBean;
@@ -70,11 +71,10 @@ public class HomeFragment extends BaseFragment implements OperateListener{
     RelativeLayout rl_search;
     @BindView(R.id.fragmentBill_recyclerview)
     RecyclerView fragmentBill_recyclerview;
-    @BindView(R.id.banner)
     Banner banner;
     private List<BannerBean> BANNER_ITEMS = new ArrayList<>();
 
-    private SearchAdapter adapter;
+    private HomeAdapter adapter;
     private int pageNum = 1;            // 当前页码
     private final int pageSize = 45;   // 每页条数
     private Activity activity;
@@ -82,7 +82,7 @@ public class HomeFragment extends BaseFragment implements OperateListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        initView(view);
+        initView(view,inflater);
         initData();
         return view;
     }
@@ -90,7 +90,7 @@ public class HomeFragment extends BaseFragment implements OperateListener{
     /**
      * 初始化控件
      * */
-    private void initView(View view) {
+    private void initView(View view,LayoutInflater inflater) {
         //一定要解绑 在onDestroyView里
         unbinder = ButterKnife.bind(this,view);
         activity = getActivity();
@@ -102,16 +102,21 @@ public class HomeFragment extends BaseFragment implements OperateListener{
         fragmentBill_recyclerview.setLayoutManager(llm);
         //recyclerview 布局设置end
 
-        adapter = new SearchAdapter(activity, 0);
+        adapter = new HomeAdapter(activity, 0);
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
 
         rl_search.getBackground().setAlpha(0);
 
+        View header = inflater.inflate(R.layout.fragment_home_banner, fragmentBill_recyclerview, false);
+        banner = header.findViewById(R.id.banner);
+        adapter.setHeaderView(header);
+
         //设置轮播图配置
         banner.setImageLoader(new GlideImageLoader());
         banner.setDelayTime(2000);//设置轮播时间
         banner.start();
+
 
         /**
          * 下拉刷新
@@ -202,24 +207,17 @@ public class HomeFragment extends BaseFragment implements OperateListener{
                     SearchBean searchBean = (SearchBean) data.getBody();
                     //------------------数据异常情况-------------------
                     if (searchBean == null || searchBean.getGroups() == null || searchBean.getGroups().size() <= 0) {
-//                        if (pageNum == 1) {
-//                            showNodata();
-//                        }
-//                        return;
+                       return;
                     }
                     //-----------------数据正常情况--------------------
                     List<SearchBean.ProductBean> dataListProm = searchBean.getGroups();
                     if (pageNum == 1) {
-//                        showList();
                         adapter.setData(dataListProm);
                     } else {
                         adapter.getData().addAll(dataListProm);
                     }
                     //如果返回数据不够10条，就不能继续上拉加载更多
                     refreshLayout.setEnableLoadmore(dataListProm.size() >= pageSize);
-//                    if (priceBillBean.getTotalPages() == 1 || dataListProm.size() >= pageSize) {
-//                        fragmentBill_refreshLayout.setEnableLoadmore(false);
-//                    }
                     adapter.notifyDataSetChanged();
 
                 }
