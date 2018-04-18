@@ -38,8 +38,6 @@ public class ProductDetailActivity extends BaseActivity {
     private String uniqueId;
     @BindView(R.id.iv_pic1)
     ImageView iv_pic1;
-    @BindView(R.id.tv_detail_title)
-    TextView tv_detail_title;
     @BindView(R.id.tv_detail_des)
     TextView tv_detail_des;
     @BindView(R.id.tv_detail_look)
@@ -52,8 +50,6 @@ public class ProductDetailActivity extends BaseActivity {
     TextView tv_detail_address;
     @BindView(R.id.tv_detail_tag)
     TextView tv_detail_tag;
-
-
 
 
     @Override
@@ -70,7 +66,6 @@ public class ProductDetailActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
-        topBar.setTitle("详情");
         topBar.setLineVisible(true);
     }
 
@@ -162,10 +157,11 @@ public class ProductDetailActivity extends BaseActivity {
      * */
     private void updateDetailInfo(ProductDetailBean dataBean) {
 
-        tv_detail_title.setText(dataBean.getGroupName());
+
+        topBar.setTitle(dataBean.getGroupName());
         tv_detail_des.setText(dataBean.getDescription());
         tv_detail_look.setText(dataBean.getLookCount()+" 个关注");
-        tv_detail_time.setText("发布于"+ DateUtils.formatDate(dataBean.getUpdateDate()));
+        tv_detail_time.setText( DateUtils.formatDate(dataBean.getUpdateDate()));
         tv_detail_category.setText(dataBean.getParentCategory()+" "+dataBean.getCategory());
         tv_detail_address.setText(dataBean.getProvince()+" "+dataBean.getCity());
         tv_detail_tag.setText(dataBean.getTags());

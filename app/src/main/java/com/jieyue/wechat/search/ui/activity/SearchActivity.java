@@ -1,24 +1,17 @@
 package com.jieyue.wechat.search.ui.activity;
 
-import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
-import com.jieyue.wechat.search.adapter.PriceBillAdapter;
 import com.jieyue.wechat.search.adapter.SearchAdapter;
-import com.jieyue.wechat.search.bean.OrderBean;
-import com.jieyue.wechat.search.bean.PriceBillBean;
 import com.jieyue.wechat.search.bean.SearchBean;
 import com.jieyue.wechat.search.common.BaseActivity;
 import com.jieyue.wechat.search.common.ShareData;
@@ -33,7 +26,6 @@ import com.jieyue.wechat.search.utils.StringUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.List;
 

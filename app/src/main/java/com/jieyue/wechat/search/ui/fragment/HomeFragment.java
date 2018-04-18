@@ -37,9 +37,14 @@ import com.jieyue.wechat.search.utils.LogUtils;
 import com.jieyue.wechat.search.utils.StringUtils;
 import com.jieyue.wechat.search.utils.UserUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshFooter;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.RefreshState;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnMultiPurposeListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
@@ -106,7 +111,6 @@ public class HomeFragment extends BaseFragment implements OperateListener{
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
 
-        rl_search.getBackground().setAlpha(0);
 
         View header = inflater.inflate(R.layout.fragment_home_banner, fragmentBill_recyclerview, false);
         banner = header.findViewById(R.id.banner);
@@ -139,7 +143,30 @@ public class HomeFragment extends BaseFragment implements OperateListener{
             }
         });
 
+        fragmentBill_recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            //返回当前recyclerview的可见的item数目，也就是datas.length
+            //dx是水平滚动的距离，dy是垂直滚动距离，向上滚动的时候为正，向下滚动的时候为负
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
 
+                 //向下滚动
+                if (dy > 0) {
+                    int firstVisiblesItems = llm.findFirstVisibleItemPosition();
+                    if (firstVisiblesItems >= 2) {
+                        rl_search.setBackgroundColor(getActivity().getResources().getColor(R.color.color_0F90F9));
+                    }
+                }
+                //向上滚动
+                if (dy < 0){
+                    int firstVisiblesItems = llm.findFirstVisibleItemPosition();
+                    if (firstVisiblesItems < 2) {
+                        rl_search.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
+                    }
+                }
+
+            }
+        });
 
     }
 
@@ -291,21 +318,6 @@ public class HomeFragment extends BaseFragment implements OperateListener{
                 break;
         }
     }
-
-//    /**
-//     * Scroll 滑动距离的回调
-//     * */
-//    @Override
-//    public void onScroll(int scrollY) {
-//        LogUtils.e(scrollY+"");
-//        if(scrollY < 100){
-//            rl_search.getBackground().setAlpha(0);
-//        }else if(scrollY >= 100 && scrollY < 860){
-//            rl_search.getBackground().setAlpha((scrollY-100)/3);
-//        }else{
-//            rl_search.getBackground().setAlpha(255);
-//        }
-//    }
 
     @Override
     public void onStart() {

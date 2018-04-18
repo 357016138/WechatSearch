@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
-import com.jieyue.wechat.search.bean.PriceBillBean;
+import com.jieyue.wechat.search.bean.PublishBillBean;
 import com.jieyue.wechat.search.listener.OperateListener;
 import com.jieyue.wechat.search.utils.SpanUtils;
 import com.jieyue.wechat.search.utils.StringUtils;
@@ -26,7 +26,7 @@ public class PriceBillAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private OperateListener listener;
-    private List<PriceBillBean.InquiryList> list;
+    private List<PublishBillBean.InquiryList> list;
     private int flag = 0;
 
     public PriceBillAdapter(Context context,int flag) {
@@ -34,11 +34,11 @@ public class PriceBillAdapter extends RecyclerView.Adapter {
         this.flag = flag;
     }
 
-    public void setData(List<PriceBillBean.InquiryList> list) {
+    public void setData(List<PublishBillBean.InquiryList> list) {
         this.list = list;
     }
 
-    public List<PriceBillBean.InquiryList> getData() {
+    public List<PublishBillBean.InquiryList> getData() {
         return list;
     }
 
@@ -52,7 +52,7 @@ public class PriceBillAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         MyViewHolder myViewHolder = (MyViewHolder) holder;
-        PriceBillBean.InquiryList inquiryListBean = list.get(position);
+        PublishBillBean.InquiryList inquiryListBean = list.get(position);
         if (inquiryListBean != null) {
             //数据绑定
             String inquiryStatus = inquiryListBean.getInquiryStatus();      //询价状态

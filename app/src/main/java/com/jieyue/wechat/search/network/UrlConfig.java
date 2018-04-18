@@ -60,7 +60,8 @@ public interface UrlConfig {
     String URL_ADD_LOOK_COUNT = URL + "/exter/add/lookCount.json";
     //获取banner信息
     String URL_BANNER_DATA = URL + "/banner/get.json";
-
+    //发布订单列表
+    String URL_PRICE_BILL = URL + "/order/show/all.json";
 
 
 
@@ -159,9 +160,6 @@ public interface UrlConfig {
 
     //修改支付密码
     String URL_UPDATE_PAY_PASSWORD = URL + "/loanApp/rest/updatePayment/v1/";
-
-    //询价订单列表
-    String URL_PRICE_BILL = URL + "/loanApp/rest/queryInquiryOrderList/v1/";
 
     //询价订单详情
     String URL_PRICE_BILL_DETAIL = URL + "/loanApp/rest/queryInquiryOrderInfo/v1/";

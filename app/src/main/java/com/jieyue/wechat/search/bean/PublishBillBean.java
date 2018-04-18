@@ -7,8 +7,30 @@ import java.util.List;
  * Created by song on 2018/3/7 0007.
  */
 
-public class PriceBillBean implements Serializable {
+public class PublishBillBean implements Serializable {
 
+/**
+ * {"orderId":"dd1e339313d34141932f596d4f9f94cc",
+ * "title":"背链家",
+ * "description":"急用吗兔兔",
+ * "imageUrl":"http://p5bahoihf.bkt.clouddn.com/Fo2mgV-OhwYqMqAPhA4xvUk6PjLh",
+ * "updateDate":1523287822000,
+ * "codeType":2,
+ * "orderType":1}
+ * */
+
+    private String orderId;
+    private String title;
+    private String description;
+    private String imageUrl;
+    private String updateDate;
+    private String codeType;
+    private String orderType;
+
+
+
+
+    //过时的 以后可以干掉
     private String busiCode;
     private String curPage;
     private String frontTransNo;
@@ -21,6 +43,63 @@ public class PriceBillBean implements Serializable {
     private int totalPages;
     private String totalRows;
     private List<InquiryList> inquiryList;
+
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getCodeType() {
+        return codeType;
+    }
+
+    public void setCodeType(String codeType) {
+        this.codeType = codeType;
+    }
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
 
     public String getBusiCode() {
         return busiCode;
@@ -132,11 +211,6 @@ public class PriceBillBean implements Serializable {
         private String buildingName;     //楼栋号
         private String householdName;     //房间号
         private String remark;           //备注
-
-
-
-
-
 
         public String getEstateKeyword() {
             return estateKeyword;

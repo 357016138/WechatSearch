@@ -17,22 +17,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
-
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/fragmentBill_recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never"/>
-
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragmentBill_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"/>
 
 
         <RelativeLayout
             android:id="@+id/rl_search"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:background="@color/white">
+            android:background="@color/transparent">
 
             <TextView
                 android:layout_width="match_parent"

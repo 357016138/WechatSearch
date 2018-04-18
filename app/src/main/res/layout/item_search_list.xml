@@ -21,8 +21,7 @@
         <ImageView
             android:id="@+id/iv_cover"
             android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/icon_pricebill_item_2"/>
+            android:layout_height="100dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,9 +42,9 @@
                 android:id="@+id/tv_des"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_18"
-                android:textColor="@color/color_3F3F3F"
-                android:singleLine="true"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/color_8A97B0"
+                android:maxLines="2"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_10"/>
 
@@ -53,7 +52,7 @@
                 android:id="@+id/tv_tags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_18"
+                android:textSize="@dimen/sp_14"
                 android:textColor="@color/color_3F3F3F"
                 android:singleLine="true"
                 android:layout_marginLeft="10dp"

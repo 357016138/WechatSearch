@@ -100,11 +100,6 @@ public class HomeAdapter extends RecyclerView.Adapter {
         return TYPE_NORMAL;
     }
 
-//
-//    public int getRealPosition(RecyclerView.ViewHolder holder) {
-//        int position = holder.getLayoutPosition();
-//        return mHeaderView == null ? position : position - 1;
-//    }
 
     @Override
     public int getItemCount() {

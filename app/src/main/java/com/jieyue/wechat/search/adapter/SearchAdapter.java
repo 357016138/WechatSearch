@@ -6,17 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jieyue.wechat.search.R;
-import com.jieyue.wechat.search.bean.PriceBillBean;
 import com.jieyue.wechat.search.bean.SearchBean;
 import com.jieyue.wechat.search.listener.OperateListener;
-import com.jieyue.wechat.search.utils.SpanUtils;
-import com.jieyue.wechat.search.utils.StringUtils;
 
 import java.util.List;
 

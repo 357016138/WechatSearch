@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.adapter.PriceBillAdapter;
-import com.jieyue.wechat.search.bean.PriceBillBean;
+import com.jieyue.wechat.search.adapter.PublishBillAdapter;
+import com.jieyue.wechat.search.bean.PublishBillBean;
 import com.jieyue.wechat.search.common.BaseFragment;
 import com.jieyue.wechat.search.common.Constants;
 import com.jieyue.wechat.search.listener.OperateListener;
@@ -44,7 +46,7 @@ import butterknife.Unbinder;
 import okhttp3.Call;
 
 /**
- * 询价订单（询价中）
+ * 发布订单（未支付）
  */
 public class BillUnpaidFragment extends BaseFragment implements OperateListener {
 
@@ -58,9 +60,8 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
     @BindView(R.id.fragmentBill_recyclerview)
     RecyclerView fragmentBill_recyclerview;
 
-    private List<PriceBillBean.InquiryList> inquiryList;
-    private PriceBillAdapter adapter;
-    private int curPage = 1;             // 当前页码
+    private PublishBillAdapter adapter;
+    private int pageNum = 1;             // 当前页码
     private final int PAGESIZE = 15;// 每页条数
 
     @Override
@@ -77,7 +78,6 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
     private void initView(View view) {
         //一定要解绑 在onDestroyView里
         unbinder = ButterKnife.bind(this, view);
-        EventBus.getDefault().register(this);
         //recyclerview 布局设置start
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayout.VERTICAL);
@@ -86,7 +86,7 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
         fragmentBill_recyclerview.addItemDecoration(new RecyclerViewItemDecoration(spacingInPixels));
         //recyclerview 布局设置end
 
-        adapter = new PriceBillAdapter(getActivity(), 1);
+        adapter = new PublishBillAdapter(getActivity(), 1);
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
 
@@ -96,8 +96,8 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
         fragmentBill_refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                curPage = 1;
-                getListData(curPage, PAGESIZE, "1", false);
+                pageNum = 1;
+                getListData(pageNum, 5, false);
             }
         });
 
@@ -107,8 +107,8 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
         fragmentBill_refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-                curPage += 1;
-                getListData(curPage, PAGESIZE, "1", false);
+                pageNum += 1;
+                getListData(pageNum,5, false);
             }
         });
 
@@ -122,8 +122,8 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
         no_data_refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                curPage = 1;
-                getListData(curPage, PAGESIZE, "1", false);
+                pageNum = 1;
+                getListData(pageNum, 5, false);
             }
         });
     }
@@ -132,7 +132,7 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
      * 初始化数据
      */
     private void initData() {
-        getListData(curPage, PAGESIZE, "1", true);
+        getListData(pageNum, 5, true);
     }
 
     @Override
@@ -144,20 +144,18 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        EventBus.getDefault().unregister(this);
     }
 
     /**
      * 获取list数据
      */
-    public void getListData(int curPage, int pageSize, String inquiryStatus, boolean showDialog) {
+    public void getListData(int pageNum, int codeType, boolean showDialog) {
         RequestParams params = new RequestParams(UrlConfig.URL_PRICE_BILL);
         params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
         params.add("userId", UserManager.getUserId());
-        params.add("curPage", curPage);
-        params.add("pageSize", pageSize);
-        params.add("inquiryStatus", inquiryStatus);
-        startRequest(Task.PRICE_BILL, params, PriceBillBean.class, showDialog);
+        params.add("pageNum", pageNum);
+        params.add("codeType", codeType);
+        startRequest(Task.PRICE_BILL, params, new TypeToken<List<PublishBillBean>>() {}.getType(), showDialog);
     }
 
     @Override
@@ -169,31 +167,27 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
                 fragmentBill_refreshLayout.finishLoadmore();
                 no_data_refreshLayout.finishRefresh();
                 if (handlerRequestErr(data)) {
-                    PriceBillBean priceBillBean = (PriceBillBean) data.getBody();
+                    List<PublishBillBean> beanList = (List<PublishBillBean>) data.getBody();
                     //------------------数据异常情况-------------------
-                    if (priceBillBean == null || priceBillBean.getInquiryList() == null || priceBillBean.getInquiryList().size() <= 0) {
-                        if (curPage == 1) {
+                    if (beanList == null) {
+                        if (pageNum == 1) {
                             showNodata();
                         }
                         return;
                     }
                     //-----------------数据正常情况--------------------
-                    List<PriceBillBean.InquiryList> dataListProm = priceBillBean.getInquiryList();
-                    if (curPage == 1) {
+                    if (pageNum == 1) {
                         showList();
-                        adapter.setData(dataListProm);
+                        adapter.setData(beanList);
                     } else {
-                        adapter.getData().addAll(dataListProm);
+                        adapter.getData().addAll(beanList);
                     }
                     //如果返回数据不够10条，就不能继续上拉加载更多
-                    if (priceBillBean.getTotalPages() == 1 || dataListProm.size() >= PAGESIZE) {
-                        fragmentBill_refreshLayout.setEnableLoadmore(false);
-                    }
-
+                    fragmentBill_refreshLayout.setEnableLoadmore(beanList.size() >= PAGESIZE);
                     adapter.notifyDataSetChanged();
 
                 } else {
-                    if (curPage == 1) {
+                    if (pageNum == 1) {
                         showNodata();
                     }
                 }
@@ -218,7 +212,7 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
         switch (operateType) {
             case "1":              //条目点击事件
                 Bundle bd = new Bundle();
-                PriceBillBean.InquiryList inquiryBean = (PriceBillBean.InquiryList) bean;
+                PublishBillBean.InquiryList inquiryBean = (PublishBillBean.InquiryList) bean;
                 bd.putString("inquiryCode", inquiryBean.getInquiryCode());
                 goPage(PriceBillDetailActivity.class, bd);
                 break;
@@ -230,13 +224,5 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEvent event) {
-        if (event.getTag() == Constants.GET_REFRESH_ORDER_LIST) {
-            if (UserUtils.isLogin()) {
-                curPage = 1;
-                getListData(curPage, PAGESIZE, "1", false);
-            }
-        }
-    }
+
 }

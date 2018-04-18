@@ -10,9 +10,9 @@ public class ConfigUtils {
     public static String getIp() {
         switch (configType) {
             case DEV:
-                return "http://140.143.167.122";
+                return "http://47.98.195.104";
             case CS:
-                return "http://172.18.101.14:8080";
+                return "http://47.98.195.104";
             case UAT:
                 return "http://59.110.172.203";
             case RELEASE:
@@ -27,9 +27,9 @@ public class ConfigUtils {
     public static String getH5Ip() {
         switch (configType) {
             case DEV:
-                return "http://140.143.167.122";
+                return "http://47.98.195.104";
             case CS:
-                return "http://172.18.101.14";
+                return "http://47.98.195.104";
             case UAT:
                 return "http://59.110.172.203";
             case RELEASE:
