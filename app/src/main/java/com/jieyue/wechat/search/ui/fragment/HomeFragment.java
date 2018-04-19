@@ -16,9 +16,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.adapter.HomeAdapter;
-import com.jieyue.wechat.search.adapter.SearchAdapter;
 import com.jieyue.wechat.search.bean.BannerBean;
-import com.jieyue.wechat.search.bean.ProvinceBean;
 import com.jieyue.wechat.search.bean.SearchBean;
 import com.jieyue.wechat.search.common.BaseFragment;
 import com.jieyue.wechat.search.common.Constants;
@@ -33,18 +31,12 @@ import com.jieyue.wechat.search.ui.activity.MsgNoticeActivity;
 import com.jieyue.wechat.search.ui.activity.ProductDetailActivity;
 import com.jieyue.wechat.search.ui.activity.SearchActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
-import com.jieyue.wechat.search.utils.LogUtils;
 import com.jieyue.wechat.search.utils.StringUtils;
 import com.jieyue.wechat.search.utils.UserUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshFooter;
-import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.constant.RefreshState;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
-import com.scwang.smartrefresh.layout.listener.OnMultiPurposeListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
@@ -77,11 +69,9 @@ public class HomeFragment extends BaseFragment implements OperateListener{
     @BindView(R.id.fragmentBill_recyclerview)
     RecyclerView fragmentBill_recyclerview;
     Banner banner;
-    private List<BannerBean> BANNER_ITEMS = new ArrayList<>();
-
     private HomeAdapter adapter;
     private int pageNum = 1;            // 当前页码
-    private final int pageSize = 45;   // 每页条数
+    private final int pageSize = 15;   // 每页条数
     private Activity activity;
 
     @Override
@@ -143,6 +133,9 @@ public class HomeFragment extends BaseFragment implements OperateListener{
             }
         });
 
+        /**
+         * 监测RecyclerView 滑动 ，改变标题栏背景色
+         * */
         fragmentBill_recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             //返回当前recyclerview的可见的item数目，也就是datas.length
             //dx是水平滚动的距离，dy是垂直滚动距离，向上滚动的时候为正，向下滚动的时候为负
@@ -178,6 +171,10 @@ public class HomeFragment extends BaseFragment implements OperateListener{
         getBannerData();
     }
 
+
+    /**
+     * 点击事件处理
+     * */
     @OnClick({R.id.rl_msg,R.id.rl_search})
     @Override
     public void onClickEvent(View view) {

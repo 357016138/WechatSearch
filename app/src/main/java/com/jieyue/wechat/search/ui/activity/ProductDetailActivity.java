@@ -22,6 +22,8 @@ import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.utils.DateUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.UserManager;
+import com.jieyue.wechat.search.view.DownloadDialog;
+import com.jieyue.wechat.search.view.OneButtonDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +32,7 @@ import okhttp3.Call;
 
 
 /**
- * 详情页
+ * 微信群详情页
  *
  * */
 public class ProductDetailActivity extends BaseActivity {
@@ -81,7 +83,7 @@ public class ProductDetailActivity extends BaseActivity {
 
         switch (view.getId()) {
             case R.id.tv_add:                //跳转到微信
-                toWeChatScanDirect();
+                showTipDialog();
                 break;
             default:
                 break;
@@ -174,20 +176,30 @@ public class ProductDetailActivity extends BaseActivity {
     /**
      * 跳转到微信
      */
-    private void getWechatApi(){
-        try {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            ComponentName cmp = new ComponentName("com.tencent.mm","com.tencent.mm.ui.LauncherUI");
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setComponent(cmp);
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            // TODtO: handle exception
-            toast("检查到您手机没有安装微信，请安装后使用该功能");
-        }
+    protected void showTipDialog() {
+        final OneButtonDialog dialog = new OneButtonDialog(this);
+        dialog.setContent("保存二维码到相册\n  \n打开微信扫一扫\n  \n从相册选取二维码扫描" );
+        dialog.setOkText("知道了");
+        dialog.setOnDownLoadClickListener(new DownloadDialog.OnDownLoadClickListener() {
+            @Override
+            public void onLeftClick() {
+                toWeChatScanDirect();
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onRightClick() {
+                toWeChatScanDirect();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
+
+    /**
+     * 跳转到微信
+     */
     public void toWeChatScanDirect() {
         try {
             Intent intent = new Intent();
