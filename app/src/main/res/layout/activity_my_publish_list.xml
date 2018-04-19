@@ -43,7 +43,18 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="审核完成"
+            android:text="审核成功"
+            android:textSize="@dimen/sp_16"
+            android:textColor="@color/color_8A97B0"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/dp_5"/>
+
+        <TextView
+            android:id="@+id/tv_fail"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="审核失败"
             android:textSize="@dimen/sp_16"
             android:textColor="@color/color_8A97B0"
             android:gravity="center_vertical"

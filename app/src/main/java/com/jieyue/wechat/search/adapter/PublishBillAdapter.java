@@ -5,12 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.bean.PublishBillBean;
 import com.jieyue.wechat.search.listener.OperateListener;
+import com.jieyue.wechat.search.utils.DateUtils;
 
 import java.util.List;
 
@@ -42,7 +45,7 @@ public class PublishBillAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_price_bill, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_public_bill, parent, false);
         PublishBillAdapter.MyViewHolder myViewHolder = new PublishBillAdapter.MyViewHolder(view);
         return myViewHolder;
     }
@@ -51,16 +54,27 @@ public class PublishBillAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         PublishBillAdapter.MyViewHolder myViewHolder = (PublishBillAdapter.MyViewHolder) holder;
         PublishBillBean publishBillBean = list.get(position);
+        if (publishBillBean != null) {
+
+            //数据绑定
+            String coverImage = publishBillBean.getImageUrl();            //图片链接
+            String title = publishBillBean.getTitle();                      //标题
+            long updateDate = publishBillBean.getUpdateDate();             //时间
+            String tags = publishBillBean.getCodeType();                   //状态  待支付，审核中，审核完成，审核失败
+
+            Glide.with(context).load(coverImage).into(myViewHolder.iv_cover);
+            myViewHolder.tv_title.setText(title);
+            myViewHolder.tv_time.setText( DateUtils.formatDate(updateDate));
+            myViewHolder.tv_tags.setText(tags);
 
 
-        myViewHolder.tv_price_bill_item_title.setText(publishBillBean.getTitle());
-
-        myViewHolder.rl_price_bill_item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.operate("1",publishBillBean);
-            }
-        });
+            myViewHolder.rl_price_bill_item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.operate("1", publishBillBean);
+                }
+            });
+        }
 
     }
 
@@ -71,14 +85,20 @@ public class PublishBillAdapter extends RecyclerView.Adapter {
 
     private static class MyViewHolder extends RecyclerView.ViewHolder {
 
+
+        private ImageView iv_cover;
+        private TextView tv_title;
+        private TextView tv_time;
+        private TextView tv_tags;
         private RelativeLayout rl_price_bill_item;
-        private TextView tv_price_bill_item_title;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             rl_price_bill_item = itemView.findViewById(R.id.rl_price_bill_item);
-            tv_price_bill_item_title = itemView.findViewById(R.id.tv_price_bill_item_title);
-
+            iv_cover = itemView.findViewById(R.id.iv_cover);
+            tv_title = itemView.findViewById(R.id.tv_title);
+            tv_tags = itemView.findViewById(R.id.tv_tags);
+            tv_time = itemView.findViewById(R.id.tv_time);
 
         }
 

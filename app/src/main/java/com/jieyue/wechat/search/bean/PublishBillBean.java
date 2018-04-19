@@ -23,7 +23,7 @@ public class PublishBillBean implements Serializable {
     private String title;
     private String description;
     private String imageUrl;
-    private String updateDate;
+    private long updateDate;
     private String codeType;
     private String orderType;
 
@@ -77,11 +77,11 @@ public class PublishBillBean implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public String getUpdateDate() {
+    public long getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(String updateDate) {
+    public void setUpdateDate(long updateDate) {
         this.updateDate = updateDate;
     }
 

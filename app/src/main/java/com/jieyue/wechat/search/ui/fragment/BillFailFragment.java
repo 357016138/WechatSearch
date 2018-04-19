@@ -11,33 +11,25 @@ import android.widget.LinearLayout;
 
 import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
-import com.jieyue.wechat.search.adapter.PriceBillAdapter;
 import com.jieyue.wechat.search.adapter.PublishBillAdapter;
 import com.jieyue.wechat.search.bean.PublishBillBean;
 import com.jieyue.wechat.search.common.BaseFragment;
-import com.jieyue.wechat.search.common.Constants;
 import com.jieyue.wechat.search.listener.OperateListener;
 import com.jieyue.wechat.search.network.RequestParams;
 import com.jieyue.wechat.search.network.ResultData;
 import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
-import com.jieyue.wechat.search.service.MessageEvent;
 import com.jieyue.wechat.search.ui.activity.ConsultPriceActivity;
-import com.jieyue.wechat.search.ui.activity.PriceBillDetailActivity;
+import com.jieyue.wechat.search.ui.activity.PreferenceProductActivity;
 import com.jieyue.wechat.search.ui.activity.ProductDetailActivity;
 import com.jieyue.wechat.search.ui.activity.RecommendProductActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.RecyclerViewItemDecoration;
 import com.jieyue.wechat.search.utils.UserManager;
-import com.jieyue.wechat.search.utils.UserUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -47,9 +39,12 @@ import butterknife.Unbinder;
 import okhttp3.Call;
 
 /**
- * 发布订单（未支付）
+ * Created by Administrator on 2018/4/19.
+ *
+ * 询价订单（失败）
  */
-public class BillUnpaidFragment extends BaseFragment implements OperateListener {
+
+public class BillFailFragment extends BaseFragment implements OperateListener {
 
     private Unbinder unbinder;
     @BindView(R.id.no_data_refreshLayout)
@@ -63,7 +58,7 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
 
     private PublishBillAdapter adapter;
     private int pageNum = 1;             // 当前页码
-    private final int PAGESIZE = 15;// 每页条数
+    private final int PAGESIZE = 15;     // 每页条数
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,15 +72,17 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
      * 初始化控件 用ButterKnife 简约
      */
     private void initView(View view) {
+
         //一定要解绑 在onDestroyView里
         unbinder = ButterKnife.bind(this, view);
+//        fragmentBill_refreshLayout.autoRefresh();
         //recyclerview 布局设置start
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayout.VERTICAL);
         fragmentBill_recyclerview.setLayoutManager(llm);
         //recyclerview 布局设置end
 
-        adapter = new PublishBillAdapter(getActivity(), 1);
+        adapter = new PublishBillAdapter(getActivity(), 0);
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
 
@@ -96,7 +93,7 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 pageNum = 1;
-                getListData(pageNum, 0, false);
+                getListData(pageNum, 3, false);
             }
         });
 
@@ -106,8 +103,9 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
         fragmentBill_refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
+
                 pageNum += 1;
-                getListData(pageNum,0, false);
+                getListData(pageNum, 3, false);
             }
         });
 
@@ -122,16 +120,24 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 pageNum = 1;
-                getListData(pageNum, 0, false);
+                getListData(pageNum, 3, false);
             }
         });
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
-        getListData(pageNum, 0, true);
+
+        getListData(pageNum, 3, true);
+
     }
 
     @Override
@@ -216,12 +222,16 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
                 goPage(ProductDetailActivity.class, bd);
                 break;
             case "2":           //推荐产品
-                goPage(RecommendProductActivity.class);
+                goPage(RecommendProductActivity.class, bd);
+                break;
+            case "3":           //优选产品
+                goPage(PreferenceProductActivity.class, bd);
                 break;
             default:
                 break;
         }
     }
+
 
 
 }

@@ -9,6 +9,7 @@ import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.adapter.PriceBillPagerAdapter;
 import com.jieyue.wechat.search.common.BaseActivity;
 import com.jieyue.wechat.search.ui.fragment.BillAllFragment;
+import com.jieyue.wechat.search.ui.fragment.BillFailFragment;
 import com.jieyue.wechat.search.ui.fragment.BillProgressFragment;
 import com.jieyue.wechat.search.ui.fragment.BillUnpaidFragment;
 import com.jieyue.wechat.search.ui.fragment.BillCompleteFragment;
@@ -32,18 +33,23 @@ public class MyPublishListActivity extends BaseActivity {
     TextView tv_complete;
     @BindView(R.id.tv_stop)
     TextView tv_stop;
+    @BindView(R.id.tv_fail)
+    TextView tv_fail;
 
 
     private List<Fragment> mFragments = new ArrayList<Fragment>();
-    private BillAllFragment allFragment; // 全部
-    private BillUnpaidFragment progressFragment; // 询价中
-    private BillProgressFragment completeFragment; // 询价完成
-    private BillCompleteFragment stopFragment; // 询价终止
+    private BillAllFragment allFragment;            // 全部
+    private BillUnpaidFragment unpaidFragment;      // 待支付
+    private BillProgressFragment progressFragment; // 审核中
+    private BillCompleteFragment completeFragment;     // 审核通过
+    private BillFailFragment    failFragment;        // 审核未通过
+
 
     public static final int ALL = 0;
     public static final int PROGRESS = 1;
     public static final int COMPLETE = 2;
     public static final int STOP = 3;
+    public static final int FAIL = 4;
     private int currentItem;
 
 
@@ -64,20 +70,22 @@ public class MyPublishListActivity extends BaseActivity {
         topBar.setLineVisible(true);
 
         allFragment = new BillAllFragment();                     //全部
-        progressFragment = new BillUnpaidFragment();            //待支付
-        completeFragment = new BillProgressFragment();          //审核中
-        stopFragment = new BillCompleteFragment();            //审核完成
+        unpaidFragment = new BillUnpaidFragment();               //待支付
+        progressFragment = new BillProgressFragment();            //审核中
+        completeFragment = new BillCompleteFragment();            //审核通过
+        failFragment = new BillFailFragment();               //审核未通过
 
         mFragments.add(allFragment);
+        mFragments.add(unpaidFragment);
         mFragments.add(progressFragment);
         mFragments.add(completeFragment);
-        mFragments.add(stopFragment);
+        mFragments.add(failFragment);
 
         /**
          * 初始化Adapter
          */
         PriceBillPagerAdapter mAdapter = new PriceBillPagerAdapter(getSupportFragmentManager(), mFragments);
-        viewpager.setOffscreenPageLimit(3);                               // 使ViewPager至少保持两个页面不被销毁
+        viewpager.setOffscreenPageLimit(4);                               // 使ViewPager至少保持两个页面不被销毁
         viewpager.setAdapter(mAdapter);
         viewpager.setOnPageChangeListener(new MyOnPageChangeListener()); // 设置页面滑动监听
 //        viewpager.setOnTouchListener(this);
@@ -91,7 +99,7 @@ public class MyPublishListActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.tv_all, R.id.tv_progress, R.id.tv_complete, R.id.tv_stop})
+    @OnClick({R.id.tv_all, R.id.tv_progress, R.id.tv_complete, R.id.tv_stop,R.id.tv_fail})
     @Override
     public void onClickEvent(View view) {
         switch (view.getId()) {
@@ -113,6 +121,10 @@ public class MyPublishListActivity extends BaseActivity {
             case R.id.tv_stop:
                 viewpager.setCurrentItem(STOP);
                 setTextColor(STOP);
+                break;
+            case R.id.tv_fail:
+                viewpager.setCurrentItem(FAIL);
+                setTextColor(FAIL);
                 break;
 
             default:
@@ -162,6 +174,7 @@ public class MyPublishListActivity extends BaseActivity {
                 tv_progress.setTextColor(getResources().getColor(R.color.color_8A97B0));
                 tv_complete.setTextColor(getResources().getColor(R.color.color_8A97B0));
                 tv_stop.setTextColor(getResources().getColor(R.color.color_8A97B0));
+                tv_fail.setTextColor(getResources().getColor(R.color.color_8A97B0));
                 break;
 
             case PROGRESS:
@@ -169,6 +182,7 @@ public class MyPublishListActivity extends BaseActivity {
                 tv_progress.setTextColor(getResources().getColor(R.color.color_3F3F3F));
                 tv_complete.setTextColor(getResources().getColor(R.color.color_8A97B0));
                 tv_stop.setTextColor(getResources().getColor(R.color.color_8A97B0));
+                tv_fail.setTextColor(getResources().getColor(R.color.color_8A97B0));
                 break;
 
             case COMPLETE:
@@ -176,6 +190,7 @@ public class MyPublishListActivity extends BaseActivity {
                 tv_progress.setTextColor(getResources().getColor(R.color.color_8A97B0));
                 tv_complete.setTextColor(getResources().getColor(R.color.color_3F3F3F));
                 tv_stop.setTextColor(getResources().getColor(R.color.color_8A97B0));
+                tv_fail.setTextColor(getResources().getColor(R.color.color_8A97B0));
                 break;
 
             case STOP:
@@ -183,6 +198,14 @@ public class MyPublishListActivity extends BaseActivity {
                 tv_progress.setTextColor(getResources().getColor(R.color.color_8A97B0));
                 tv_complete.setTextColor(getResources().getColor(R.color.color_8A97B0));
                 tv_stop.setTextColor(getResources().getColor(R.color.color_3F3F3F));
+                tv_fail.setTextColor(getResources().getColor(R.color.color_8A97B0));
+                break;
+            case FAIL:
+                tv_all.setTextColor(getResources().getColor(R.color.color_8A97B0));
+                tv_progress.setTextColor(getResources().getColor(R.color.color_8A97B0));
+                tv_complete.setTextColor(getResources().getColor(R.color.color_8A97B0));
+                tv_stop.setTextColor(getResources().getColor(R.color.color_8A97B0));
+                tv_fail.setTextColor(getResources().getColor(R.color.color_3F3F3F));
                 break;
 
             default:

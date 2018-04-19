@@ -25,6 +25,7 @@ import com.jieyue.wechat.search.service.MessageEvent;
 import com.jieyue.wechat.search.ui.activity.ConsultPriceActivity;
 import com.jieyue.wechat.search.ui.activity.PreferenceProductActivity;
 import com.jieyue.wechat.search.ui.activity.PriceBillDetailActivity;
+import com.jieyue.wechat.search.ui.activity.ProductDetailActivity;
 import com.jieyue.wechat.search.ui.activity.RecommendProductActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.RecyclerViewItemDecoration;
@@ -83,8 +84,6 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayout.VERTICAL);
         fragmentBill_recyclerview.setLayoutManager(llm);
-        int spacingInPixels = 12;
-        fragmentBill_recyclerview.addItemDecoration(new RecyclerViewItemDecoration(spacingInPixels));
         //recyclerview 布局设置end
 
         adapter = new PublishBillAdapter(getActivity(), 2);
@@ -98,7 +97,7 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 pageNum = 1;
-                getListData(pageNum, 5, false);
+                getListData(pageNum, 1, false);
             }
         });
 
@@ -109,7 +108,7 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 pageNum += 1;
-                getListData(pageNum, 5, false);
+                getListData(pageNum, 1, false);
             }
         });
 
@@ -124,7 +123,7 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 pageNum = 1;
-                getListData(pageNum, 5, false);
+                getListData(pageNum, 1, false);
             }
         });
     }
@@ -133,7 +132,7 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
      * 初始化数据
      */
     private void initData() {
-        getListData(pageNum, 5, false);
+        getListData(pageNum, 1, false);
     }
 
     @Override
@@ -212,13 +211,12 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
     @Override
     public void operate(String operateType, Object bean) {
         Bundle bd = new Bundle();
-        PublishBillBean.InquiryList inquiryBean = (PublishBillBean.InquiryList) bean;
-        bd.putString("inquiryCode", inquiryBean.getInquiryCode());
+        PublishBillBean publishBillBean = (PublishBillBean) bean;
+        bd.putString("uniqueId", publishBillBean.getOrderId());
         switch (operateType) {
             case "1":              //条目点击事件
-                goPage(PriceBillDetailActivity.class, bd);
+                goPage(ProductDetailActivity.class, bd);
                 break;
-
             case "2":           //推荐产品
                 goPage(RecommendProductActivity.class, bd);
                 break;
