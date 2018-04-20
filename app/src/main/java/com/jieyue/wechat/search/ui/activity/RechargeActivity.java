@@ -1,7 +1,7 @@
 package com.jieyue.wechat.search.ui.activity;
 
 import android.view.View;
-import android.widget.CheckBox;
+import android.widget.LinearLayout;
 
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.common.BaseActivity;
@@ -17,23 +17,18 @@ import butterknife.OnClick;
  */
 public class RechargeActivity extends BaseActivity {
 
-    @BindView(R.id.cb_use_1)
-    CheckBox cb_use_1;
-    @BindView(R.id.cb_use_2)
-    CheckBox cb_use_2;
-    @BindView(R.id.cb_use_3)
-    CheckBox cb_use_3;
-    @BindView(R.id.cb_use_4)
-    CheckBox cb_use_4;
-    @BindView(R.id.cb_use_5)
-    CheckBox cb_use_5;
-    @BindView(R.id.cb_use_6)
-    CheckBox cb_use_6;
-    @BindView(R.id.cb_use_7)
-    CheckBox cb_use_7;
-    @BindView(R.id.cb_use_8)
-    CheckBox cb_use_8;
-
+    @BindView(R.id.ll_1)
+    LinearLayout ll_1;
+    @BindView(R.id.ll_2)
+    LinearLayout ll_2;
+    @BindView(R.id.ll_3)
+    LinearLayout ll_3;
+    @BindView(R.id.ll_4)
+    LinearLayout ll_4;
+    @BindView(R.id.ll_5)
+    LinearLayout ll_5;
+    @BindView(R.id.ll_6)
+    LinearLayout ll_6;
     @Override
     public void setContentLayout() {
         setContentView(R.layout.activity_recharge);
@@ -53,46 +48,37 @@ public class RechargeActivity extends BaseActivity {
 
     @Override
     public void dealLogicAfterInitView() {
-
+        ll_1.setBackground(getResources().getDrawable(R.drawable.bg_yellow));
     }
-    @OnClick({R.id.cb_use_1,R.id.cb_use_2,R.id.cb_use_3,R.id.cb_use_4,R.id.cb_use_5,R.id.cb_use_6,R.id.cb_use_7,R.id.cb_use_8,R.id.btn_submit})
+    @OnClick({R.id.ll_1,R.id.ll_2,R.id.ll_3,R.id.ll_4,R.id.ll_5,R.id.ll_6,R.id.btn_submit})
     @Override
     public void onClickEvent(View view) {
         switch (view.getId()) {
-            case R.id.cb_use_1:
-                setCheckBoxBackground();
-                cb_use_1.setChecked(true);
+            case R.id.ll_1:
+                setLinearLayoutBackground();
+                ll_1.setBackground(getResources().getDrawable(R.drawable.bg_yellow));
                 break;
-            case R.id.cb_use_2:
-                setCheckBoxBackground();
-                cb_use_2.setChecked(true);
+            case R.id.ll_2:
+                setLinearLayoutBackground();
+                ll_2.setBackground(getResources().getDrawable(R.drawable.bg_yellow));
                 break;
-            case R.id.cb_use_3:
-                setCheckBoxBackground();
-                cb_use_3.setChecked(true);
+            case R.id.ll_3:
+                setLinearLayoutBackground();
+                ll_3.setBackground(getResources().getDrawable(R.drawable.bg_yellow));
                 break;
-            case R.id.cb_use_4:
-                setCheckBoxBackground();
-                cb_use_4.setChecked(true);
+            case R.id.ll_4:
+                setLinearLayoutBackground();
+                ll_4.setBackground(getResources().getDrawable(R.drawable.bg_yellow));
                 break;
-            case R.id.cb_use_5:
-                setCheckBoxBackground();
-                cb_use_5.setChecked(true);
+            case R.id.ll_5:
+                setLinearLayoutBackground();
+                ll_5.setBackground(getResources().getDrawable(R.drawable.bg_yellow));
                 break;
-            case R.id.cb_use_6:
-                setCheckBoxBackground();
-                cb_use_6.setChecked(true);
-                break;
-            case R.id.cb_use_7:
-                setCheckBoxBackground();
-                cb_use_7.setChecked(true);
-                break;
-            case R.id.cb_use_8:
-                setCheckBoxBackground();
-                cb_use_8.setChecked(true);
+            case R.id.ll_6:
+                setLinearLayoutBackground();
+                ll_6.setBackground(getResources().getDrawable(R.drawable.bg_yellow));
                 break;
             case R.id.btn_submit:
-
 
                 break;
             default:
@@ -117,15 +103,28 @@ public class RechargeActivity extends BaseActivity {
 
 
 
-    public void setCheckBoxBackground(){
-        cb_use_1.setChecked(false);
-        cb_use_2.setChecked(false);
-        cb_use_3.setChecked(false);
-        cb_use_4.setChecked(false);
-        cb_use_5.setChecked(false);
-        cb_use_6.setChecked(false);
-        cb_use_7.setChecked(false);
-        cb_use_8.setChecked(false);
+    //背景色初始化
+    public void setLinearLayoutBackground(){
+        ll_1.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+        ll_2.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+        ll_3.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+        ll_4.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+        ll_5.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+        ll_6.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
     }
+
+    //选中效果
+    public void setSelectEffect(){
+        ll_1.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+        ll_2.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+        ll_3.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+        ll_4.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+        ll_5.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+        ll_6.setBackground(getResources().getDrawable(R.drawable.bg_loading_dialog));
+    }
+
+
+
+
 
 }

@@ -7,73 +7,86 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:background="@color/white"
+        android:layout_height="100dp"
         android:orientation="horizontal"
         android:baselineAligned="false">
 
-        <CheckBox
-            android:id="@+id/cb_use_1"
+
+        <LinearLayout
+            android:id="@+id/ll_1"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:background="@drawable/slider_tab_bgcolor"
-            android:textColor="@drawable/slider_tab_tvcolor"
-            android:textSize="@dimen/sp_14"
-            android:button="@null"
+            android:background="@drawable/bg_loading_dialog"
             android:layout_margin="5dp"
-            android:text="10"
-            android:checked="true"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6元"
+                android:textColor="@color/color_FF934C"
+                android:textSize="@dimen/sp_14"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="600微币"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/sp_12"/>
 
-        </CheckBox>
+        </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/cb_use_2"
+        <LinearLayout
+            android:id="@+id/ll_2"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:background="@drawable/slider_tab_bgcolor"
-            android:textColor="@drawable/slider_tab_tvcolor"
-            android:textSize="@dimen/sp_14"
-            android:button="@null"
+            android:background="@drawable/bg_loading_dialog"
             android:layout_margin="5dp"
-            android:text="30"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
-        </CheckBox>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12元"
+                android:textColor="@color/color_FF934C"
+                android:textSize="@dimen/sp_14"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1200微币"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/sp_12"/>
 
-        <CheckBox
-            android:id="@+id/cb_use_3"
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_3"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:background="@drawable/slider_tab_bgcolor"
-            android:textColor="@drawable/slider_tab_tvcolor"
-            android:textSize="@dimen/sp_14"
-            android:button="@null"
+            android:background="@drawable/bg_loading_dialog"
             android:layout_margin="5dp"
-            android:text="50"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30元"
+                android:textColor="@color/color_FF934C"
+                android:textSize="@dimen/sp_14"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3000微币"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/sp_12"/>
 
-        </CheckBox>
-
-        <CheckBox
-            android:id="@+id/cb_use_4"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:background="@drawable/slider_tab_bgcolor"
-            android:textColor="@drawable/slider_tab_tvcolor"
-            android:textSize="@dimen/sp_14"
-            android:button="@null"
-            android:layout_margin="5dp"
-            android:text="100"
-            android:gravity="center">
-
-        </CheckBox>
+        </LinearLayout>
 
     </LinearLayout>
     <View
@@ -86,69 +99,86 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:background="@color/white"
+        android:layout_height="100dp"
         android:orientation="horizontal"
         android:baselineAligned="false">
 
-        <CheckBox
-            android:id="@+id/cb_use_5"
+        <LinearLayout
+            android:id="@+id/ll_4"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:background="@drawable/slider_tab_bgcolor"
-            android:textColor="@drawable/slider_tab_tvcolor"
-            android:textSize="@dimen/sp_14"
-            android:button="@null"
+            android:background="@drawable/bg_loading_dialog"
             android:layout_margin="5dp"
-            android:text="200"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
-        </CheckBox>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50元"
+                android:textColor="@color/color_FF934C"
+                android:textSize="@dimen/sp_14"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5000微币"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/sp_12"/>
 
-        <CheckBox
-            android:id="@+id/cb_use_6"
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_5"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:background="@drawable/slider_tab_bgcolor"
-            android:textColor="@drawable/slider_tab_tvcolor"
-            android:textSize="@dimen/sp_14"
-            android:button="@null"
+            android:background="@drawable/bg_loading_dialog"
             android:layout_margin="5dp"
-            android:text="300"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
-        </CheckBox>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100元"
+                android:textColor="@color/color_FF934C"
+                android:textSize="@dimen/sp_14"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10000微币"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/sp_12"/>
 
-        <CheckBox
-            android:id="@+id/cb_use_7"
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_6"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:background="@drawable/slider_tab_bgcolor"
-            android:textColor="@drawable/slider_tab_tvcolor"
-            android:textSize="@dimen/sp_14"
-            android:button="@null"
+            android:background="@drawable/bg_loading_dialog"
             android:layout_margin="5dp"
-            android:text="500"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
-        </CheckBox>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="200元"
+                android:textColor="@color/color_FF934C"
+                android:textSize="@dimen/sp_14"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20000微币"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/sp_12"/>
 
-        <CheckBox
-            android:id="@+id/cb_use_8"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:background="@drawable/slider_tab_bgcolor"
-            android:textColor="@drawable/slider_tab_tvcolor"
-            android:textSize="@dimen/sp_14"
-            android:button="@null"
-            android:layout_margin="5dp"
-            android:text="1000"
-            android:gravity="center">
-        </CheckBox>
+        </LinearLayout>
+
+
 
     </LinearLayout>
 
