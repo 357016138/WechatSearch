@@ -205,11 +205,9 @@ public class MineFragment extends BaseFragment {
             case R.id.ll_mine_4:        //关于我们
                 goWebPage("关于我们", UrlConfig.URL_ABOUT_US);
                 break;
-
             case R.id.ll_mine_5:      //返佣管理
 
                 break;
-
             case R.id.ll_mine_6:      //账单
                 toast("敬请期待");
                 break;
