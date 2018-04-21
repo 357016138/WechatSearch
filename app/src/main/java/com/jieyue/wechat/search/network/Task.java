@@ -65,8 +65,8 @@ public interface Task {
     int ADD_LOOK_COUNT = 0X0028;
     //获取banner信息
     int BANNER_DATA = 0X0029;
-
-
+    //账户微币充值
+    int RECHARGE_ORDER = 0X0030;
 
 
 

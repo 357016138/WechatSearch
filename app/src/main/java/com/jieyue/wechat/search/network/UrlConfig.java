@@ -60,8 +60,10 @@ public interface UrlConfig {
     String URL_ADD_LOOK_COUNT = URL + "/exter/add/lookCount.json";
     //获取banner信息
     String URL_BANNER_DATA = URL + "/banner/get.json";
-    //发布订单列表
+    //查询发布订单列表
     String URL_PRICE_BILL = URL + "/order/show/all.json";
+    //账户微币充值
+    String URL_RECHARGE_ORDER = URL + "/vcoin/order.json";
 
 
 
