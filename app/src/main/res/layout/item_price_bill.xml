@@ -41,15 +41,15 @@
                 android:id="@+id/tv_price_bill_item_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_12"
-                android:textColor="@color/color_24BD48"
                 android:layout_gravity="center_vertical"
+                android:layout_marginRight="22dp"
                 android:background="@drawable/textview_border_blue"
+                android:paddingBottom="4dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
                 android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:layout_marginRight="22dp"/>
+                android:textColor="@color/color_24BD48"
+                android:textSize="@dimen/sp_12" />
         </LinearLayout>
 
 

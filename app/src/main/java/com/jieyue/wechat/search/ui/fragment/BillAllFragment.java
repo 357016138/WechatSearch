@@ -1,14 +1,22 @@
 package com.jieyue.wechat.search.ui.fragment;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.donkingliang.imageselector.ImageSelectorActivity;
 import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.adapter.PriceBillAdapter;
@@ -23,15 +31,24 @@ import com.jieyue.wechat.search.network.ResultData;
 import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.service.MessageEvent;
+import com.jieyue.wechat.search.ui.activity.BindBankCardActivity;
 import com.jieyue.wechat.search.ui.activity.ConsultPriceActivity;
+import com.jieyue.wechat.search.ui.activity.PayActivity;
 import com.jieyue.wechat.search.ui.activity.PreferenceProductActivity;
 import com.jieyue.wechat.search.ui.activity.PriceBillDetailActivity;
 import com.jieyue.wechat.search.ui.activity.ProductDetailActivity;
+import com.jieyue.wechat.search.ui.activity.PublishWechatGroupActivity;
 import com.jieyue.wechat.search.ui.activity.RecommendProductActivity;
+import com.jieyue.wechat.search.ui.activity.SetWithdrawPasswordActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.FileUtils;
 import com.jieyue.wechat.search.utils.RecyclerViewItemDecoration;
 import com.jieyue.wechat.search.utils.UserManager;
 import com.jieyue.wechat.search.utils.UserUtils;
+import com.jieyue.wechat.search.view.DownloadDialog;
+import com.jieyue.wechat.search.view.OneButtonDialog;
+import com.jieyue.wechat.search.view.iosspinner.BaseSpinnerAdapter;
+import com.jieyue.wechat.search.view.iosspinner.SpinnerPop;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -41,6 +58,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -66,6 +86,7 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
     private PublishBillAdapter adapter;
     private int pageNum = 1;             // 当前页码
     private final int PAGESIZE = 15;     // 每页条数
+    private SpinnerPop spinnerPop;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -119,7 +140,7 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
         btn_apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goPage(ConsultPriceActivity.class);
+                goPage(PublishWechatGroupActivity.class);
             }
         });
 
@@ -181,7 +202,7 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
                 if (handlerRequestErr(data)) {
                     List<PublishBillBean> beanList = (List<PublishBillBean>) data.getBody();
                     //------------------数据异常情况-------------------
-                    if (beanList == null) {
+                    if (beanList == null||beanList.size() == 0) {
                         if (pageNum == 1) {
                             showNodata();
                         }
@@ -228,15 +249,77 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
             case "1":              //条目点击事件
                 goPage(ProductDetailActivity.class, bd);
                 break;
-            case "2":           //推荐产品
-                goPage(RecommendProductActivity.class, bd);
-                break;
-            case "3":           //优选产品
-                goPage(PreferenceProductActivity.class, bd);
+            case "2":              //编辑 根据状态去判断 弹出
+                showMenu(publishBillBean.getCodeType(),publishBillBean.getOrderId());
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 弹出菜单数据初始化
+     */
+    private void showMenu(String codeType,String uniqueId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.dialog_no_bg);
+        View myView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_layout, null);
+        builder.setView(myView);
+        Button bt_1 = myView.findViewById(R.id.bt_1);            //支付
+        Button bt_2 = myView.findViewById(R.id.bt_2);            //置顶
+        Button bt_3 = myView.findViewById(R.id.bt_3);            //刷新
+        Button bt_4 = myView.findViewById(R.id.bt_4);            //修改
+        Button bt_5 = myView.findViewById(R.id.bt_5);            //删除
+        Button bt_cancel = myView.findViewById(R.id.bt_cancel);  //取消
+
+        if ("0".equals(codeType)){
+            bt_1.setVisibility(View.VISIBLE);
+        }
+
+
+        myView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT));
+        final Dialog dialog = builder.create();
+        myView.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        bt_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //支付
+                Bundle bd = new Bundle();
+                bd.putString("orderId", uniqueId);
+                goPage(PayActivity.class, bd);
+                dialog.dismiss();
+            }
+        });
+        bt_3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //刷新
+                toast("刷新");
+                dialog.dismiss();
+            }
+        });
+        bt_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //修改
+                toast("修改");
+                dialog.dismiss();
+            }
+        });
+        bt_5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 //删除
+                toast("删除");
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
 

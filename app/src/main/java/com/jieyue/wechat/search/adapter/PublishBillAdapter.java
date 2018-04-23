@@ -57,16 +57,26 @@ public class PublishBillAdapter extends RecyclerView.Adapter {
         if (publishBillBean != null) {
 
             //数据绑定
-            String coverImage = publishBillBean.getImageUrl();            //图片链接
+            String coverImage = publishBillBean.getImageUrl();               //图片链接
             String title = publishBillBean.getTitle();                      //标题
             long updateDate = publishBillBean.getUpdateDate();             //时间
-            String tags = publishBillBean.getCodeType();                   //状态  待支付，审核中，审核完成，审核失败
+            String codeType = publishBillBean.getCodeType();               //状态  待支付，审核中，审核完成，审核失败
 
             Glide.with(context).load(coverImage).into(myViewHolder.iv_cover);
             myViewHolder.tv_title.setText(title);
             myViewHolder.tv_time.setText( DateUtils.formatDate(updateDate));
-            myViewHolder.tv_tags.setText(tags);
 
+            if ("0".equals(codeType)){
+                myViewHolder.tv_tags.setText("待支付");
+            }else if ("1".equals(codeType)){
+                myViewHolder.tv_tags.setText("审核中");
+            }else if ("2".equals(codeType)){
+                myViewHolder.tv_tags.setText("审核通过");
+            }else if ("3".equals(codeType)){
+                myViewHolder.tv_tags.setText("审核不通过");
+            }else{
+                myViewHolder.tv_tags.setText(codeType);
+            }
 
             myViewHolder.rl_price_bill_item.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,6 +84,15 @@ public class PublishBillAdapter extends RecyclerView.Adapter {
                     listener.operate("1", publishBillBean);
                 }
             });
+
+
+            myViewHolder.tv_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.operate("2", publishBillBean);
+                }
+            });
+
         }
 
     }
@@ -90,6 +109,7 @@ public class PublishBillAdapter extends RecyclerView.Adapter {
         private TextView tv_title;
         private TextView tv_time;
         private TextView tv_tags;
+        private TextView tv_edit;
         private RelativeLayout rl_price_bill_item;
 
         public MyViewHolder(View itemView) {
@@ -99,6 +119,9 @@ public class PublishBillAdapter extends RecyclerView.Adapter {
             tv_title = itemView.findViewById(R.id.tv_title);
             tv_tags = itemView.findViewById(R.id.tv_tags);
             tv_time = itemView.findViewById(R.id.tv_time);
+            tv_edit = itemView.findViewById(R.id.tv_edit);
+
+
 
         }
 

@@ -22,6 +22,7 @@ import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.ui.activity.ConsultPriceActivity;
 import com.jieyue.wechat.search.ui.activity.PreferenceProductActivity;
 import com.jieyue.wechat.search.ui.activity.ProductDetailActivity;
+import com.jieyue.wechat.search.ui.activity.PublishWechatGroupActivity;
 import com.jieyue.wechat.search.ui.activity.RecommendProductActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.RecyclerViewItemDecoration;
@@ -112,7 +113,7 @@ public class BillFailFragment extends BaseFragment implements OperateListener {
         btn_apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goPage(ConsultPriceActivity.class);
+                goPage(PublishWechatGroupActivity.class);
             }
         });
 
@@ -174,7 +175,7 @@ public class BillFailFragment extends BaseFragment implements OperateListener {
                 if (handlerRequestErr(data)) {
                     List<PublishBillBean> beanList = (List<PublishBillBean>) data.getBody();
                     //------------------数据异常情况-------------------
-                    if (beanList == null) {
+                    if (beanList == null||beanList.size() == 0) {
                         if (pageNum == 1) {
                             showNodata();
                         }

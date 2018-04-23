@@ -64,8 +64,8 @@ public interface UrlConfig {
     String URL_PRICE_BILL = URL + "/order/show/all.json";
     //账户微币充值
     String URL_RECHARGE_ORDER = URL + "/vcoin/order.json";
-
-
+    //支付回调地址
+    String URL_PAY_NOTIFY = URL + "/order/pay/notify.json";
 
 
 

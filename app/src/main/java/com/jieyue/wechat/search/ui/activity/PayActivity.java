@@ -36,6 +36,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Call;
 
+import static com.jieyue.wechat.search.network.UrlConfig.URL_PAY_NOTIFY;
+
 public class PayActivity extends BaseActivity {
 
 
@@ -63,9 +65,10 @@ public class PayActivity extends BaseActivity {
     @BindView(R.id.btn_submit)
     TextView btn_submit;
 
-    private static final String NOTIFYURL = "http://140.143.167.122/order/pay/notify.json";
+    private static final String NOTIFYURL = URL_PAY_NOTIFY;
     private String orderId;
     private OrderBean orderBean;
+    private String path;
 
     @Override
     public void setContentLayout() {
@@ -76,7 +79,7 @@ public class PayActivity extends BaseActivity {
     public void dealLogicBeforeInitView() {
         Bundle bundle = getIntentData();
         orderId = bundle.getString("orderId");
-//        orderId = "0ab08fbb7fd248afac5ba385bd6ca22a";
+        path = bundle.getString("path");
         if (StringUtils.isEmpty(orderId)){
             toast("请获取正确的订单信息");
             return;
@@ -94,7 +97,11 @@ public class PayActivity extends BaseActivity {
     @Override
     public void dealLogicAfterInitView() {
 
-        getTinyCoinNum();
+        if (StringUtils.isEmpty(path)){    //  从微信群发布页过来的
+            getTinyCoinNum();
+        }else{
+            rl_payment_tiny_coin.setVisibility(View.GONE);    //从充值页过来的
+        }
         getOrderDes();
     }
 
@@ -279,7 +286,12 @@ public class PayActivity extends BaseActivity {
                 if (resultCode == TrPayResult.RESULT_CODE_SUCC.getId()) {
                     Bundle bd = new Bundle();
                     bd.putString("orderId",orderId);
-                    goPage(PayResultActivity.class,bd);
+                    if (StringUtils.isEmpty(path)){
+                        goPage(PayResultActivity.class,bd);
+                    }else {
+                        toast("支付宝支付成功");
+                    }
+                    finish();
                     //支付成功逻辑处理
                 } else if (resultCode == TrPayResult.RESULT_CODE_FAIL.getId()) {
                     //支付失败逻辑处理
@@ -319,8 +331,12 @@ public class PayActivity extends BaseActivity {
                     //支付成功逻辑处理
                     Bundle bd = new Bundle();
                     bd.putString("orderId",orderId);
-                    goPage(PayResultActivity.class,bd);
-                    toast("微信支付成功");
+                    if (StringUtils.isEmpty(path)){
+                        goPage(PayResultActivity.class,bd);
+                    }else {
+                        toast("微信支付成功");
+                    }
+                    finish();
                 } else if (resultCode == TrPayResult.RESULT_CODE_FAIL.getId()) {
                     //支付失败逻辑处理
                     toast("微信支付未成功");

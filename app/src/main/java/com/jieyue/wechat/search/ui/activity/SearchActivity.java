@@ -1,5 +1,6 @@
 package com.jieyue.wechat.search.ui.activity;
 
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -67,12 +68,10 @@ public class SearchActivity extends BaseActivity implements TextView.OnEditorAct
         ButterKnife.bind(this);
         et_search.setOnEditorActionListener(this);   //初始化监听
 
-
+        //recyclerview 布局设置start
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayout.VERTICAL);
         fragmentBill_recyclerview.setLayoutManager(llm);
-        int spacingInPixels = 12;
-        fragmentBill_recyclerview.addItemDecoration(new RecyclerViewItemDecoration(spacingInPixels));
         //recyclerview 布局设置end
 
         adapter = new SearchAdapter(this, 0);
@@ -189,9 +188,6 @@ public class SearchActivity extends BaseActivity implements TextView.OnEditorAct
                     }
                     //如果返回数据不够10条，就不能继续上拉加载更多
                     fragmentBill_refreshLayout.setEnableLoadmore(dataListProm.size() >= pageSize);
-//                    if (priceBillBean.getTotalPages() == 1 || dataListProm.size() >= pageSize) {
-//                        fragmentBill_refreshLayout.setEnableLoadmore(false);
-//                    }
                     adapter.notifyDataSetChanged();
 
                 } else {
@@ -226,11 +222,19 @@ public class SearchActivity extends BaseActivity implements TextView.OnEditorAct
     }
 
     /**
-     * 点击事件的回调
-     *
+     * 列表布局的回调
      * */
     @Override
-    public void operate(String operateType, Object bean) {
-
+    public void operate(String operateType, Object str) {
+        Bundle bd = new Bundle();
+        String uniqueId = (String) str;
+        bd.putString("uniqueId", uniqueId);
+        switch (operateType) {
+            case "1":                   //条目点击事件
+                goPage(ProductDetailActivity.class, bd);
+                break;
+            default:
+                break;
+        }
     }
 }

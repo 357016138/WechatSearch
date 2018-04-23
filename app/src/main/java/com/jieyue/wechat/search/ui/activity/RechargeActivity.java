@@ -6,21 +6,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
-import com.jieyue.wechat.search.bean.BindBankCardInfoBean;
-import com.jieyue.wechat.search.bean.CoinBean;
 import com.jieyue.wechat.search.bean.DataBean;
-import com.jieyue.wechat.search.bean.OrderBean;
 import com.jieyue.wechat.search.common.BaseActivity;
 import com.jieyue.wechat.search.common.ShareData;
 import com.jieyue.wechat.search.network.RequestParams;
 import com.jieyue.wechat.search.network.ResultData;
 import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
-import com.jieyue.wechat.search.response.BankCardListResponse;
-import com.jieyue.wechat.search.response.WhetherSetPaymentPasswordResponse;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,7 +64,7 @@ public class RechargeActivity extends BaseActivity {
     TextView tv_6_1;
     @BindView(R.id.tv_6_2)
     TextView tv_6_2;
-    private String rechargeMenoy = "600";
+    private String rechargeMenoy = "10";
 
 
     @Override
@@ -178,7 +172,9 @@ public class RechargeActivity extends BaseActivity {
                     String orderId = dataBean.getData();
                     Bundle bd = new Bundle();
                     bd.putString("orderId", orderId);
+                    bd.putString("path", "recharge");
                     goPage(PayActivity.class, bd);
+                    finish();
 
                 }
                 break;

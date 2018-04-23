@@ -59,7 +59,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         if(holder instanceof MyViewHolder) {
             HomeAdapter.MyViewHolder myViewHolder = (HomeAdapter.MyViewHolder) holder;
 //            final int pos = getRealPosition(myViewHolder);
-            SearchBean.ProductBean productBean = list.get(position);
+            SearchBean.ProductBean productBean = list.get(position-1);
 
             if (productBean != null) {
                 //数据绑定
@@ -103,7 +103,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return list == null? 0 : list.size();
+        return list == null? 1 : list.size()+1;
     }
 
     private class MyViewHolder extends RecyclerView.ViewHolder {
