@@ -1,0 +1,85 @@
+package com.jieyue.wechat.search.adapter;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.jieyue.wechat.search.R;
+import com.jieyue.wechat.search.bean.MessageBean;
+import com.jieyue.wechat.search.listener.OperateListener;
+import com.jieyue.wechat.search.utils.DateUtils;
+
+import java.util.List;
+
+/**
+ * Created by Administrator on 2018/4/24.
+ */
+
+public class MessageAdapter extends RecyclerView.Adapter {
+
+    private Context context;
+    private OperateListener listener;
+    private List<MessageBean> list;
+
+    public MessageAdapter(Context context) {
+        this.context = context;
+    }
+
+    public void setData(List<MessageBean> list) {
+        this.list = list;
+    }
+
+    public List<MessageBean> getData() {
+        return list;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_message_list, parent, false);
+        MessageAdapter.MyViewHolder myViewHolder = new MessageAdapter.MyViewHolder(view);
+        return myViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        MessageAdapter.MyViewHolder myViewHolder = (MessageAdapter.MyViewHolder) holder;
+        MessageBean messageBean = list.get(position);
+        if (messageBean != null) {
+            //数据绑定
+            String context = messageBean.getReview_context();         //描述
+            long time = messageBean.getCreate_time();               //time
+
+            myViewHolder.tv_des.setText(context);
+            myViewHolder.tv_time.setText(DateUtils.formatDate(time));
+
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return list == null? 0 : list.size();
+    }
+
+    private static class MyViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView tv_des;
+        private TextView tv_time;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            tv_des = itemView.findViewById(R.id.tv_des);
+            tv_time = itemView.findViewById(R.id.tv_time);
+
+        }
+
+    }
+
+    public void setOperateListener(OperateListener listener) {
+        this.listener = listener;
+    }
+}

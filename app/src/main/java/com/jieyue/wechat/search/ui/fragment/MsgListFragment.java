@@ -10,8 +10,12 @@ import android.webkit.JavascriptInterface;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
+import com.jieyue.wechat.search.adapter.MessageAdapter;
 import com.jieyue.wechat.search.adapter.SearchAdapter;
+import com.jieyue.wechat.search.bean.MessageBean;
+import com.jieyue.wechat.search.bean.PublishBillBean;
 import com.jieyue.wechat.search.bean.SearchBean;
 import com.jieyue.wechat.search.common.BaseFragment;
 import com.jieyue.wechat.search.common.ShareData;
@@ -24,11 +28,13 @@ import com.jieyue.wechat.search.ui.activity.ProductDetailActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.GsonUtil;
 import com.jieyue.wechat.search.utils.LogUtils;
+import com.jieyue.wechat.search.utils.RecyclerViewItemDecoration;
 import com.jieyue.wechat.search.utils.UserManager;
 import com.jieyue.wechat.search.view.CustomWebView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.List;
 import java.util.Locale;
@@ -52,10 +58,10 @@ public class MsgListFragment extends BaseFragment implements OperateListener {
     SmartRefreshLayout fragmentBill_refreshLayout;
     @BindView(R.id.fragmentBill_recyclerview)
     RecyclerView fragmentBill_recyclerview;
-    private SearchAdapter adapter;
+    private MessageAdapter adapter;
 
     private int pageNum = 1;            // 当前页码
-    private final int pageSize = 15;   // 每页条数
+    private final int PAGESIZE = 15;     // 每页条数
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_base_webview, container, false);
@@ -76,19 +82,28 @@ public class MsgListFragment extends BaseFragment implements OperateListener {
         fragmentBill_recyclerview.setLayoutManager(llm);
         //recyclerview 布局设置end
 
-        adapter = new SearchAdapter(getActivity(), 0);
+        adapter = new MessageAdapter(getActivity());
         fragmentBill_recyclerview.setAdapter(adapter);
         adapter.setOperateListener(this);
 
+        /**
+         * 下拉刷新
+         * */
+        fragmentBill_refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                pageNum = 1;
+                getMessageList(pageNum+"");
+            }
+        });
         /**
          *上拉加载更多
          * */
         fragmentBill_refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-
                 pageNum += 1;
-//                getListData(curPage, PAGESIZE, "0", false);
+                getMessageList(pageNum+"");
             }
         });
     }
@@ -123,7 +138,7 @@ public class MsgListFragment extends BaseFragment implements OperateListener {
         params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
         params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
         params.add("pageNum", pageNum);
-        startRequest(Task.MESSAGE_LIST, params, SearchBean.class);
+        startRequest(Task.MESSAGE_LIST, params, new TypeToken<List<MessageBean>>(){}.getType());
     }
 
 
@@ -136,24 +151,23 @@ public class MsgListFragment extends BaseFragment implements OperateListener {
                 fragmentBill_refreshLayout.finishLoadmore();
                 no_data_refreshLayout.finishRefresh();
                 if (handlerRequestErr(data)) {
-                    SearchBean searchBean = (SearchBean) data.getBody();
+                    List<MessageBean> beanList = (List<MessageBean>) data.getBody();
                     //------------------数据异常情况-------------------
-                    if (searchBean == null || searchBean.getGroups() == null || searchBean.getGroups().size() <= 0) {
+                    if (beanList == null||beanList.size() == 0) {
                         if (pageNum == 1) {
                             showNodata();
                         }
                         return;
                     }
                     //-----------------数据正常情况--------------------
-                    List<SearchBean.ProductBean> dataListProm = searchBean.getGroups();
                     if (pageNum == 1) {
                         showList();
-                        adapter.setData(dataListProm);
+                        adapter.setData(beanList);
                     } else {
-                        adapter.getData().addAll(dataListProm);
+                        adapter.getData().addAll(beanList);
                     }
                     //如果返回数据不够10条，就不能继续上拉加载更多
-                    fragmentBill_refreshLayout.setEnableLoadmore(dataListProm.size() >= pageSize);
+                    fragmentBill_refreshLayout.setEnableLoadmore(beanList.size() >= PAGESIZE);
                     adapter.notifyDataSetChanged();
 
                 } else {
@@ -182,15 +196,15 @@ public class MsgListFragment extends BaseFragment implements OperateListener {
      * */
     @Override
     public void operate(String operateType, Object str) {
-        Bundle bd = new Bundle();
-        String uniqueId = (String) str;
-        bd.putString("uniqueId", uniqueId);
-        switch (operateType) {
-            case "1":                   //条目点击事件
-                goPage(ProductDetailActivity.class, bd);
-                break;
-            default:
-                break;
-        }
+//        Bundle bd = new Bundle();
+//        String uniqueId = (String) str;
+//        bd.putString("uniqueId", uniqueId);
+//        switch (operateType) {
+//            case "1":                   //条目点击事件
+//                goPage(ProductDetailActivity.class, bd);
+//                break;
+//            default:
+//                break;
+//        }
     }
 }

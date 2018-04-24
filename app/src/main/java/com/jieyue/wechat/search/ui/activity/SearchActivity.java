@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
@@ -42,6 +43,8 @@ public class SearchActivity extends BaseActivity implements TextView.OnEditorAct
     ImageView iv_search;
     @BindView(R.id.et_search)
     EditText et_search;
+    @BindView(R.id.rl_search)
+    RelativeLayout rl_search;
     @BindView(R.id.no_data_refreshLayout)
     SmartRefreshLayout no_data_refreshLayout;
     @BindView(R.id.fragmentBill_refreshLayout)
@@ -87,9 +90,13 @@ public class SearchActivity extends BaseActivity implements TextView.OnEditorAct
         fragmentBill_refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-
                 pageNum += 1;
-//                getListData(curPage, PAGESIZE, "0", false);
+
+                String mKeyWord = et_search.getText().toString().replace(" ","");
+                if(!StringUtils.isEmpty(mKeyWord)) {
+                    getSearchList(mKeyWord);
+                }
+
             }
         });
     }
@@ -138,8 +145,8 @@ public class SearchActivity extends BaseActivity implements TextView.OnEditorAct
             }
 
             getSearchList(mKeyWord);
-            iv_search.setFocusable(true);
-            iv_search.setFocusableInTouchMode(true);
+            rl_search.setFocusable(true);
+            rl_search.setFocusableInTouchMode(true);
         }
 
     }

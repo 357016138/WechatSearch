@@ -8,6 +8,8 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -72,6 +74,11 @@ public class PublishWechatGroupActivity extends BaseActivity {
     EditText et_tag;
     @BindView(R.id.et_des)
     EditText et_des;
+    @BindView(R.id.tv_remark_num)
+    TextView tv_remark_num;
+
+
+
     @BindView(R.id.iv_group_qcode)
     ImageView iv_group_qcode;
     @BindView(R.id.iv_cover)
@@ -88,22 +95,14 @@ public class PublishWechatGroupActivity extends BaseActivity {
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
     private File tempFile;
     private String type = "1";
-
     private String groupImage ;    //微信群二维码图片地址
     private String coverImage ;     //封面图片地址
     private List<ProvinceBean> mProvinceList;        //省份列表
     private List<ProvinceBean.CityBean> mCityList;  //市或区列表
     private List<String> mProvinceNameList = new ArrayList<>();
-
     private HashMap<String, List<String>> mProvinceMap = new HashMap<String, List<String>>();
-
-
-
     private String mCurrentProvinceId;   //当前省份的id
     private String mCurrentCityId;      //当前市区的id
-
-
-
     private List<CategoryBean> mCategoryList;
     private List<CategoryBean.TwoLevelBean> mTwoLevelList;
     private List<String> mCategoryNameList = new ArrayList<>();
@@ -127,6 +126,8 @@ public class PublishWechatGroupActivity extends BaseActivity {
         ButterKnife.bind(this);
         topBar.setTitle("发布");
         topBar.setLineVisible(true);
+
+        et_des.addTextChangedListener(watcher1); //监听输入数字变化
 
     }
 
@@ -599,5 +600,69 @@ public class PublishWechatGroupActivity extends BaseActivity {
         selectStoreDialog.show();
 
     }
+
+
+    /**
+     * 监听所有EditText是否输入内容  然后判断高亮button
+     * */
+    private TextWatcher watcher = new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            flag1 = login_uerName.getText().toString().trim().length() > 0;
+//            flag2 = login_password_input.getText().toString().trim().length() > 0;
+//
+//
+//            if (flag1 && uerNameHasFocus){
+//                iv_del_username.setVisibility(View.VISIBLE);
+//            }else {
+//                iv_del_username.setVisibility(View.GONE);
+//            }
+//            if (flag2 && passWordHasFocus){
+//                iv_del_password.setVisibility(View.VISIBLE);
+//            }else {
+//                iv_del_password.setVisibility(View.GONE);
+//            }
+//            if (flag1 && flag2 ) {
+//                login_loginButton.setEnabled(true);
+//                login_loginButton.setBackground(getResources().getDrawable(R.drawable.bg_login_button));
+//                ll_btn.setBackground(getResources().getDrawable(R.drawable.bg_loan_pic_shadow));
+//            } else {
+//                login_loginButton.setEnabled(false);
+//                login_loginButton.setBackground(getResources().getDrawable(R.drawable.bg_button_disable));
+//                ll_btn.setBackground(null);
+//            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+
+    /**
+     * 监听所有EditText是否输入内容  然后判断高亮button
+     * */
+    private TextWatcher watcher1 = new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            tv_remark_num.setText(s.length()+"/100");
+        }
+    };
 
 }
