@@ -21,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.adapter.PriceBillAdapter;
 import com.jieyue.wechat.search.adapter.PublishBillAdapter;
+import com.jieyue.wechat.search.bean.DataBean;
 import com.jieyue.wechat.search.bean.ProvinceBean;
 import com.jieyue.wechat.search.bean.PublishBillBean;
 import com.jieyue.wechat.search.common.BaseFragment;
@@ -87,6 +88,8 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
     private int pageNum = 1;             // 当前页码
     private final int PAGESIZE = 15;     // 每页条数
     private SpinnerPop spinnerPop;
+    private List<PublishBillBean> beanList;
+    private PublishBillBean publishBillBean;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -191,6 +194,28 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
         startRequest(Task.PRICE_BILL, params, new TypeToken<List<PublishBillBean>>() {}.getType(), showDialog);
     }
 
+    /**
+     * 刷新订单
+     */
+    public void refreshOrder(String orderId) {
+        RequestParams params = new RequestParams(UrlConfig.URL_REFRESH_ORDER);
+        params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
+        params.add("userId", UserManager.getUserId());
+        params.add("orderId", orderId);
+        startRequest(Task.REFRESH_ORDER, params, DataBean.class);
+    }
+
+    /**
+     * 删除订单订单
+     */
+    public void deleteOrder(String uniqueId) {
+        RequestParams params = new RequestParams(UrlConfig.URL_DELETE_ORDER);
+        params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
+        params.add("userId", UserManager.getUserId());
+        params.add("uniqueId", uniqueId);
+        startRequest(Task.DELETE_ORDER, params, DataBean.class);
+    }
+
     @Override
     public void onRefresh(Call call, int tag, ResultData data) {
         super.onRefresh(call, tag, data);
@@ -200,7 +225,7 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
                 fragmentBill_refreshLayout.finishLoadmore();
                 no_data_refreshLayout.finishRefresh();
                 if (handlerRequestErr(data)) {
-                    List<PublishBillBean> beanList = (List<PublishBillBean>) data.getBody();
+                    beanList = (List<PublishBillBean>) data.getBody();
                     //------------------数据异常情况-------------------
                     if (beanList == null||beanList.size() == 0) {
                         if (pageNum == 1) {
@@ -225,6 +250,24 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
                     }
                 }
                 break;
+            case Task.REFRESH_ORDER:     //刷新
+                if (handlerRequestErr(data)) {
+                    DataBean dataBean = (DataBean)data.getBody();
+                    Bundle bd = new Bundle();
+                    bd.putString("orderId",  dataBean.getData());
+                    goPage(PayActivity.class, bd);
+
+                }
+                break;
+            case Task.DELETE_ORDER:
+                if (handlerRequestErr(data)) { //删除成功
+                    toast("删除成功");
+                    beanList.remove(publishBillBean);
+                    adapter.notifyDataSetChanged();
+                }else{
+                    toast("删除失败");
+                }
+                break;
             default:
                 break;
         }
@@ -243,7 +286,7 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
     @Override
     public void operate(String operateType, Object bean) {
         Bundle bd = new Bundle();
-        PublishBillBean publishBillBean = (PublishBillBean) bean;
+        publishBillBean = (PublishBillBean) bean;
         bd.putString("uniqueId", publishBillBean.getOrderId());
         switch (operateType) {
             case "1":              //条目点击事件
@@ -274,16 +317,12 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
         if ("0".equals(codeType)){
             bt_1.setVisibility(View.VISIBLE);
         }
-
+        if ("2".equals(codeType)){
+            bt_3.setVisibility(View.VISIBLE);
+        }
 
         myView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT));
         final Dialog dialog = builder.create();
-        myView.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
 
         bt_1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,30 +334,38 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
                 dialog.dismiss();
             }
         });
+        //刷新
         bt_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //刷新
-                toast("刷新");
+                refreshOrder(uniqueId);
                 dialog.dismiss();
             }
         });
+        //修改
         bt_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //修改
                 toast("修改");
                 dialog.dismiss();
             }
         });
+        //删除
         bt_5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 //删除
-                toast("删除");
+                deleteOrder(uniqueId);
                 dialog.dismiss();
             }
         });
+        //取消
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
     }
 

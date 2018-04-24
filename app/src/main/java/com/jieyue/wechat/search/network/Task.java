@@ -67,10 +67,12 @@ public interface Task {
     int BANNER_DATA = 0X0029;
     //账户微币充值
     int RECHARGE_ORDER = 0X0030;
-
-
-
-
+    //刷新订单
+    int REFRESH_ORDER = 0X0031;
+    //删除订单
+    int DELETE_ORDER = 0X0032;
+    //获取消息列表
+    int MESSAGE_LIST = 0X0033;
 
 
     //绑定银行卡

@@ -66,10 +66,12 @@ public interface UrlConfig {
     String URL_RECHARGE_ORDER = URL + "/vcoin/order.json";
     //支付回调地址
     String URL_PAY_NOTIFY = URL + "/order/pay/notify.json";
-
-
-
-
+    //刷新订单
+    String URL_REFRESH_ORDER = URL + "/order/refresh/group.json";
+    //删除订单
+    String URL_DELETE_ORDER = URL + "/group/edit/delete.json";
+    //获取消息列表
+    String URL_MESSAGE_LIST = URL + "/message/get/all.json";
 
 
 

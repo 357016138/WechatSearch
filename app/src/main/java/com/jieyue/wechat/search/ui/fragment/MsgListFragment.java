@@ -1,25 +1,42 @@
 package com.jieyue.wechat.search.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
+import com.jieyue.wechat.search.adapter.SearchAdapter;
+import com.jieyue.wechat.search.bean.SearchBean;
 import com.jieyue.wechat.search.common.BaseFragment;
+import com.jieyue.wechat.search.common.ShareData;
+import com.jieyue.wechat.search.listener.OperateListener;
+import com.jieyue.wechat.search.network.RequestParams;
+import com.jieyue.wechat.search.network.ResultData;
+import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
+import com.jieyue.wechat.search.ui.activity.ProductDetailActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.GsonUtil;
 import com.jieyue.wechat.search.utils.LogUtils;
 import com.jieyue.wechat.search.utils.UserManager;
 import com.jieyue.wechat.search.view.CustomWebView;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.Call;
 
 /**
  * @author baipeng
@@ -27,10 +44,18 @@ import butterknife.Unbinder;
  * @Date 2018/3/6 11:31
  * @Description MsgListFragment.
  */
-public class MsgListFragment extends BaseFragment {
+public class MsgListFragment extends BaseFragment implements OperateListener {
     Unbinder unbinder;
-    @BindView(R.id.wv_common)
-    CustomWebView wvCommon;
+    @BindView(R.id.no_data_refreshLayout)
+    SmartRefreshLayout no_data_refreshLayout;
+    @BindView(R.id.fragmentBill_refreshLayout)
+    SmartRefreshLayout fragmentBill_refreshLayout;
+    @BindView(R.id.fragmentBill_recyclerview)
+    RecyclerView fragmentBill_recyclerview;
+    private SearchAdapter adapter;
+
+    private int pageNum = 1;            // 当前页码
+    private final int pageSize = 15;   // 每页条数
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_base_webview, container, false);
@@ -45,17 +70,34 @@ public class MsgListFragment extends BaseFragment {
     private void initView(View view) {
         //一定要解绑 在onDestroyView里
         unbinder = ButterKnife.bind(this,view);
-        wvCommon.getmWebView().addJavascriptInterface(new JSNotify(), "jsToJava");
+        //recyclerview 布局设置start
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayout.VERTICAL);
+        fragmentBill_recyclerview.setLayoutManager(llm);
+        //recyclerview 布局设置end
+
+        adapter = new SearchAdapter(getActivity(), 0);
+        fragmentBill_recyclerview.setAdapter(adapter);
+        adapter.setOperateListener(this);
+
+        /**
+         *上拉加载更多
+         * */
+        fragmentBill_refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+
+                pageNum += 1;
+//                getListData(curPage, PAGESIZE, "0", false);
+            }
+        });
     }
 
     /**
      * 初始化数据
      * */
     private void initData() {
-        String url = String.format(Locale.US, UrlConfig.URL_MSG_LIST,
-                DeviceUtils.getDeviceUniqueId(getActivity()),
-                UserManager.getUserId());
-        wvCommon.getmWebView().loadUrl(url);
+        getMessageList(pageNum+"");
     }
 
     @Override
@@ -72,26 +114,83 @@ public class MsgListFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    /**
-     * android与js交互
-     */
-    public class JSNotify {
-        /**
-         * js回调方法，通过跟h5定协议 确定要做的操作
-         *
-         * @param json
-         */
-        @JavascriptInterface
-        public void jsCallbackMethod(String json) {
-            String type = GsonUtil.getStringFromJson(json, "type");
-            LogUtils.e("JY", json);
-            switch (type) {
-                default:
 
-                    break;
-            }
+    /***
+     * 信息列表
+     * */
+    private void getMessageList(String pageNum) {
+        RequestParams params = new RequestParams(UrlConfig.URL_MESSAGE_LIST);
+        params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
+        params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
+        params.add("pageNum", pageNum);
+        startRequest(Task.MESSAGE_LIST, params, SearchBean.class);
+    }
+
+
+    @Override
+    public void onRefresh(Call call, int tag, ResultData data) {
+        super.onRefresh(call, tag, data);
+        switch (tag) {
+            case Task.MESSAGE_LIST:
+                fragmentBill_refreshLayout.finishRefresh();
+                fragmentBill_refreshLayout.finishLoadmore();
+                no_data_refreshLayout.finishRefresh();
+                if (handlerRequestErr(data)) {
+                    SearchBean searchBean = (SearchBean) data.getBody();
+                    //------------------数据异常情况-------------------
+                    if (searchBean == null || searchBean.getGroups() == null || searchBean.getGroups().size() <= 0) {
+                        if (pageNum == 1) {
+                            showNodata();
+                        }
+                        return;
+                    }
+                    //-----------------数据正常情况--------------------
+                    List<SearchBean.ProductBean> dataListProm = searchBean.getGroups();
+                    if (pageNum == 1) {
+                        showList();
+                        adapter.setData(dataListProm);
+                    } else {
+                        adapter.getData().addAll(dataListProm);
+                    }
+                    //如果返回数据不够10条，就不能继续上拉加载更多
+                    fragmentBill_refreshLayout.setEnableLoadmore(dataListProm.size() >= pageSize);
+                    adapter.notifyDataSetChanged();
+
+                } else {
+                    if (pageNum == 1) {
+                        showNodata();
+                    }
+                }
+                break;
+            default:
+                break;
         }
+    }
 
+    private void showNodata() {
+        no_data_refreshLayout.setVisibility(View.VISIBLE);
+        fragmentBill_refreshLayout.setVisibility(View.GONE);
+    }
 
+    private void showList() {
+        no_data_refreshLayout.setVisibility(View.GONE);
+        fragmentBill_refreshLayout.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 列表布局的回调
+     * */
+    @Override
+    public void operate(String operateType, Object str) {
+        Bundle bd = new Bundle();
+        String uniqueId = (String) str;
+        bd.putString("uniqueId", uniqueId);
+        switch (operateType) {
+            case "1":                   //条目点击事件
+                goPage(ProductDetailActivity.class, bd);
+                break;
+            default:
+                break;
+        }
     }
 }

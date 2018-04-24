@@ -73,7 +73,7 @@ public class MyPublishListActivity extends BaseActivity {
         unpaidFragment = new BillUnpaidFragment();               //待支付
         progressFragment = new BillProgressFragment();            //审核中
         completeFragment = new BillCompleteFragment();            //审核通过
-        failFragment = new BillFailFragment();               //审核未通过
+        failFragment = new BillFailFragment();                  //审核未通过
 
         mFragments.add(allFragment);
         mFragments.add(unpaidFragment);

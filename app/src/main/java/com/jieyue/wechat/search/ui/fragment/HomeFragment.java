@@ -200,7 +200,7 @@ public class HomeFragment extends BaseFragment implements OperateListener{
 
 
     /***
-     * 搜索信息列表
+     * 信息列表
      * */
     private void getNewDataList() {
         RequestParams params = new RequestParams(UrlConfig.URL_GET_NEW_DATA_LIST);

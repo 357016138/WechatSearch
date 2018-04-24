@@ -1,5 +1,7 @@
 package com.jieyue.wechat.search.ui.fragment;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.adapter.PriceBillAdapter;
 import com.jieyue.wechat.search.adapter.PublishBillAdapter;
+import com.jieyue.wechat.search.bean.DataBean;
 import com.jieyue.wechat.search.bean.PublishBillBean;
 import com.jieyue.wechat.search.common.BaseFragment;
 import com.jieyue.wechat.search.common.Constants;
@@ -23,6 +27,7 @@ import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.service.MessageEvent;
 import com.jieyue.wechat.search.ui.activity.ConsultPriceActivity;
+import com.jieyue.wechat.search.ui.activity.PayActivity;
 import com.jieyue.wechat.search.ui.activity.PreferenceProductActivity;
 import com.jieyue.wechat.search.ui.activity.PriceBillDetailActivity;
 import com.jieyue.wechat.search.ui.activity.ProductDetailActivity;
@@ -66,6 +71,8 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
     private PublishBillAdapter adapter;
     private int pageNum = 1;             //当前页码
     private final int PAGESIZE = 15;//每页条数
+    private PublishBillBean publishBillBean;
+    private List<PublishBillBean> beanList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -159,6 +166,17 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
         startRequest(Task.PRICE_BILL, params, new TypeToken<List<PublishBillBean>>() {}.getType(), showDialog);
     }
 
+    /**
+     * 删除订单订单
+     */
+    public void deleteOrder(String uniqueId) {
+        RequestParams params = new RequestParams(UrlConfig.URL_DELETE_ORDER);
+        params.add("pid", DeviceUtils.getDeviceUniqueId(getActivity()));
+        params.add("userId", UserManager.getUserId());
+        params.add("uniqueId", uniqueId);
+        startRequest(Task.DELETE_ORDER, params, DataBean.class);
+    }
+
     @Override
     public void onRefresh(Call call, int tag, ResultData data) {
         super.onRefresh(call, tag, data);
@@ -168,7 +186,7 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
                 fragmentBill_refreshLayout.finishLoadmore();
                 no_data_refreshLayout.finishRefresh();
                 if (handlerRequestErr(data)) {
-                    List<PublishBillBean> beanList = (List<PublishBillBean>) data.getBody();
+                    beanList = (List<PublishBillBean>) data.getBody();
                     //------------------数据异常情况-------------------
                     if (beanList == null||beanList.size() == 0) {
                         if (pageNum == 1) {
@@ -193,7 +211,15 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
                     }
                 }
                 break;
-
+            case Task.DELETE_ORDER:
+                if (handlerRequestErr(data)) { //删除成功
+                    toast("删除成功");
+                    beanList.remove(publishBillBean);
+                    adapter.notifyDataSetChanged();
+                }else{
+                    toast("删除失败");
+                }
+                break;
             default:
                 break;
         }
@@ -212,24 +238,68 @@ public class BillProgressFragment extends BaseFragment implements OperateListene
     @Override
     public void operate(String operateType, Object bean) {
         Bundle bd = new Bundle();
-        PublishBillBean publishBillBean = (PublishBillBean) bean;
+        publishBillBean = (PublishBillBean) bean;
         bd.putString("uniqueId", publishBillBean.getOrderId());
         switch (operateType) {
             case "1":              //条目点击事件
                 goPage(ProductDetailActivity.class, bd);
                 break;
-            case "2":           //推荐产品
-                goPage(RecommendProductActivity.class, bd);
+            case "2":              //编辑 根据状态去判断 弹出
+                showMenu(publishBillBean.getCodeType(),publishBillBean.getOrderId());
                 break;
-
-            case "3":           //优选产品
-                goPage(PreferenceProductActivity.class, bd);
-                break;
-
             default:
                 break;
         }
     }
+    /**
+     * 弹出菜单数据初始化
+     */
+    private void showMenu(String codeType,String uniqueId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.dialog_no_bg);
+        View myView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_layout, null);
+        builder.setView(myView);
+        Button bt_1 = myView.findViewById(R.id.bt_1);            //支付
+        Button bt_2 = myView.findViewById(R.id.bt_2);            //置顶
+        Button bt_3 = myView.findViewById(R.id.bt_3);            //刷新
+        Button bt_4 = myView.findViewById(R.id.bt_4);            //修改
+        Button bt_5 = myView.findViewById(R.id.bt_5);            //删除
+        Button bt_cancel = myView.findViewById(R.id.bt_cancel);  //取消
 
+        if ("0".equals(codeType)){
+            bt_1.setVisibility(View.VISIBLE);
+        }
+        if ("2".equals(codeType)){
+            bt_3.setVisibility(View.VISIBLE);
+        }
+
+        myView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT));
+        final Dialog dialog = builder.create();
+
+        //修改
+        bt_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toast("修改");
+                dialog.dismiss();
+            }
+        });
+        //删除
+        bt_5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteOrder(uniqueId);
+                dialog.dismiss();
+            }
+        });
+        //取消
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
 
 }

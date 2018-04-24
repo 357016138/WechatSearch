@@ -274,7 +274,6 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 if (handlerRequestErr(data)) {
                     mCategoryList = (List<CategoryBean>) data.getBody();
 
-
                     if (mCategoryList != null && mCategoryList.size() > 0) {
 
                         for (int i = 0; i < mCategoryList.size(); i++) {

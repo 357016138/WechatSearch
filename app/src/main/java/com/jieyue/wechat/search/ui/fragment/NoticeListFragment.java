@@ -29,8 +29,6 @@ import butterknife.Unbinder;
  */
 public class NoticeListFragment extends BaseFragment {
     Unbinder unbinder;
-    @BindView(R.id.wv_common)
-    CustomWebView wvCommon;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_base_webview, container, false);
@@ -45,7 +43,6 @@ public class NoticeListFragment extends BaseFragment {
     private void initView(View view) {
         //一定要解绑 在onDestroyView里
         unbinder = ButterKnife.bind(this,view);
-        wvCommon.getmWebView().addJavascriptInterface(new JSNotify(), "jsToJava");
     }
 
     /**
@@ -55,7 +52,6 @@ public class NoticeListFragment extends BaseFragment {
         String url = String.format(Locale.US, UrlConfig.URL_NOTICE_LIST,
                 DeviceUtils.getDeviceUniqueId(getActivity()),
                 UserManager.getUserId());
-        wvCommon.getmWebView().loadUrl(url);
     }
 
     @Override
@@ -72,32 +68,4 @@ public class NoticeListFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    /**
-     * android与js交互
-     */
-    public class JSNotify {
-        /**
-         * js回调方法，通过跟h5定协议 确定要做的操作
-         *
-         * @param json
-         */
-        @JavascriptInterface
-        public void jsCallbackMethod(String json) {
-            String type = GsonUtil.getStringFromJson(json, "type");
-            LogUtils.e("JY", json);
-            switch (type) {
-                default:
-
-                    break;
-            }
-        }
-
-        @JavascriptInterface
-        public void loadNoticeDetail(String intoUrl) {
-            LogUtils.e("JY", intoUrl);
-            goWebPage("", intoUrl);
-        }
-
-
-    }
 }

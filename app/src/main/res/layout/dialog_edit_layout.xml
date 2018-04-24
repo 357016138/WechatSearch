@@ -19,8 +19,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0.5"
-        android:layout_marginRight="7dp"
-        android:layout_marginLeft="7dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:background="@color/color_E7E9EA"/>
 
     <Button
@@ -52,8 +52,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0.5"
-        android:layout_marginRight="7dp"
-        android:layout_marginLeft="7dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:background="@color/color_E7E9EA"/>
 
     <Button
