@@ -38,9 +38,9 @@ public class MyPublishListActivity extends BaseActivity {
 
 
     private List<Fragment> mFragments = new ArrayList<Fragment>();
-    private BillAllFragment allFragment;            // 全部
-    private BillUnpaidFragment unpaidFragment;      // 待支付
-    private BillProgressFragment progressFragment; // 审核中
+    private BillAllFragment allFragment;                  // 全部
+    private BillUnpaidFragment unpaidFragment;           // 待支付
+    private BillProgressFragment progressFragment;      // 审核中
     private BillCompleteFragment completeFragment;     // 审核通过
     private BillFailFragment    failFragment;        // 审核未通过
 

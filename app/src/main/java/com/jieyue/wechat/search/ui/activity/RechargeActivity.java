@@ -64,7 +64,7 @@ public class RechargeActivity extends BaseActivity {
     TextView tv_6_1;
     @BindView(R.id.tv_6_2)
     TextView tv_6_2;
-    private String rechargeMenoy = "10";
+    private String rechargeMenoy = "600";
 
 
     @Override

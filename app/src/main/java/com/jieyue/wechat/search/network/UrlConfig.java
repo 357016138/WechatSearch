@@ -72,7 +72,8 @@ public interface UrlConfig {
     String URL_DELETE_ORDER = URL + "/group/edit/delete.json";
     //获取消息列表
     String URL_MESSAGE_LIST = URL + "/message/get/all.json";
-
+    //修改微信群信息
+    String URL_UPDATE_GROUP = URL + "/order/update/group.json";
 
 
 

@@ -306,12 +306,30 @@
                         android:text="群二维码"
                         android:textSize="@dimen/sp_20"/>
 
-                    <ImageView
-                        android:id="@+id/iv_group_qcode"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/icon_add_img"
-                        android:layout_marginTop="@dimen/dp_5"/>
+                    <RelativeLayout
+                        android:id="@+id/rl_group_qcode"
+                        android:layout_width="@dimen/dp_105"
+                        android:layout_height="@dimen/dp_105">
+
+                        <ImageView
+                            android:id="@+id/iv_group_qcode"
+                            android:layout_width="@dimen/dp_100"
+                            android:layout_height="@dimen/dp_100"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:src="@drawable/icon_add_img"
+                            android:scaleType="fitXY" />
+
+                        <ImageView
+                            android:id="@+id/iv_delete_qcode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:src="@drawable/icon_delete"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -328,12 +346,30 @@
                         android:text="封面"
                         android:textSize="@dimen/sp_20"/>
 
-                    <ImageView
-                        android:id="@+id/iv_cover"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/icon_add_img"
-                        android:layout_marginTop="@dimen/dp_5"/>
+                    <RelativeLayout
+                        android:id="@+id/rl_cover"
+                        android:layout_width="@dimen/dp_105"
+                        android:layout_height="@dimen/dp_105">
+
+                        <ImageView
+                            android:id="@+id/iv_cover"
+                            android:layout_width="@dimen/dp_100"
+                            android:layout_height="@dimen/dp_100"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:src="@drawable/icon_add_img"
+                            android:scaleType="fitXY"/>
+
+                        <ImageView
+                            android:id="@+id/iv_delete_cover"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:src="@drawable/icon_delete"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -375,6 +411,12 @@
                 android:focusable="true"/>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"/>
 
     </LinearLayout>
 

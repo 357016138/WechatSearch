@@ -21,12 +21,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.adapter.CityArrayWheelAdapter;
 import com.jieyue.wechat.search.adapter.ProvinceArrayWheelAdapter;
 import com.jieyue.wechat.search.bean.CategoryBean;
+import com.jieyue.wechat.search.bean.ProductDetailBean;
 import com.jieyue.wechat.search.bean.ProvinceBean;
 import com.jieyue.wechat.search.bean.DataBean;
 import com.jieyue.wechat.search.common.BaseActivity;
@@ -39,6 +41,7 @@ import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.utils.DateUtils;
 import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.FileUtils;
+import com.jieyue.wechat.search.utils.StringUtils;
 import com.jieyue.wechat.search.utils.UserManager;
 import com.jieyue.wechat.search.view.wheelview.adapter.ArrayWheelAdapter;
 import com.jieyue.wechat.search.view.wheelview.widget.WheelView;
@@ -76,18 +79,20 @@ public class PublishWechatGroupActivity extends BaseActivity {
     EditText et_des;
     @BindView(R.id.tv_remark_num)
     TextView tv_remark_num;
-
-
-
     @BindView(R.id.iv_group_qcode)
     ImageView iv_group_qcode;
+    @BindView(R.id.iv_delete_qcode)
+    ImageView iv_delete_qcode;
     @BindView(R.id.iv_cover)
     ImageView iv_cover;
+    @BindView(R.id.iv_delete_cover)
+    ImageView iv_delete_cover;
     @BindView(R.id.ll_btn)
     LinearLayout ll_btn;
     @BindView(R.id.ll_publish_address)
     LinearLayout ll_publish_address;
-
+    @BindView(R.id.ll_publish_category)
+    LinearLayout ll_publish_category;
 
     @BindView(R.id.btn_submit)
     TextView btn_submit;
@@ -97,6 +102,9 @@ public class PublishWechatGroupActivity extends BaseActivity {
     private String type = "1";
     private String groupImage ;    //微信群二维码图片地址
     private String coverImage ;     //封面图片地址
+    private String tempGroupImage ;    //临时微信群二维码图片地址
+    private String tempCoverImage ;     //临时封面图片地址
+
     private List<ProvinceBean> mProvinceList;        //省份列表
     private List<ProvinceBean.CityBean> mCityList;  //市或区列表
     private List<String> mProvinceNameList = new ArrayList<>();
@@ -110,6 +118,8 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
     private String mCurrentCategoryId;      //当前分类的id
     private String mCurrentTwoLevelId;      //当前子分类的id
+    private String orderId;
+    private String path;
 
     @Override
     public void setContentLayout() {
@@ -118,7 +128,9 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
     @Override
     public void dealLogicBeforeInitView() {
-
+        Bundle bundle = getIntentData();
+        orderId = bundle.getString("orderId");
+        path = bundle.getString("path");
     }
 
     @Override
@@ -126,9 +138,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
         ButterKnife.bind(this);
         topBar.setTitle("发布");
         topBar.setLineVisible(true);
-
         et_des.addTextChangedListener(watcher1); //监听输入数字变化
-
     }
 
     @Override
@@ -137,12 +147,17 @@ public class PublishWechatGroupActivity extends BaseActivity {
         getAddressList("city.json",this);
         //获取分类类目
         getCategoryList();
+        //修改订单的情况,获取订单信息展示
+        if (!StringUtils.isEmpty(orderId)){
+            topBar.setTitle("修改");
+            getProductDetail(orderId);
+        }
 
     }
 
 
 
-    @OnClick({R.id.iv_group_qcode, R.id.iv_cover, R.id.btn_submit, R.id.ll_publish_address,R.id.ll_publish_category})
+    @OnClick({R.id.rl_group_qcode, R.id.rl_cover, R.id.btn_submit, R.id.ll_publish_address,R.id.ll_publish_category})
     @Override
     public void onClickEvent(View view) {
         Intent intent =null;
@@ -162,7 +177,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 }
                 initCategoryDialog(mCategoryNameList);
                 break;
-            case R.id.iv_group_qcode:             //微信群二维码图片地址
+            case R.id.rl_group_qcode:             //微信群二维码图片地址
                 // 激活系统图库，选择一张图片
                 intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
@@ -171,7 +186,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 startActivityForResult(intent, PHOTO_REQUEST_GROUP);
                 break;
 
-            case R.id.iv_cover:                 //封面图片地址
+            case R.id.rl_cover:                 //封面图片地址
                 // 激活系统图库，选择一张图片
                 intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
@@ -181,7 +196,16 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 break;
             case R.id.btn_submit:                 //提交
                 if (!isLogin()) return;
-                submitInfo();
+                //新发布的和修改的两种情况
+                if (!StringUtils.isEmpty(orderId)){        // 修改
+                    if (groupImage.equals(tempGroupImage)&&coverImage.equals(tempGroupImage)){
+                        toast("请修改二维码图片或封面图片");
+                        return;
+                    }
+                     updataGroupInfo(groupImage,coverImage);
+                }else {                              // 新发布
+                    submitInfo();
+                }
                 break;
 
             default:
@@ -207,11 +231,39 @@ public class PublishWechatGroupActivity extends BaseActivity {
         String tag = et_tag.getText().toString().trim();
         String des = et_des.getText().toString().trim();
 
-//        if (StringUtils.isEmpty(mCurrentProvinceId)||StringUtils.isEmpty(mCurrentCityId)){
-//            toast("请选择地区");
-//            return;
-//        }
-
+        //判断是否为空
+        if (StringUtils.isEmpty(title)){
+            toast("标题不能为空");
+            return;
+        }
+        if (StringUtils.isEmpty(wechat_num)){
+            toast("微信号不能为空");
+            return;
+        }
+        if (StringUtils.isEmpty(mCurrentCategoryId)||StringUtils.isEmpty(mCurrentTwoLevelId)){
+            toast("请选择分类");
+            return;
+        }
+        if (StringUtils.isEmpty(mCurrentProvinceId)||StringUtils.isEmpty(mCurrentCityId)){
+            toast("请选择地区");
+            return;
+        }
+        if (StringUtils.isEmpty(tag)){
+            toast("标签不能为空");
+            return;
+        }
+        if (StringUtils.isEmpty(des)){
+            toast("详情不能为空");
+            return;
+        }
+        if (StringUtils.isEmpty(groupImage)){
+            toast("请上传群二维码");
+            return;
+        }
+        if (StringUtils.isEmpty(coverImage)){
+            toast("请上传封面");
+            return;
+        }
 
         RequestParams params = new RequestParams(UrlConfig.URL_PUBLISH_WECHAT_GROUP);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
@@ -229,11 +281,23 @@ public class PublishWechatGroupActivity extends BaseActivity {
         startRequest(Task.PUBLISH_WECHAT_GROUP, params, DataBean.class);
 
     }
+    /**
+     * 修改订单
+     * */
+    public void updataGroupInfo(String groupImage,String coverImage) {
+        RequestParams params = new RequestParams(UrlConfig.URL_UPDATE_GROUP);
+        params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+        params.add("orderId", orderId);
+        params.add("groupImage", groupImage);
+        params.add("coverImage", coverImage);
+        startRequest(Task.UPDATE_GROUP, params, DataBean.class);
+    }
+
 
     /**
      * 上传头像
      */
-    public  void uploadImg(String file) {
+    public void uploadImg(String file) {
         RequestParams params = new RequestParams(UrlConfig.URL_UPLOAD_IMAGE);
         params.setHttpType(HttpType.UPLOAD);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
@@ -248,11 +312,19 @@ public class PublishWechatGroupActivity extends BaseActivity {
      * 获取分类类目
      */
     private void getCategoryList() {
-
         RequestParams params = new RequestParams(UrlConfig.URL_GET_CATEGORY);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
         startRequest(Task.GET_CATEGORY, params, new TypeToken<List<CategoryBean>>() {}.getType());
+    }
 
+    /**
+     * 获得商品详情
+     * */
+    public void getProductDetail(String uniqueId) {
+        RequestParams params = new RequestParams(UrlConfig.URL_PRODUCT_DETAIL);
+        params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+        params.add("uniqueId", uniqueId);
+        startRequest(Task.PRODUCT_DETAIL, params, ProductDetailBean.class);
     }
 
     @Override
@@ -261,20 +333,25 @@ public class PublishWechatGroupActivity extends BaseActivity {
         switch (tag) {
             case Task.PUBLISH_WECHAT_GROUP:
                 if (handlerRequestErr(data)) {       //发布成功
-
                     DataBean dataBean = (DataBean) data.getBody();
                     String orderId = dataBean.getData();
                     Bundle bd = new Bundle();
                     bd.putString("orderId", orderId);
                     goPage(PayActivity.class, bd);
                     finish();
-
                 }
                 break;
+            case Task.UPDATE_GROUP:
+                if (handlerRequestErr(data)) {       //修改成功
+                    DataBean dataBean = (DataBean) data.getBody();
+                    String orderId = dataBean.getData();
+                    finish();
+                }
+                break;
+
             case Task.GET_CATEGORY:            //获取分类类目
                 if (handlerRequestErr(data)) {
                     mCategoryList = (List<CategoryBean>) data.getBody();
-
                     if (mCategoryList != null && mCategoryList.size() > 0) {
 
                         for (int i = 0; i < mCategoryList.size(); i++) {
@@ -288,13 +365,10 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
                         }
                     }
-
-
                 }
                 break;
             case Task.UPLOAD_IMAGE:          //上传图片
                 if (handlerRequestErr(data)) {
-
                     DataBean dataBean = (DataBean) data.getBody();
                     String url = dataBean.getData();
                     if ("1".equals(type)){
@@ -304,13 +378,52 @@ public class PublishWechatGroupActivity extends BaseActivity {
                     }else {
                         return;
                     }
-
+                }
+                break;
+            case Task.PRODUCT_DETAIL:
+                if (handlerRequestErr(data)) {
+                    ProductDetailBean dataBean = (ProductDetailBean) data.getBody();
+                    if (dataBean != null) {
+                        updateDetailInfo(dataBean);
+                    }
                 }
                 break;
             default:
                 break;
         }
     }
+    /**
+     * 赋值
+     * */
+    private void updateDetailInfo(ProductDetailBean dataBean) {
+        et_title.setText(dataBean.getGroupName());
+        et_wechat_num.setText(dataBean.getUserWechat());
+        tv_category .setText(dataBean.getParentCategory()+" "+dataBean.getCategory());
+        tv_address.setText(dataBean.getProvince()+" "+dataBean.getCity());
+        et_tag.setText(dataBean.getTags());
+        et_des.setText(dataBean.getDescription());
+        tv_remark_num.setText(et_des.getText().length()+"/100");
+        Glide.with(this).load(dataBean.getGroupImage()).into(iv_group_qcode);
+        Glide.with(this).load(dataBean.getCoverImage()).into(iv_cover);
+
+        iv_delete_cover.setVisibility(View.VISIBLE);
+        iv_delete_qcode.setVisibility(View.VISIBLE);
+        //临时赋值
+        tempGroupImage = dataBean.getGroupImage();
+        tempCoverImage = dataBean.getCoverImage();
+        //赋值
+        groupImage = dataBean.getGroupImage();
+        coverImage = dataBean.getCoverImage();
+
+        et_title.setFocusable(false);
+        et_wechat_num.setFocusable(false);
+        ll_publish_category.setOnClickListener(null);
+        ll_publish_address.setOnClickListener(null);
+        et_tag.setFocusable(false);
+        et_des.setFocusable(false);
+
+    }
+
     /**
      *
      * @param requestCode
@@ -337,10 +450,8 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 }else if ("2".equals(type)){
                     iv_cover.setImageBitmap(bitmap);
                 }
-
                 //压缩并上传图片
                 compressImage(bitmap);
-
                 //保存到SharedPreferences
 //                saveBitmapToSharedPreferences(bitmap);
             }
@@ -600,50 +711,6 @@ public class PublishWechatGroupActivity extends BaseActivity {
         selectStoreDialog.show();
 
     }
-
-
-    /**
-     * 监听所有EditText是否输入内容  然后判断高亮button
-     * */
-    private TextWatcher watcher = new TextWatcher() {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            flag1 = login_uerName.getText().toString().trim().length() > 0;
-//            flag2 = login_password_input.getText().toString().trim().length() > 0;
-//
-//
-//            if (flag1 && uerNameHasFocus){
-//                iv_del_username.setVisibility(View.VISIBLE);
-//            }else {
-//                iv_del_username.setVisibility(View.GONE);
-//            }
-//            if (flag2 && passWordHasFocus){
-//                iv_del_password.setVisibility(View.VISIBLE);
-//            }else {
-//                iv_del_password.setVisibility(View.GONE);
-//            }
-//            if (flag1 && flag2 ) {
-//                login_loginButton.setEnabled(true);
-//                login_loginButton.setBackground(getResources().getDrawable(R.drawable.bg_login_button));
-//                ll_btn.setBackground(getResources().getDrawable(R.drawable.bg_loan_pic_shadow));
-//            } else {
-//                login_loginButton.setEnabled(false);
-//                login_loginButton.setBackground(getResources().getDrawable(R.drawable.bg_button_disable));
-//                ll_btn.setBackground(null);
-//            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
-
 
     /**
      * 监听所有EditText是否输入内容  然后判断高亮button

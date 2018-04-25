@@ -73,6 +73,19 @@ public interface Task {
     int DELETE_ORDER = 0X0032;
     //获取消息列表
     int MESSAGE_LIST = 0X0033;
+    //获取消息列表
+    int UPDATE_GROUP = 0X0034;
+
+
+
+
+
+
+
+
+
+
+
 
 
     //绑定银行卡

@@ -66,6 +66,9 @@ public class PayActivity extends BaseActivity {
     TextView btn_submit;
 
     private static final String NOTIFYURL = URL_PAY_NOTIFY;
+
+    private static final String RECHARGE = "recharge";    //从充值过来的路径
+
     private String orderId;
     private OrderBean orderBean;
     private String path;

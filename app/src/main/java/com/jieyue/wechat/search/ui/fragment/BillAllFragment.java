@@ -346,7 +346,11 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
         bt_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toast("修改");
+                //
+                Bundle bd = new Bundle();
+                bd.putString("orderId", uniqueId);
+                bd.putString("path", "bill");
+                goPage(PublishWechatGroupActivity.class, bd);
                 dialog.dismiss();
             }
         });

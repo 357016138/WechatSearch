@@ -158,8 +158,6 @@ public class ProductDetailActivity extends BaseActivity {
      "lookCount": 15
      * */
     private void updateDetailInfo(ProductDetailBean dataBean) {
-
-
         topBar.setTitle(dataBean.getGroupName());
         tv_detail_des.setText(dataBean.getDescription());
         tv_detail_look.setText(dataBean.getLookCount()+" 个关注");
@@ -168,8 +166,6 @@ public class ProductDetailActivity extends BaseActivity {
         tv_detail_address.setText(dataBean.getProvince()+" "+dataBean.getCity());
         tv_detail_tag.setText(dataBean.getTags());
         Glide.with(this).load(dataBean.getGroupImage()).into(iv_pic1);
-
-
     }
 
 
