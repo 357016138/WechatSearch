@@ -202,7 +202,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
                         return;
                      }
                      updataGroupInfo(groupImage,coverImage);
-                }else {                              // 新发布
+                }else {                                  // 新发布
                     submitInfo();
                 }
                 break;
@@ -371,10 +371,13 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 if (handlerRequestErr(data)) {
                     DataBean dataBean = (DataBean) data.getBody();
                     String url = dataBean.getData();
+
                     if ("1".equals(type)){
                         groupImage = url;
+                        iv_delete_qcode.setVisibility(View.VISIBLE);
                     }else if ("2".equals(type)){
                         coverImage = url;
+                        iv_delete_cover.setVisibility(View.VISIBLE);
                     }else {
                         return;
                     }
@@ -475,6 +478,9 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
         intent.putExtra("outputFormat", "JPEG");// 图片格式
         intent.putExtra("noFaceDetection", true);// 取消人脸识别
+
+        //是否是圆形裁剪区域，设置了也不一定有效
+        intent.putExtra("circleCrop", false);
         intent.putExtra("return-data", true);
         // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CUT
         startActivityForResult(intent, PHOTO_REQUEST_CUT);
