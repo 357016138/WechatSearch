@@ -169,7 +169,6 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 }
                 initProvinceDialog(mProvinceNameList);
                 break;
-
             case R.id.ll_publish_category:                 //选择分类
                 if (mCategoryNameList.size() == 0) {
                     getCategoryList();
@@ -198,10 +197,10 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 if (!isLogin()) return;
                 //新发布的和修改的两种情况
                 if (!StringUtils.isEmpty(orderId)){        // 修改
-                    if (groupImage.equals(tempGroupImage) && coverImage.equals(tempGroupImage)){
+                    if (groupImage.equals(tempGroupImage) && coverImage.equals(tempCoverImage)){
                         toast("请修改二维码图片或封面图片");
                         return;
-                    }
+                     }
                      updataGroupInfo(groupImage,coverImage);
                 }else {                              // 新发布
                     submitInfo();
@@ -281,18 +280,19 @@ public class PublishWechatGroupActivity extends BaseActivity {
         startRequest(Task.PUBLISH_WECHAT_GROUP, params, DataBean.class);
 
     }
+
     /**
      * 修改订单
      * */
     public void updataGroupInfo(String groupImage,String coverImage) {
         RequestParams params = new RequestParams(UrlConfig.URL_UPDATE_GROUP);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+        params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
         params.add("orderId", orderId);
         params.add("groupImage", groupImage);
         params.add("coverImage", coverImage);
         startRequest(Task.UPDATE_GROUP, params, DataBean.class);
     }
-
 
     /**
      * 上传头像
@@ -344,7 +344,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
             case Task.UPDATE_GROUP:
                 if (handlerRequestErr(data)) {       //修改成功
                     DataBean dataBean = (DataBean) data.getBody();
-                    String orderId = dataBean.getData();
+                    toast("修改成功");
                     finish();
                 }
                 break;
