@@ -198,7 +198,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 if (!isLogin()) return;
                 //新发布的和修改的两种情况
                 if (!StringUtils.isEmpty(orderId)){        // 修改
-                    if (groupImage.equals(tempGroupImage)&&coverImage.equals(tempGroupImage)){
+                    if (groupImage.equals(tempGroupImage) && coverImage.equals(tempGroupImage)){
                         toast("请修改二维码图片或封面图片");
                         return;
                     }
