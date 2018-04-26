@@ -352,6 +352,7 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
             params.add("pid", DeviceUtils.getDeviceUniqueId(this));
             params.add("phoneNumber", userNameStr);
             params.add("password", Md5Util.MD5(passWordStr));
+            params.add("invitationCode", inviterStr);
             startRequest(Task.REGISTER, params, UserBean.class);
         }
 

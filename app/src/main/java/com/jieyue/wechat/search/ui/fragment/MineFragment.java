@@ -25,13 +25,16 @@ import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.response.BankCardListResponse;
 import com.jieyue.wechat.search.response.WhetherSetPaymentPasswordResponse;
+import com.jieyue.wechat.search.ui.activity.AboutUsActivity;
 import com.jieyue.wechat.search.ui.activity.BankCardListActivity;
 import com.jieyue.wechat.search.ui.activity.BindBankCardActivity;
+import com.jieyue.wechat.search.ui.activity.ContactUsActivity;
 import com.jieyue.wechat.search.ui.activity.LoginActivity;
 import com.jieyue.wechat.search.ui.activity.MyPublishListActivity;
 import com.jieyue.wechat.search.ui.activity.RechargeActivity;
 import com.jieyue.wechat.search.ui.activity.SetWithdrawPasswordActivity;
 import com.jieyue.wechat.search.ui.activity.SettingActivity;
+import com.jieyue.wechat.search.ui.activity.SuggestionActivity;
 import com.jieyue.wechat.search.ui.activity.TestActivity;
 import com.jieyue.wechat.search.ui.activity.WithdrawDepositActivity;
 import com.jieyue.wechat.search.utils.DeviceUtils;
@@ -192,18 +195,16 @@ public class MineFragment extends BaseFragment {
                 break;
 
             case R.id.ll_mine_2:        //联系客服
-                goWebPage("联系我们", UrlConfig.URL_CONTACT_US);
+                goPage(ContactUsActivity.class);
                 break;
 
             case R.id.ll_mine_3:        //我要吐槽
                 if (!isLogin()) return;
-                goWebPage("我要吐槽", String.format(Locale.US, UrlConfig.URL_SUGGEST,
-                        DeviceUtils.getDeviceUniqueId(getActivity()),
-                        UserManager.getUserId()));
+                goPage(SuggestionActivity.class);
                 break;
 
             case R.id.ll_mine_4:        //关于我们
-                goWebPage("关于我们", UrlConfig.URL_ABOUT_US);
+                goPage(AboutUsActivity.class);
                 break;
             case R.id.ll_mine_5:      //返佣管理
 
@@ -233,15 +234,17 @@ public class MineFragment extends BaseFragment {
                 break;
 
             case R.id.ll_mine_12:     //关于我们
-
+//                goWebPage("关于我们", UrlConfig.URL_ABOUT_US);
                 break;
 
             case R.id.ll_mine_13:    //联系我们
-
+//                goWebPage("联系我们", UrlConfig.URL_CONTACT_US);
                 break;
 
             case R.id.ll_mine_14:   //我要吐槽
-
+//                goWebPage("我要吐槽", String.format(Locale.US, UrlConfig.URL_SUGGEST,
+//                        DeviceUtils.getDeviceUniqueId(getActivity()),
+//                        UserManager.getUserId()));
                 break;
 
             default:

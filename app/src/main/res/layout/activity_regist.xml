@@ -262,10 +262,9 @@
                 android:id="@+id/rl_inviter_input"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
-                android:layout_below="@id/signup_belowCity"
+                android:layout_below="@id/signup_belowSL"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:visibility="gone">
+                android:layout_marginRight="20dp">
 
 
                 <TextView
@@ -297,7 +296,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/iv_del_inviter"
                     android:background="@color/color_00000000"
-                    android:hint="请输入邀请人手机号"
+                    android:hint="请输入邀请人注册的手机号"
                     android:textColorHint="@color/color_C5C5C5"
                     android:textCursorDrawable="@drawable/edittext_cursor_color"
                     android:inputType="number"

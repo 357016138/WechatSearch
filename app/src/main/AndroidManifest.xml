@@ -292,22 +292,43 @@
 
 
         <!-- 友盟统计开始 -->
-        <meta-data
+        <!--
+            <meta-data
             android:name="UMENG_APPKEY"
             android:value="5aa62bd98f4a9d5862000174" />
+        -->
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="baidu" />
         <!-- 友盟统计结束 -->
 
-        <activity android:name=".ui.activity.PublishWechatGroupActivity" />
-        <activity android:name=".ui.activity.PayActivity" />
-        <activity android:name=".ui.activity.MyPublishListActivity" />
-        <activity android:name=".ui.activity.SearchActivity" />
-        <activity android:name=".ui.activity.ProductDetailActivity" />
-        <activity android:name=".ui.activity.RechargeActivity" />
-        <activity android:name=".ui.activity.TestActivity" />
-        <activity android:name=".ui.activity.PayResultActivity"></activity>
+        <activity
+            android:name=".ui.activity.PublishWechatGroupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.PayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MyPublishListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ProductDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.RechargeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.TestActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.PayResultActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.activity.SuggestionActivity" />
+        <activity android:name=".ui.activity.ContactUsActivity" />
+        <activity android:name=".ui.activity.AboutUsActivity" />
     </application>
 
 </manifest>
