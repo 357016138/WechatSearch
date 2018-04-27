@@ -1,5 +1,6 @@
 package com.jieyue.wechat.search.ui.activity;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -81,9 +82,12 @@ public class ProductDetailActivity extends BaseActivity {
                     toast("开始保存图片...");
                     break;
                 case SAVE_SUCCESS:
+                    dissDialog();
+                    toWeChatScanDirect();
                     toast("点击右上角--从相册选取二维码扫描");
                     break;
                 case SAVE_FAILURE:
+                    dissDialog();
                     toast("图片保存失败,请稍后再试...");
                     break;
             }
@@ -226,14 +230,20 @@ public class ProductDetailActivity extends BaseActivity {
             public void onRightClick() {
                 dialog.dismiss();
                 showDialog();
-                //保存图片必须在子线程中操作，是耗时操作
-                new Thread(new Runnable() {
+                //监测权限
+                checkPermission(new CheckPermListener(){
                     @Override
-                    public void run() {
-                        Bitmap bp = returnBitMap(iamgeUrl);
-                        saveImageToPhotos(ProductDetailActivity.this, bp);
-                    }
-                }).start();
+                    public void superPermission() {
+                        //保存图片必须在子线程中操作，是耗时操作
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Bitmap bp = returnBitMap(iamgeUrl);
+                                saveImageToPhotos(ProductDetailActivity.this, bp);
+                            }
+                        }).start();
+                }
+            }, R.string.ask_again, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             }
         });
@@ -246,42 +256,42 @@ public class ProductDetailActivity extends BaseActivity {
      * 保存二维码到本地相册
      */
     private void saveImageToPhotos(Context context, Bitmap bmp) {
-        // 首先保存图片
-        File appDir = new File(Environment.getExternalStorageDirectory(), "Boohee");
-        if (!appDir.exists()) {
-            appDir.mkdir();
-        }
-        String fileName = System.currentTimeMillis() + ".jpg";
-        File file = new File(appDir, fileName);
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), fileName, null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            dissDialog();
-            mHandler.obtainMessage(SAVE_FAILURE).sendToTarget();
-            return;
-        }
-        // 最后通知图库更新
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri uri = Uri.fromFile(file);
-        intent.setData(uri);
-        context.sendBroadcast(intent);
-        mHandler.obtainMessage(SAVE_SUCCESS).sendToTarget();
 
-        dissDialog();
-        toWeChatScanDirect();
+                // 首先保存图片
+                File appDir = new File(Environment.getExternalStorageDirectory(), "wechatsearch");
+                if (!appDir.exists()) {
+                    appDir.mkdir();
+                }
+                String fileName = System.currentTimeMillis() + ".jpg";
+                File file = new File(appDir, fileName);
+                try {
+                    FileOutputStream fos = new FileOutputStream(file);
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                    fos.flush();
+                    fos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // 其次把文件插入到系统图库
+                try {
+                    MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                            file.getAbsolutePath(), fileName, null);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    dissDialog();
+                    mHandler.obtainMessage(SAVE_FAILURE).sendToTarget();
+                    return;
+                }
+                // 最后通知图库更新
+                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri uri = Uri.fromFile(file);
+                intent.setData(uri);
+                context.sendBroadcast(intent);
+                mHandler.obtainMessage(SAVE_SUCCESS).sendToTarget();
+
+
     }
 
 
@@ -316,6 +326,7 @@ public class ProductDetailActivity extends BaseActivity {
      * 跳转到微信
      */
     public void toWeChatScanDirect() {
+
         try {
             Intent intent = new Intent();
             intent.setComponent(new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI"));
