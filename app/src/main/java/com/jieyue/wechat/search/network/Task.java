@@ -75,8 +75,8 @@ public interface Task {
     int MESSAGE_LIST = 0X0033;
     //获取消息列表
     int UPDATE_GROUP = 0X0034;
-
-
+    //意见反馈
+    int SUGGESTION_BACK = 0X0035;
 
 
 

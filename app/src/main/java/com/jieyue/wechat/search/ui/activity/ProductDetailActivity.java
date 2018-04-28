@@ -71,9 +71,10 @@ public class ProductDetailActivity extends BaseActivity {
     TextView tv_detail_tag;
     private String iamgeUrl;
 
-    private static final int SAVE_SUCCESS = 0;//保存图片成功
-    private static final int SAVE_FAILURE = 1;//保存图片失败
-    private static final int SAVE_BEGIN = 2;//开始保存图片
+    private static final int SAVE_SUCCESS = 0;           //保存图片成功
+    private static final int SAVE_FAILURE = 1;          //保存图片失败
+    private static final int SAVE_BEGIN = 2;           //开始保存图片
+    private static final int NETWORK_SAVE_FAILURE = 3;// 网络原因 保存图片失败
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -89,6 +90,10 @@ public class ProductDetailActivity extends BaseActivity {
                 case SAVE_FAILURE:
                     dissDialog();
                     toast("图片保存失败,请稍后再试...");
+                    break;
+                case NETWORK_SAVE_FAILURE:
+                    dissDialog();
+                    toast("图片保存失败,请检查网络...");
                     break;
             }
         }
@@ -239,7 +244,12 @@ public class ProductDetailActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 Bitmap bp = returnBitMap(iamgeUrl);
-                                saveImageToPhotos(ProductDetailActivity.this, bp);
+                                if(bp != null){
+                                    saveImageToPhotos(ProductDetailActivity.this, bp);
+                                }else{
+                                    mHandler.obtainMessage(NETWORK_SAVE_FAILURE).sendToTarget();
+                                }
+
                             }
                         }).start();
                 }

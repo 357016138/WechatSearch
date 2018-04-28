@@ -440,7 +440,11 @@ public class PublishWechatGroupActivity extends BaseActivity {
             if (data != null) {
                 // 得到图片的全路径
                 Uri uri = data.getData();
-                crop(uri);
+
+                Intent intent = new Intent(this, CropPicActivity.class);
+                intent.setData(uri);
+                startActivity(intent);
+//                crop(uri);
             }
         } else if (requestCode == PHOTO_REQUEST_CUT) {
             // 从剪切图片返回的数据

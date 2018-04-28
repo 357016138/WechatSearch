@@ -74,7 +74,8 @@ public interface UrlConfig {
     String URL_MESSAGE_LIST = URL + "/message/get/all.json";
     //修改微信群信息
     String URL_UPDATE_GROUP = URL + "/order/update/group.json";
-
+    //意见反馈
+    String URL_SUGGESTION_BACK = URL + "/opinion/add.json";
 
 
 

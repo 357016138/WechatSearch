@@ -329,6 +329,7 @@
         <activity android:name=".ui.activity.SuggestionActivity" />
         <activity android:name=".ui.activity.ContactUsActivity" />
         <activity android:name=".ui.activity.AboutUsActivity" />
+        <activity android:name=".ui.activity.CropPicActivity"></activity>
     </application>
 
 </manifest>

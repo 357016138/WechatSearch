@@ -81,6 +81,7 @@
     <string name="recharge_6">150</string>
     <string name="recharge_7">200</string>
     <string name="recharge_8">300</string>
+    <string name="title_activity_crop_pic">CropPicActivity</string>
     <!--充值界面end-->
 
 

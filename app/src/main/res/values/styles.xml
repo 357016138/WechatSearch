@@ -11,7 +11,7 @@
         <!--<item name="android:windowIsTranslucent">true</item>-->
         <!--<item name="android:windowBackground">@android:color/transparent</item>-->
         <!--<item name="colorAccent">@android:color/holo_blue_dark</item>-->
-    <!--</style>-->
+        <!--</style>-->
 
         <item name="colorPrimary">@color/color_0c9bff</item>
         <item name="colorPrimaryDark">@color/color_0c9bff</item>
@@ -103,25 +103,28 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
     <style name="bottom_dialog_window_style" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/dialog_enter</item>
         <item name="android:windowExitAnimation">@anim/dialog_exit</item>
     </style>
+
     <style name="bottom_dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:background">@color/white</item>
     </style>
+
     <declare-styleable name="PasswordKeyboard">
-        <attr name="contentColor" format="color"/>
-        <attr name="dividerColor" format="color"/>
-        <attr name="dividerWidth" format="color"/>
-        <attr name="circleDotSize" format="dimension"/>
+        <attr name="contentColor" format="color" />
+        <attr name="dividerColor" format="color" />
+        <attr name="dividerWidth" format="color" />
+        <attr name="circleDotSize" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="PasswordEditText">
         <!-- 密码的个数 -->
-        <attr name="passwordNumber" format="integer"/>
+        <attr name="passwordNumber" format="integer" />
         <!-- 密码圆点的半径 -->
         <attr name="passwordRadius" format="dimension" />
         <!-- 密码圆点的颜色 -->
@@ -135,24 +138,31 @@
         <!-- 背景边框的大小 -->
         <attr name="bgSize" format="dimension" />
         <!-- 背景边框的圆角大小 -->
-        <attr name="bgCorner" format="dimension"/>
+        <attr name="bgCorner" format="dimension" />
     </declare-styleable>
 
     <style name="input_password_dialog" parent="android:style/Theme.Dialog">
         <item name="android:background">#00000000</item> <!-- 设置自定义布局的背景透明 -->
-        <item name="android:windowBackground">@android:color/transparent</item>  <!-- 设置window背景透明，也就是去边框 -->
+        <item name="android:windowBackground">@android:color/transparent
+        </item>  <!-- 设置window背景透明，也就是去边框 -->
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
     <style name="keyboard_button">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/color_000000</item>
         <item name="android:background">@color/white</item>
     </style>
-    <style name="dialog_no_bg" >
+
+    <style name="dialog_no_bg">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

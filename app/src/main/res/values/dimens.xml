@@ -147,5 +147,6 @@
     <dimen name="sp_34">34sp</dimen>
     <dimen name="sp_36">36sp</dimen>
     <dimen name="sp_40">40sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

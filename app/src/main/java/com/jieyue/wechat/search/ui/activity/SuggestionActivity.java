@@ -62,15 +62,12 @@ public class SuggestionActivity extends BaseActivity {
 
     @Override
     public void OnTopRightClick() {
-
         String content = et_content.getText().toString().trim();
-
-        RequestParams params = new RequestParams(UrlConfig.URL_PUBLISH_WECHAT_GROUP);
+        RequestParams params = new RequestParams(UrlConfig.URL_SUGGESTION_BACK);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-        params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
+        params.add("phoneNumber", ShareData.getShareStringData(ShareData.USER_PHONE));
         params.add("content",content);
-        startRequest(Task.PUBLISH_WECHAT_GROUP, params, DataBean.class);
-        finish();
+        startRequest(Task.SUGGESTION_BACK, params, DataBean.class);
     }
 
 
@@ -80,9 +77,9 @@ public class SuggestionActivity extends BaseActivity {
         super.onRefresh(call, tag, data);
         if (data != null) {
             switch (tag) {
-                case Task.PUBLISH_WECHAT_GROUP:
+                case Task.SUGGESTION_BACK:
                     if (handlerRequestErr(data)) {
-
+                        toast("反馈成功");
                         finish();
                     }
                     break;
