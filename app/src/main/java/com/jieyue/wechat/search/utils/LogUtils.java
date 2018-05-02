@@ -9,9 +9,9 @@ import java.io.StringWriter;
 public final class LogUtils {
 
 //    public static boolean sIsLogEnabled = ConfigUtils.configType != ConfigUtils.ConfigType.RELEASE;// 是否打开LOG  线上版本不打开log
-    public static boolean sIsLogEnabled = true;// 是否打开LOG
+    public static boolean sIsLogEnabled = ConfigUtils.isOpenLog();// 是否打开LOG
 
-    public static String TAG = "JY";// LOG默认TAG
+    public static String TAG = "WS";// LOG默认TAG
 
     private static final String TAG_CONTENT_PRINT = "%s:%s.%s:%d";
 

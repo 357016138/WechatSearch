@@ -201,6 +201,57 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textSize="@dimen/text_size_big"
+            android:textColor="@color/color_3F3F3F"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:text="充值说明"
+            android:textStyle="bold"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@color/uncompleted_text_color"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_16"
+            android:textColor="@color/color_3F3F3F"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingRight="19dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="1、 1元=100微币，微币可用于支付"
+            android:lineSpacingExtra="5dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_16"
+            android:textColor="@color/color_3F3F3F"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingRight="19dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="2、购买后，如账户余额长时间无变化，请联系客服反馈"
+            android:lineSpacingExtra="5dp"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/ll_btn"
         android:layout_width="match_parent"
         android:layout_height="70dp"
@@ -221,7 +272,7 @@
             android:gravity="center"
             android:paddingBottom="@dimen/dp_10"
             android:paddingTop="@dimen/dp_10"
-            android:text="下一步"
+            android:text="立即充值"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:clickable="true"

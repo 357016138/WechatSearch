@@ -46,14 +46,24 @@ public class ContactUsActivity extends BaseActivity {
     public void dealLogicAfterInitView() {
 
     }
-    @OnClick({R.id.tv_qq})
+    @OnClick({R.id.tv_qq1,R.id.tv_qq2})
     @Override
     public void onClickEvent(View view) {
         switch (view.getId()) {
-            case R.id.tv_qq:             //设置
+            case R.id.tv_qq1:                  //客服1
                 try {
                     //第二种方式：可以跳转到添加好友，如果qq号是好友了，直接聊天
-                    String url = "mqqwpa://im/chat?chat_type=wpa&uin=870156110";//uin是发送过去的qq号码
+                    String url = "mqqwpa://im/chat?chat_type=wpa&uin=3517208338";//uin是发送过去的qq号码
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    toast( "请检查是否安装QQ");
+                }
+                break;
+            case R.id.tv_qq2:                //客服2
+                try {
+                    //第二种方式：可以跳转到添加好友，如果qq号是好友了，直接聊天
+                    String url = "mqqwpa://im/chat?chat_type=wpa&uin=2595802618";//uin是发送过去的qq号码
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 } catch (Exception e) {
                     e.printStackTrace();

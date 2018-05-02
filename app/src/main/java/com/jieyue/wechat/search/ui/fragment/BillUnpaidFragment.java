@@ -276,6 +276,7 @@ public class BillUnpaidFragment extends BaseFragment implements OperateListener 
             public void onClick(View v) {  //支付
                 Bundle bd = new Bundle();
                 bd.putString("orderId", uniqueId);
+                bd.putString("path",  "refresh");
                 goPage(PayActivity.class, bd);
                 dialog.dismiss();
             }

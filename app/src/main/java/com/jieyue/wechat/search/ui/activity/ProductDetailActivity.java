@@ -301,7 +301,6 @@ public class ProductDetailActivity extends BaseActivity {
                 context.sendBroadcast(intent);
                 mHandler.obtainMessage(SAVE_SUCCESS).sendToTarget();
 
-
     }
 
 

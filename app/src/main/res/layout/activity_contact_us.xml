@@ -5,34 +5,25 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/tv_qq"
+        android:id="@+id/tv_qq1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_60"
-        android:layout_above="@+id/tv_wechat"
+        android:layout_above="@+id/tv_qq2"
         android:layout_centerInParent="true"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:text="QQ沟通"
+        android:text="QQ客服1沟通"
         android:textSize="20sp" />
 
     <Button
-        android:id="@+id/tv_wechat"
+        android:id="@+id/tv_qq2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_60"
-        android:layout_above="@+id/tv_mail"
         android:layout_centerInParent="true"
         android:layout_marginBottom="10dp"
         android:gravity="center"
         android:textSize="20sp"
-        android:text="微信沟通" />
+        android:text="QQ客服2沟通" />
 
-    <Button
-        android:id="@+id/tv_mail"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_60"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:text="电话沟通" />
 
 </RelativeLayout>

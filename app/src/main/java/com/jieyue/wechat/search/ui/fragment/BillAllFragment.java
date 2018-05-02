@@ -255,6 +255,7 @@ public class BillAllFragment extends BaseFragment implements OperateListener {
                     DataBean dataBean = (DataBean)data.getBody();
                     Bundle bd = new Bundle();
                     bd.putString("orderId",  dataBean.getData());
+                    bd.putString("path",  "refresh");
                     goPage(PayActivity.class, bd);
 
                 }

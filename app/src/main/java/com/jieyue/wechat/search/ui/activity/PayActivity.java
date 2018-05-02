@@ -68,6 +68,7 @@ public class PayActivity extends BaseActivity {
     private static final String NOTIFYURL = URL_PAY_NOTIFY;
 
     private static final String RECHARGE = "recharge";    //从充值过来的路径
+    private static final String REFRESH = "refresh";    //从刷新过来的
 
     private String orderId;
     private OrderBean orderBean;
@@ -100,10 +101,10 @@ public class PayActivity extends BaseActivity {
     @Override
     public void dealLogicAfterInitView() {
 
-        if (StringUtils.isEmpty(path)){    //  从微信群发布页过来的
-            getTinyCoinNum();
-        }else{
+        if ("recharge".equals(path)){
             rl_payment_tiny_coin.setVisibility(View.GONE);    //从充值页过来的
+        }else{
+            getTinyCoinNum();      //  从微信群发布页 或者刷新页 过来的
         }
         getOrderDes();
     }
@@ -244,10 +245,12 @@ public class PayActivity extends BaseActivity {
                 break;
             case Task.PAY_BY_COIN:
                 if (handlerRequestErr(data)) {
-                   Bundle bd = new Bundle();
-                   bd.putString("orderId",orderId);
-                   goPage(PayResultActivity.class,bd);
-                   finish();
+                    if (StringUtils.isEmpty(path)){     //从微信群发布页 过来的
+                        Bundle bd = new Bundle();
+                        bd.putString("orderId",orderId);
+                        goPage(PayResultActivity.class,bd);
+                    }
+                    finish();
                 }else {
                     toast(data.getRspMsg());
                 }

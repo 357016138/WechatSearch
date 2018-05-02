@@ -72,6 +72,7 @@
                 android:paddingEnd="@dimen/dp_20"
                 android:paddingTop="@dimen/dp_10"
                 android:paddingBottom="@dimen/dp_10"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <TextView
@@ -105,6 +106,7 @@
                 android:layout_height="0.5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
+                android:visibility="gone"
                 android:background="@color/color_E7E9EA"/>
 
             <LinearLayout
@@ -191,6 +193,7 @@
                 android:background="@color/color_E7E9EA"/>
 
             <LinearLayout
+                android:id="@+id/ll_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/dp_20"
@@ -207,7 +210,41 @@
                     android:text="标签"
                     android:layout_gravity="center_vertical"/>
 
-                <EditText
+                <TextView
+                    android:id="@+id/tv_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="@dimen/sp_16"
+                    android:textColor="@color/color_29354D"
+                    android:singleLine="true"
+                    android:maxLength="10"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:layout_marginEnd="5dp"/>
+
+                <ImageView
+                    android:id="@+id/iv_add_tag"
+                    android:layout_width="50.5dp"
+                    android:layout_height="@dimen/dp_24"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_add_tag"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+
+                <ImageView
+                    android:id="@+id/iv_delete"
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:padding="@dimen/dp_3"
+                    android:visibility="gone"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_login_close"/>
+
+               <!-- <EditText
                     android:id="@+id/et_tag"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -223,7 +260,7 @@
                     android:inputType="text"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="3dp"/>
-
+-->
             </LinearLayout>
 
             <View

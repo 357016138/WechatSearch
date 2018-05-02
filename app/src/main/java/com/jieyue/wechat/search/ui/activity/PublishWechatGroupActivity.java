@@ -1,14 +1,17 @@
 package com.jieyue.wechat.search.ui.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -25,8 +28,6 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jieyue.wechat.search.R;
-import com.jieyue.wechat.search.adapter.CityArrayWheelAdapter;
-import com.jieyue.wechat.search.adapter.ProvinceArrayWheelAdapter;
 import com.jieyue.wechat.search.bean.CategoryBean;
 import com.jieyue.wechat.search.bean.ProductDetailBean;
 import com.jieyue.wechat.search.bean.ProvinceBean;
@@ -54,7 +55,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,14 +67,14 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
     @BindView(R.id.et_title)
     EditText et_title;
-    @BindView(R.id.et_wechat_num)
-    EditText et_wechat_num;
+//    @BindView(R.id.et_wechat_num)
+//    EditText et_wechat_num;
     @BindView(R.id.tv_category)
     TextView tv_category;
     @BindView(R.id.tv_address)
     TextView tv_address;
-    @BindView(R.id.et_tag)
-    EditText et_tag;
+    @BindView(R.id.tv_tag)
+    TextView tv_tag;
     @BindView(R.id.et_des)
     EditText et_des;
     @BindView(R.id.tv_remark_num)
@@ -93,6 +93,12 @@ public class PublishWechatGroupActivity extends BaseActivity {
     LinearLayout ll_publish_address;
     @BindView(R.id.ll_publish_category)
     LinearLayout ll_publish_category;
+    @BindView(R.id.ll_tag)
+    LinearLayout ll_tag;
+    @BindView(R.id.iv_delete)
+    ImageView iv_delete;
+    @BindView(R.id.iv_add_tag)
+    ImageView iv_add_tag;
 
     @BindView(R.id.btn_submit)
     TextView btn_submit;
@@ -157,7 +163,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
 
 
-    @OnClick({R.id.rl_group_qcode, R.id.rl_cover, R.id.btn_submit, R.id.ll_publish_address,R.id.ll_publish_category})
+    @OnClick({R.id.rl_group_qcode, R.id.rl_cover, R.id.btn_submit, R.id.ll_publish_address,R.id.ll_publish_category,R.id.ll_tag,R.id.iv_delete})
     @Override
     public void onClickEvent(View view) {
         Intent intent =null;
@@ -176,22 +182,44 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 }
                 initCategoryDialog(mCategoryNameList);
                 break;
+            case R.id.ll_tag:                            //自定义Tag
+                showEditTextDialog();
+                break;
+            case R.id.iv_delete:                         //删除Tag
+                tv_tag.setText("");
+                iv_add_tag.setVisibility(View.VISIBLE);
+                iv_delete.setVisibility(View.GONE);
+                ll_tag.setOnClickListener(this);
+                break;
             case R.id.rl_group_qcode:             //微信群二维码图片地址
-                // 激活系统图库，选择一张图片
-                intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                type = "1";    //设置图片上传类型  1.二维码 2.封面
-                // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GROUP
-                startActivityForResult(intent, PHOTO_REQUEST_GROUP);
+                checkPermission(new CheckPermListener(){
+                    @Override
+                    public void superPermission() {
+                        // 激活系统图库，选择一张图片
+                        Intent intent = new Intent(Intent.ACTION_PICK);
+                        intent.setType("image/*");
+                        type = "1";    //设置图片上传类型  1.二维码 2.封面
+                        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GROUP
+                        startActivityForResult(intent, PHOTO_REQUEST_GROUP);
+
+                    }
+                }, R.string.ask_again, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
                 break;
 
             case R.id.rl_cover:                 //封面图片地址
-                // 激活系统图库，选择一张图片
-                intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                type = "2"; //设置图片上传类型  1.二维码 2.封面
-                // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GROUP
-                startActivityForResult(intent, PHOTO_REQUEST_GROUP);
+                checkPermission(new CheckPermListener(){
+                    @Override
+                    public void superPermission() {
+                        // 激活系统图库，选择一张图片
+                        Intent intent = new Intent(Intent.ACTION_PICK);
+                        intent.setType("image/*");
+                        type = "2";    //设置图片上传类型  1.二维码 2.封面
+                        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GROUP
+                        startActivityForResult(intent, PHOTO_REQUEST_GROUP);
+
+                    }
+                }, R.string.ask_again, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 break;
             case R.id.btn_submit:                 //提交
                 if (!isLogin()) return;
@@ -226,8 +254,8 @@ public class PublishWechatGroupActivity extends BaseActivity {
     private void submitInfo() {
 
         String title = et_title.getText().toString().trim();
-        String wechat_num = et_wechat_num.getText().toString().trim();
-        String tag = et_tag.getText().toString().trim();
+//        String wechat_num = et_wechat_num.getText().toString().trim();
+        String tag = tv_tag.getText().toString().trim();
         String des = et_des.getText().toString().trim();
 
         //判断是否为空
@@ -235,10 +263,10 @@ public class PublishWechatGroupActivity extends BaseActivity {
             toast("标题不能为空");
             return;
         }
-        if (StringUtils.isEmpty(wechat_num)){
-            toast("微信号不能为空");
-            return;
-        }
+//        if (StringUtils.isEmpty(wechat_num)){
+//            toast("微信号不能为空");
+//            return;
+//        }
         if (StringUtils.isEmpty(mCurrentCategoryId)||StringUtils.isEmpty(mCurrentTwoLevelId)){
             toast("请选择分类");
             return;
@@ -270,7 +298,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
         params.add("groupName", title);
         params.add("groupImage", groupImage);
         params.add("coverImage", coverImage);
-        params.add("userWechat", wechat_num);
+//        params.add("userWechat", wechat_num);
         params.add("tags", tag);
         params.add("description", des);
         params.add("provinceId", mCurrentProvinceId);
@@ -400,10 +428,10 @@ public class PublishWechatGroupActivity extends BaseActivity {
      * */
     private void updateDetailInfo(ProductDetailBean dataBean) {
         et_title.setText(dataBean.getGroupName());
-        et_wechat_num.setText(dataBean.getUserWechat());
+//        et_wechat_num.setText(dataBean.getUserWechat());
         tv_category .setText(dataBean.getParentCategory()+" "+dataBean.getCategory());
         tv_address.setText(dataBean.getProvince()+" "+dataBean.getCity());
-        et_tag.setText(dataBean.getTags());
+        tv_tag.setText(dataBean.getTags());
         et_des.setText(dataBean.getDescription());
         tv_remark_num.setText(et_des.getText().length()+"/100");
         Glide.with(this).load(dataBean.getGroupImage()).into(iv_group_qcode);
@@ -419,10 +447,11 @@ public class PublishWechatGroupActivity extends BaseActivity {
         coverImage = dataBean.getCoverImage();
 
         et_title.setFocusable(false);
-        et_wechat_num.setFocusable(false);
+//        et_wechat_num.setFocusable(false);
         ll_publish_category.setOnClickListener(null);
         ll_publish_address.setOnClickListener(null);
-        et_tag.setFocusable(false);
+        ll_tag.setOnClickListener(null);
+        iv_add_tag.setVisibility(View.GONE);
         et_des.setFocusable(false);
 
     }
@@ -440,11 +469,10 @@ public class PublishWechatGroupActivity extends BaseActivity {
             if (data != null) {
                 // 得到图片的全路径
                 Uri uri = data.getData();
-
+                //剪切图片
                 Intent intent = new Intent(this, CropPicActivity.class);
                 intent.setData(uri);
-                startActivity(intent);
-//                crop(uri);
+                startActivityForResult(intent, PHOTO_REQUEST_CUT);
             }
         } else if (requestCode == PHOTO_REQUEST_CUT) {
             // 从剪切图片返回的数据
@@ -465,30 +493,6 @@ public class PublishWechatGroupActivity extends BaseActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-      /**
-       * 剪切图片
-       */
-    private void crop(Uri uri) {
-        // 裁剪图片意图
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");
-        // 裁剪框的比例，1：1
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // 裁剪后输出图片的尺寸大小
-        intent.putExtra("outputX", 250);
-        intent.putExtra("outputY", 250);
-
-        intent.putExtra("outputFormat", "JPEG");// 图片格式
-        intent.putExtra("noFaceDetection", true);// 取消人脸识别
-
-        //是否是圆形裁剪区域，设置了也不一定有效
-        intent.putExtra("circleCrop", false);
-        intent.putExtra("return-data", true);
-        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CUT
-        startActivityForResult(intent, PHOTO_REQUEST_CUT);
-    }
 
 
     /**
@@ -506,39 +510,33 @@ public class PublishWechatGroupActivity extends BaseActivity {
             long length = baos.toByteArray().length;
         }
 
-        checkPermission(new CheckPermListener(){
-            @Override
-            public void superPermission() {
-                try {
-                    String filePath = FileUtils.TEMP + UserManager.getUserId()
-                            + DateUtils.format(System.currentTimeMillis(), "yyyyMMddkkmmssSSS") + ".png";
-                    File file = new File(filePath);
+        try {
+            String filePath = FileUtils.TEMP + UserManager.getUserId()
+                    + DateUtils.format(System.currentTimeMillis(), "yyyyMMddkkmmssSSS") + ".png";
+            File file = new File(filePath);
 
-                    if (!file.exists()) {
-                        File fileParentDir = file.getParentFile();
-                        if (!fileParentDir.exists()) {
-                            fileParentDir.mkdirs();
-                        }
-                        file.createNewFile();
-                    }
-
-                    FileOutputStream fos = new FileOutputStream(file);
-                    try {
-                        fos.write(baos.toByteArray());
-                        fos.flush();
-                        fos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    uploadImg(filePath);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            if (!file.exists()) {
+                File fileParentDir = file.getParentFile();
+                if (!fileParentDir.exists()) {
+                    fileParentDir.mkdirs();
                 }
-       //        recycleBitmap(bitmap);
-
+                file.createNewFile();
             }
-        }, R.string.ask_again, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+            FileOutputStream fos = new FileOutputStream(file);
+            try {
+                fos.write(baos.toByteArray());
+                fos.flush();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            uploadImg(filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//         recycleBitmap(bitmap);
 
     }
 
@@ -554,6 +552,36 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 bm.recycle();
             }
         }
+    }
+
+
+    // 可输入文本的提示框
+    private void showEditTextDialog(){
+        final EditText edt = new EditText(this);
+        edt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+//        edt.setEms(4);
+//        edt.setMaxEms(4);
+        new AlertDialog.Builder(this)
+                .setTitle("请输入少于4个字")
+                .setView(edt)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+//                        text_01.setText(edt.getText().toString());
+                        if (StringUtils.isEmpty(tv_tag.getText().toString().trim())){
+                            //第一次输入
+                            tv_tag.setText(edt.getText().toString());
+                            iv_delete.setVisibility(View.VISIBLE);
+                        }else {
+                            //第二次输入
+                            tv_tag.setText(tv_tag.getText().toString().trim()+" "+edt.getText().toString());
+                            iv_add_tag.setVisibility(View.GONE);
+                            ll_tag.setOnClickListener(null);
+                        }
+
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 
     /**

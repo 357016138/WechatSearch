@@ -16,7 +16,7 @@ public class ConfigUtils {
             case UAT:
                 return "http://59.110.172.203";
             case RELEASE:
-                return "https://snailhouse.api.iqianjindai.com";
+                return "http://www.vxsousuo.com";
         }
         return "";
     }
@@ -33,7 +33,7 @@ public class ConfigUtils {
             case UAT:
                 return "http://59.110.172.203";
             case RELEASE:
-                return "https://snailhouse.static.iqianjindai.com";
+                return "http://www.vxsousuo.com";
         }
         return "";
     }
@@ -84,6 +84,19 @@ public class ConfigUtils {
         }
         return true;
     }
+
+    public static boolean isOpenLog() {
+        switch (configType) {
+            case DEV:
+            case CS:
+            case UAT:
+                return true;
+            case RELEASE:
+                return false;
+        }
+        return true;
+    }
+
 
     public enum ConfigType {
         DEV, CS, UAT, RELEASE

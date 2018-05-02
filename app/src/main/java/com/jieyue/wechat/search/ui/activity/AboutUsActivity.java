@@ -11,8 +11,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AboutUsActivity extends BaseActivity {
-    @BindView(R.id.tv_version)
-    TextView tv_version;
 
     @Override
     public void setContentLayout() {
@@ -33,8 +31,6 @@ public class AboutUsActivity extends BaseActivity {
 
     @Override
     public void dealLogicAfterInitView() {
-        String currentAppVersionName = DeviceUtils.getCurrentAppVersionName(this);
-        tv_version.setText("v"+currentAppVersionName+" for Android");
     }
     @Override
     public void onClickEvent(View view) {

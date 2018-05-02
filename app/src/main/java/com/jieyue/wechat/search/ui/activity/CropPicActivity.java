@@ -24,7 +24,7 @@ public class CropPicActivity extends BaseActivity {
     Uri srouceUri;
     @Override
     public void setContentLayout() {
-        setContentView(R.layout.activity_crop_pic);
+        setContentView(R.layout.activity_crop_pic,BasePageSet.NO_TOPBAR_DEFAULT_PAGE);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CropPicActivity extends BaseActivity {
         ButterKnife.bind(this);
         cropView.of(srouceUri)
                 .asSquare()
-                .withOutputSize(360, 360)
+                .withOutputSize(300, 300)
                 .initialize(this);
     }
 
@@ -51,10 +51,14 @@ public class CropPicActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_ok:                  //确定
                 Bitmap croppedBitmap = cropView.getOutput();
+                Intent intent = new Intent();
+                intent.putExtra("data", croppedBitmap);
+                setResult(RESULT_OK,intent);
+                finish();
 //                CropUtil.saveOutput(context, saveUri, croppedImage, quality);
                 break;
             case R.id.tv_cancel:             //取消
-
+                finish();
                 break;
             default:
                 break;
@@ -65,7 +69,6 @@ public class CropPicActivity extends BaseActivity {
 
     @Override
     public void OnTopLeftClick() {
-        finish();
     }
 
     @Override
