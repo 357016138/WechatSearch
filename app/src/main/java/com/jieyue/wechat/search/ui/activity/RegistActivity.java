@@ -343,8 +343,8 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
             toast("请输入验证码");
             return;
         }
-        if (!isAgree) {
-            toast("请勾选协议");
+        if (inviterStr.equals(userNameStr)) {
+            toast("邀请码可以为空,但不能填写自己");
             return;
         }
         if (acceptCodeStr.equals(codeStr)){
@@ -365,10 +365,11 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
             switch (tag) {
                 case Task.REGISTER:
                     if (handlerRequestErr(data)) {
-                        UserBean userBean = (UserBean) data.getBody();
-                        UserUtils.saveLoginUserInfo(userBean);
-                        ShareData.setShareStringData(ShareData.LAST_ACCOUNT, signup_uerName.getText().toString());
-                        EventBus.getDefault().post(new MessageEvent(Constants.GET_NEW_MSG));
+//                        UserBean userBean = (UserBean) data.getBody();
+//                        UserUtils.saveLoginUserInfo(userBean);
+//                        ShareData.setShareStringData(ShareData.USER_COOKIE, data.getHeader());
+//                        ShareData.setShareStringData(ShareData.LAST_ACCOUNT, signup_uerName.getText().toString());
+//                        EventBus.getDefault().post(new MessageEvent(Constants.GET_NEW_MSG));
                         finish();
                     }
                     break;

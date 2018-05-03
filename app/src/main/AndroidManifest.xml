@@ -327,10 +327,18 @@
         <activity
             android:name=".ui.activity.PayResultActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.SuggestionActivity" />
-        <activity android:name=".ui.activity.ContactUsActivity" />
-        <activity android:name=".ui.activity.AboutUsActivity" />
-        <activity android:name=".ui.activity.CropPicActivity"></activity>
+        <activity
+            android:name=".ui.activity.SuggestionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activity.ContactUsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activity.AboutUsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activity.CropPicActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

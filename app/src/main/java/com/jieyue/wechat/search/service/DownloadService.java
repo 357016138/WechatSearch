@@ -21,6 +21,7 @@ import com.jieyue.wechat.search.utils.LogUtils;
 import com.jieyue.wechat.search.utils.UtilTools;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by yangwei on 2017/12/1.
@@ -35,7 +36,7 @@ public class DownloadService extends IntentService {
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
     public DownloadService() {
-        super("com.service.DownloadService");
+        super("com.jieyue.wechat.search.service.DownloadService");
     }
 
     @Override
@@ -56,7 +57,6 @@ public class DownloadService extends IntentService {
     }
 
     private void startDownLoad() {
-
         apkPath = FileUtils.APK_PATH + versionBean.getNewAppVersion() + ".apk";
         File file = new File(apkPath);
         if (file.exists()) {

@@ -123,7 +123,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                 break;
             case R.id.login_sign:      //注册
                 goPage(RegistActivity.class);
-                finish();
+//                finish();
             break;
             case R.id.login_forgetPassword:   //忘记密码
                 goPage(ForgetPasswordActivity.class);
@@ -203,7 +203,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     UserUtils.saveLoginUserInfo(userBean);
                     ShareData.setShareStringData(ShareData.USER_COOKIE, data.getHeader());
                     ShareData.setShareStringData(ShareData.LAST_ACCOUNT, login_uerName.getText().toString());
-                    ShareData.setShareStringData(ShareData.USER_COOKIE, data.getHeader());
                     EventBus.getDefault().post(new MessageEvent(Constants.GET_NEW_MSG));
                     finish();
 
