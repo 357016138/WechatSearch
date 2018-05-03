@@ -107,9 +107,10 @@ public class DownloadService extends IntentService {
         var2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         var2.setAction("android.intent.action.VIEW");
         String var3 = getMIMEType(var0);
+        //判断版本是否在7.0以上
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             var2.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri apkUri = FileProvider.getUriForFile(this, "com.jieyue.houseloan.agent.fileprovider", var0);
+            Uri apkUri = FileProvider.getUriForFile(this, "com.jieyue.wechat.search.fileprovider", var0);
             var2.setDataAndType(apkUri, var3);
         } else {
             var2.setDataAndType(Uri.fromFile(var0), var3);

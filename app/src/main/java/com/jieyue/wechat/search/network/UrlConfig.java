@@ -76,8 +76,8 @@ public interface UrlConfig {
     String URL_UPDATE_GROUP = URL + "/order/update/group.json";
     //意见反馈
     String URL_SUGGESTION_BACK = URL + "/opinion/add.json";
-
-
+    //检查Token是否到期
+    String URL_CHECK_TOKEN_VALIDITY = URL + "/user/token/check.json";
 
 
 

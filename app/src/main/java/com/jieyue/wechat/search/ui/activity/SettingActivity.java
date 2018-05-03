@@ -178,6 +178,17 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         EventBus.getDefault().post(new MessageEvent(Constants.GET_REFRESH_ORDER_LIST));
     }
 
+//    /**
+//     * 退出登录
+//     * */
+//    private void checkTokenValidity() {
+//        RequestParams params = new RequestParams(UrlConfig.URL_LOGIN_OUT);
+//        params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+//        params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
+//        startRequest(Task.LOGIN_OUT, params, null, false);
+//    }
+
+
     @Override
     public void onRefresh(Call call, int tag, ResultData data) {
         super.onRefresh(call, tag, data);

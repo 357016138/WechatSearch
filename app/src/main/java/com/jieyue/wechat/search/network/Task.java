@@ -77,6 +77,8 @@ public interface Task {
     int UPDATE_GROUP = 0X0034;
     //意见反馈
     int SUGGESTION_BACK = 0X0035;
+    //检查Token是否到期
+    int CHECK_TOKEN_VALIDITY = 0X0036;
 
 
 

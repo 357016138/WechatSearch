@@ -1,11 +1,18 @@
 package com.jieyue.wechat.search.ui.activity;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import com.base.bj.paysdk.utils.TrPay;
 import com.jieyue.wechat.search.R;
@@ -18,7 +25,9 @@ import com.jieyue.wechat.search.network.Task;
 import com.jieyue.wechat.search.network.UrlConfig;
 import com.jieyue.wechat.search.service.DownloadService;
 import com.jieyue.wechat.search.utils.DeviceUtils;
+import com.jieyue.wechat.search.utils.DiaLogUtils;
 import com.jieyue.wechat.search.utils.ToastUtils;
+import com.jieyue.wechat.search.utils.UserUtils;
 import com.jieyue.wechat.search.view.DownloadDialog;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
@@ -32,6 +41,7 @@ import okhttp3.Call;
  */
 public class StartActivity extends BaseActivity {
 
+    private static final int REQUEST_CODE_UNKNOWN_APP = 100;
     private final int KEY_GET_NEW_VERSION = 1;
     private final int KEY_TO_MAIN = 2;
     private final int KEY_UPLOAD_POSITION = 3;
@@ -41,6 +51,7 @@ public class StartActivity extends BaseActivity {
     private final String KEY_FORCE_UPDATE = "2";
 
     private WeakHandler mHandler;
+    private VersionBean versionBean;
 
     public static class WeakHandler extends Handler {
         private WeakReference<StartActivity> refreence;
@@ -101,9 +112,15 @@ public class StartActivity extends BaseActivity {
 
     @Override
     public void dealLogicAfterInitView() {
-//        nextPage();
-        getNewVersion();   //查看是否有新版本
+
+        if (UserUtils.isLogin()){
+            //检测token是否过期
+            checkTokenValidity();
+        }else{
+            getNewVersion();   //查看是否有新版本
+        }
     }
+
 
     @Override
     public void OnTopLeftClick() {
@@ -119,11 +136,13 @@ public class StartActivity extends BaseActivity {
     public void onClickEvent(View view) {
 
     }
-
+    /**
+     * 查看是否有新版本
+     * */
     private void getNewVersion() {
         RequestParams params = new RequestParams(UrlConfig.URL_GET_NEW_VERSION);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
-        params.add("version", DeviceUtils.getCurrentAppVersionCode(this));
+        params.add("appVersion", DeviceUtils.getCurrentAppVersionCode(this));
         params.add("operatSystem", "android");
         startRequest(Task.NEW_VERSION, params, VersionBean.class, false);
     }
@@ -136,6 +155,17 @@ public class StartActivity extends BaseActivity {
         }
         finish();
     }
+    /**
+     * 检查Token是否到期
+     * */
+    private void checkTokenValidity() {
+        RequestParams params = new RequestParams(UrlConfig.URL_CHECK_TOKEN_VALIDITY);
+        params.add("pid", DeviceUtils.getDeviceUniqueId(this));
+        params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
+        startRequest(Task.CHECK_TOKEN_VALIDITY, params, null, false);
+    }
+
+
 
     @Override
     public void onRefresh(Call call, int tag, ResultData data) {
@@ -143,7 +173,7 @@ public class StartActivity extends BaseActivity {
         switch (tag) {
             case Task.NEW_VERSION:
                 if (handlerRequestErr(data)) {
-                    VersionBean versionBean = (VersionBean) data.getBody();
+                    versionBean = (VersionBean) data.getBody();
                     if (versionBean != null) {
                         setUpdateTips(versionBean);
                     }
@@ -151,6 +181,22 @@ public class StartActivity extends BaseActivity {
                     mHandler.sendEmptyMessage(KEY_TO_MAIN);
                 }
                 break;
+            case Task.CHECK_TOKEN_VALIDITY:
+                if (handlerRequestErr(data)) {
+                    //Token未过期  查看是否有新版本
+                    getNewVersion();
+                } else {
+                    //Token过期,清理本地登录状态
+                    if ("0000".equals(data.getRspMsg())){
+                        UserUtils.loginOut();
+                    }
+                    //查看是否有新版本
+                    getNewVersion();
+                }
+                break;
+            default:
+                break;
+
         }
     }
 
@@ -186,25 +232,59 @@ public class StartActivity extends BaseActivity {
 
             @Override
             public void onRightClick() {
-                if (!RxPermissions.getInstance(StartActivity.this).isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    toast("没有SD卡权限");
-                    if (!isForce) mHandler.sendEmptyMessage(KEY_TO_MAIN);
-                    return;
-                }
-                dialog.dismiss();
-                downLoad(versionBean);
-                //if (!isForce) mHandler.sendEmptyMessage(KEY_TO_MAIN);
-                //toast("后台下载中");
-                ToastUtils.showLong(StartActivity.this, "后台下载中");
+                //请求权限
+                checkPermission(new CheckPermListener(){
+                    @Override
+                    public void superPermission() {
+                        dialog.dismiss();
+                        downLoad(versionBean);
+                        toast( "后台下载中");
+                    }
+                }, R.string.ask_again, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
         });
         dialog.show();
     }
 
+
+
     private void downLoad(VersionBean versionBean) {
-        Intent intent = new Intent(this, DownloadService.class);
-        intent.putExtra("key_version", versionBean);
-        startService(intent);
+
+            // Android 8.0 以上版本先获取是否有安装未知来源应用的权限
+            boolean b = true;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                b = getPackageManager().canRequestPackageInstalls();
+            }
+            if (b) {
+                Intent intent = new Intent(this, DownloadService.class);
+                intent.putExtra("key_version", versionBean);
+                startService(intent);
+                if (!"2".equals(versionBean.getForceState())){
+                    nextPage();
+                }
+
+            } else {
+                DiaLogUtils diaLogUtils = DiaLogUtils.creatDiaLog(this);
+                diaLogUtils.setContent("安装应用需要打开未知来源权限，请去设置中开启权限");
+                diaLogUtils.setSureButton("确认", v -> {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:com.jieyue.wechat.search"));
+                    startActivityForResult(intent, REQUEST_CODE_UNKNOWN_APP);
+                    diaLogUtils.destroyDialog();
+                });
+                diaLogUtils.setCancelButton("取消", v -> {
+                    diaLogUtils.destroyDialog();
+                });
+                diaLogUtils.showDialog();
+            }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O_MR1)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_UNKNOWN_APP) {
+            downLoad(versionBean);
+        }
     }
 
 }

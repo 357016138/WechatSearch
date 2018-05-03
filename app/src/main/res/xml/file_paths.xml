@@ -5,5 +5,5 @@
         path="Android/data/com.jieyue.wechat.agent/files/Pictures/OriPicture/" />
     <external-path
         name="name"
-        path="houseloanagent/apk" />
+        path="wechatsearch/apk" />
 </paths>
