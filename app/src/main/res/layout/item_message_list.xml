@@ -21,12 +21,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <me.biubiubiu.justifytext.library.JustifyTextView
+            <TextView
                 android:id="@+id/tv_des"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_8A97B0"
-                android:text="1111111111111111111111111111111111"
                 android:maxLines="3"/>
 
             <View

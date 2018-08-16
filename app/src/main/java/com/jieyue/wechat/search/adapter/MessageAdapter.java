@@ -5,8 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jieyue.wechat.search.R;
@@ -54,7 +52,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
             String context = messageBean.getReview_context();         //描述
             long time = messageBean.getCreate_time();               //time
 
-            myViewHolder.tv_des.setText(context);
+            myViewHolder.tv_des.setText(transport(context));
             myViewHolder.tv_time.setText(DateUtils.formatDate(time));
 
         }
@@ -74,12 +72,32 @@ public class MessageAdapter extends RecyclerView.Adapter {
             super(itemView);
             tv_des = itemView.findViewById(R.id.tv_des);
             tv_time = itemView.findViewById(R.id.tv_time);
-
         }
-
     }
 
     public void setOperateListener(OperateListener listener) {
         this.listener = listener;
+    }
+
+
+    /**
+     *w文字排版不整齐的问题
+     * */
+    public String transport(String inputStr)
+    {
+        char arr[] = inputStr.toCharArray();
+        for(int i=0;i<arr.length;i++)
+        {
+            if(arr[i] == ' ')
+            {
+                arr[i]='\u3000';
+            }
+            else if (arr[i] < '\177')
+            {
+                arr[i] = (char) (arr[i] + 65248);
+            }
+
+        }
+        return new String(arr);
     }
 }
