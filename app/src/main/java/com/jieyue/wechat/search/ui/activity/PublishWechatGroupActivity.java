@@ -126,6 +126,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
     private String mCurrentTwoLevelId;      //当前子分类的id
     private String orderId;
     private String path;
+    private ProductDetailBean dataBean;
 
     @Override
     public void setContentLayout() {
@@ -316,7 +317,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
         RequestParams params = new RequestParams(UrlConfig.URL_UPDATE_GROUP);
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
         params.add("userId", ShareData.getShareStringData(ShareData.USER_ID));
-        params.add("orderId", orderId);
+        params.add("uniqueId", dataBean.getUniqueId());
         params.add("groupImage", groupImage);
         params.add("coverImage", coverImage);
         startRequest(Task.UPDATE_GROUP, params, DataBean.class);
@@ -413,7 +414,7 @@ public class PublishWechatGroupActivity extends BaseActivity {
                 break;
             case Task.PRODUCT_DETAIL:
                 if (handlerRequestErr(data)) {
-                    ProductDetailBean dataBean = (ProductDetailBean) data.getBody();
+                    dataBean = (ProductDetailBean) data.getBody();
                     if (dataBean != null) {
                         updateDetailInfo(dataBean);
                     }

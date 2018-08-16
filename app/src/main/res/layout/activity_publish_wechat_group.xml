@@ -51,7 +51,7 @@
                     android:textCursorDrawable="@drawable/edittext_cursor_color"
                     android:cursorVisible="true"
                     android:singleLine="true"
-                    android:maxLength="10"
+                    android:maxLength="15"
                     android:inputType="text"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="3dp"/>
@@ -340,25 +340,25 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="群二维码"
+                        android:text="封面"
                         android:textSize="@dimen/sp_20"/>
 
                     <RelativeLayout
-                        android:id="@+id/rl_group_qcode"
+                        android:id="@+id/rl_cover"
                         android:layout_width="@dimen/dp_105"
                         android:layout_height="@dimen/dp_105">
 
                         <ImageView
-                            android:id="@+id/iv_group_qcode"
+                            android:id="@+id/iv_cover"
                             android:layout_width="@dimen/dp_100"
                             android:layout_height="@dimen/dp_100"
                             android:layout_marginTop="@dimen/dp_5"
                             android:layout_marginRight="@dimen/dp_5"
                             android:src="@drawable/icon_add_img"
-                            android:scaleType="fitXY" />
+                            android:scaleType="fitXY"/>
 
                         <ImageView
-                            android:id="@+id/iv_delete_qcode"
+                            android:id="@+id/iv_delete_cover"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
@@ -380,25 +380,25 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="封面"
+                        android:text="二维码"
                         android:textSize="@dimen/sp_20"/>
 
                     <RelativeLayout
-                        android:id="@+id/rl_cover"
+                        android:id="@+id/rl_group_qcode"
                         android:layout_width="@dimen/dp_105"
                         android:layout_height="@dimen/dp_105">
 
                         <ImageView
-                            android:id="@+id/iv_cover"
+                            android:id="@+id/iv_group_qcode"
                             android:layout_width="@dimen/dp_100"
                             android:layout_height="@dimen/dp_100"
                             android:layout_marginTop="@dimen/dp_5"
                             android:layout_marginRight="@dimen/dp_5"
                             android:src="@drawable/icon_add_img"
-                            android:scaleType="fitXY"/>
+                            android:scaleType="fitXY" />
 
                         <ImageView
-                            android:id="@+id/iv_delete_cover"
+                            android:id="@+id/iv_delete_qcode"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
