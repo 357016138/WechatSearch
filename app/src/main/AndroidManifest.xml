@@ -292,11 +292,11 @@
         <!-- 极光推送结束 -->
 
         <!-- 友盟统计开始 -->
-        <!--
+
             <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5aa62bd98f4a9d5862000174" />
-        -->
+            android:value="5796d7a667e58e105e000abf" />
+
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="baidu" />
