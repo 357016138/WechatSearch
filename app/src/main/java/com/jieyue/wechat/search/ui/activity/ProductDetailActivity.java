@@ -32,6 +32,11 @@ import com.jieyue.wechat.search.utils.DeviceUtils;
 import com.jieyue.wechat.search.utils.UserManager;
 import com.jieyue.wechat.search.view.DownloadDialog;
 import com.jieyue.wechat.search.view.OneButtonDialog;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -115,6 +120,8 @@ public class ProductDetailActivity extends BaseActivity {
     public void initView() {
         ButterKnife.bind(this);
         topBar.setLineVisible(true);
+        topBar.setRightText("分享");
+        topBar.setRightVisible(true);
     }
 
     @Override
@@ -145,7 +152,8 @@ public class ProductDetailActivity extends BaseActivity {
 
     @Override
     public void OnTopRightClick() {
-
+           //展示邀请弹出框
+        showShareDialog("https://www.baidu.com","百度","11111111111111111111111111111111111");
     }
     /**
      * 增加浏览量
@@ -216,7 +224,6 @@ public class ProductDetailActivity extends BaseActivity {
         Glide.with(this).load(iamgeUrl).into(iv_pic1);
     }
 
-
     /**
      * 跳转到微信
      */
@@ -260,8 +267,6 @@ public class ProductDetailActivity extends BaseActivity {
         dialog.show();
     }
 
-
-
     /**
      * 保存二维码到本地相册
      */
@@ -303,9 +308,6 @@ public class ProductDetailActivity extends BaseActivity {
 
     }
 
-
-
-
     /**
      * 将URL转化成bitmap形式
      *
@@ -346,5 +348,69 @@ public class ProductDetailActivity extends BaseActivity {
         } catch (Exception e) {
         }
     }
+
+    /**
+     * 分享弹出框
+     */
+    protected void showShareDialog(String url,String title,String content) {
+        //分享链接设置
+        UMWeb web = new UMWeb(url);
+        web.setTitle(title);                                                             //标题
+        UMImage thumb = new UMImage(this, R.mipmap.ic_launcher);               //资源图片
+        web.setThumb(thumb);                                                           //缩略图
+        web.setDescription(content);                                                  //描述
+        //设置分享方式，分享平台，分享回调
+        new ShareAction(this) .withMedia(web).setDisplayList(SHARE_MEDIA.WEIXIN,SHARE_MEDIA.WEIXIN_CIRCLE)
+                .setCallback(shareListener).open();
+    }
+
+    /**
+     * 分享回调接口
+     */
+    private UMShareListener shareListener = new UMShareListener() {
+        /**
+         * @descrption 分享开始的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+        /**
+         * @descrption 分享成功的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            toast("分享成功");
+        }
+        /**
+         * @descrption 分享失败的回调
+         * @param platform 平台类型
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            if (platform == SHARE_MEDIA.WEIXIN ||platform == SHARE_MEDIA.WEIXIN_CIRCLE ){
+                if (t.getMessage().contains("2008")){
+                    toast("请先安装微信");
+                }else {
+                    toast("分享失败"+t.getMessage());
+                }
+
+            }else {
+                toast("分享失败"+t.getMessage());
+            }
+
+        }
+        /**
+         * @descrption 分享取消的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            toast("分享已取消");
+        }
+    };
 
 }

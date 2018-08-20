@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.PlatformConfig;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,9 +29,16 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         baseApplication = this;
+
         ShareData.init(this);          //SharedPreferences 初始化
+
         JPushInterface.setDebugMode(true);      //极光推送debug模式开关
         JPushInterface.init(this);    //极光推送初始化
+
+        UMConfigure.init(this,"5aa62bd98f4a9d5862000174","umeng",UMConfigure.DEVICE_TYPE_PHONE,"");//友盟分享初始化
+        PlatformConfig.setWeixin("wx2f7280f725be67f2", "965244827818f81022ea89fbdef7de7d");     //微信分享設置
+        PlatformConfig.setQQZone("1106786821", "iBv2TRuBuTTjHhlY");                             //QQ分享設置
+
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
         UncatchExceptionHandler.getInstance().init(this);
     }
