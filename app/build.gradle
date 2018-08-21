@@ -18,6 +18,7 @@ android {
         versionCode 100
         versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true //Howard 2017-08-31 解决方法数超过65536的问题
 
     }
     sourceSets {
