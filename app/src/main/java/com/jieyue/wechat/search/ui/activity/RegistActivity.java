@@ -303,13 +303,14 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
         }
     });
 
+    //点击注册按钮发起网络请求
     private void signUpMethod() {
-
+        //获取输入框文本 有空格的去掉空格
         String userNameStr = signup_uerName.getText().toString().replace(" ","");
         String passWordStr = signup_password_input.getText().toString();
         String codeStr = signup_code_input.getText().toString();
         String inviterStr = signup_inviter_input.getText().toString().replace(" ","");
-
+        //判断手机号是否正确
         if (userNameStr == null || userNameStr.trim().length() == 0) {
             toast("请输入帐号");
             return;
@@ -323,12 +324,11 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
                 return;
             }
         }
-
         if (!userNameStr.equals(phoneNum)) {
             toast("手机号码与验证码手机号不同");
             return;
         }
-
+        //判断是否未输密码 和密码格式是否正确
         if (passWordStr == null || passWordStr.trim().length() <= 0) {
             toast("请输入密码");
             return;
@@ -339,6 +339,7 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
                 return;
             }
         }
+        //判断验证码是否为空
         if (codeStr == null || codeStr.trim().length() <= 0) {
             toast("请输入验证码");
             return;
@@ -347,6 +348,7 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
             toast("邀请码可以为空,但不能填写自己");
             return;
         }
+        //发起网络请求
         if (acceptCodeStr.equals(codeStr)){
             RequestParams params = new RequestParams(UrlConfig.URL_REGISTER);
             params.add("pid", DeviceUtils.getDeviceUniqueId(this));
@@ -355,7 +357,6 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
             params.add("invitationCode", inviterStr);
             startRequest(Task.REGISTER, params, UserBean.class);
         }
-
     }
 
     @Override

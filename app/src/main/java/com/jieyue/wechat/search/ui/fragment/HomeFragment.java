@@ -224,9 +224,9 @@ public class HomeFragment extends BaseFragment implements OperateListener{
     public void onRefresh(Call call, int tag, ResultData data) {
         super.onRefresh(call, tag, data);
         switch (tag) {
-            case Task.GET_NEW_DATA_LIST:
-                refreshLayout.finishRefresh();
-                refreshLayout.finishLoadmore();
+            case Task.GET_NEW_DATA_LIST:    //商品信息网络请求的回调
+                refreshLayout.finishRefresh();   //停止控件下拉刷新状态
+                refreshLayout.finishLoadmore();  //停止控件上拉加载状态
                 if (handlerRequestErr(data)) {
                     SearchBean searchBean = (SearchBean) data.getBody();
                     //------------------数据异常情况-------------------
@@ -235,6 +235,7 @@ public class HomeFragment extends BaseFragment implements OperateListener{
                     }
                     //-----------------数据正常情况--------------------
                     List<SearchBean.ProductBean> dataListProm = searchBean.getGroups();
+                    //通过适配器模式 显示数据
                     if (pageNum == 1) {
                         adapter.setData(dataListProm);
                     } else {
@@ -242,12 +243,14 @@ public class HomeFragment extends BaseFragment implements OperateListener{
                     }
                     //如果返回数据不够10条，就不能继续上拉加载更多
                     refreshLayout.setEnableLoadmore(dataListProm.size() >= pageSize);
+                    //刷新界面
                     adapter.notifyDataSetChanged();
 
                 }
                 break;
-            case Task.BANNER_DATA:             //轮播图数据
+            case Task.BANNER_DATA:             //网络请求的回调
                 if (handlerRequestErr(data)) {
+                   //从data里面取出banner数据列表,然后数据显示到banner上，并设置点击事件 跳转到WebView
                     List<BannerBean> bannerBeanList = (List<BannerBean>) data.getBody();
                     if (bannerBeanList != null&& bannerBeanList.size() > 0) {
                         banner.update(bannerBeanList);

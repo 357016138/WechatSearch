@@ -217,20 +217,18 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     private boolean flag1 = false;
     private boolean flag2 = false;
     /**
-     * 监听所有EditText是否输入内容  然后判断高亮button
+     * 监听所有EditText是否输入内容  然后判断高亮登录按钮，并可点击
      * */
     private TextWatcher watcher = new TextWatcher() {
-
         @Override
           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
           }
           @Override
           public void onTextChanged(CharSequence s, int start, int before, int count) {
+              //每次有字符输入获取两个EditText是否有文字状态
               flag1 = login_uerName.getText().toString().trim().length() > 0;
               flag2 = login_password_input.getText().toString().trim().length() > 0;
-
-
               if (flag1 && uerNameHasFocus){
                   iv_del_username.setVisibility(View.VISIBLE);
               }else {
@@ -241,6 +239,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
               }else {
                   iv_del_password.setVisibility(View.GONE);
               }
+              //如果都有文字，高亮登录按钮 并设置可点击
               if (flag1 && flag2 ) {
                   login_loginButton.setEnabled(true);
                   login_loginButton.setBackground(getResources().getDrawable(R.drawable.bg_login_button));
@@ -251,10 +250,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                   ll_btn.setBackground(null);
               }
           }
-
          @Override
          public void afterTextChanged(Editable s) {
-
          }
      };
 
