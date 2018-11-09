@@ -349,14 +349,13 @@ public class RegistActivity extends BaseActivity implements CompoundButton.OnChe
             return;
         }
         //发起网络请求
-        if (acceptCodeStr.equals(codeStr)){
             RequestParams params = new RequestParams(UrlConfig.URL_REGISTER);
             params.add("pid", DeviceUtils.getDeviceUniqueId(this));
             params.add("phoneNumber", userNameStr);
             params.add("password", Md5Util.MD5(passWordStr));
             params.add("invitationCode", inviterStr);
+            params.add("code", codeStr);
             startRequest(Task.REGISTER, params, UserBean.class);
-        }
     }
 
     @Override

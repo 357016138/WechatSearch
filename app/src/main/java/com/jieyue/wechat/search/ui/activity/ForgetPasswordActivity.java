@@ -152,12 +152,10 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnFocus
                     toast("请输入验证码");
                     return;
                 }
-                if (acceptCodeStr.equals(codeStr)){
                     Bundle bd = new Bundle();
                     bd.putString("userNameS",userNameStr);
                     bd.putString("codeStr",codeStr);
                     goPage(ForgetPassword2Activity.class,bd,Constants.FLAG_FORGET_PASSWORD);
-                }
                 break;
             default:
                 break;

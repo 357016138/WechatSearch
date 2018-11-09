@@ -80,6 +80,9 @@ public class ProductDetailActivity extends BaseActivity {
     private static final int SAVE_FAILURE = 1;          //保存图片失败
     private static final int SAVE_BEGIN = 2;           //开始保存图片
     private static final int NETWORK_SAVE_FAILURE = 3;// 网络原因 保存图片失败
+
+    private ProductDetailBean dataBean;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -152,8 +155,10 @@ public class ProductDetailActivity extends BaseActivity {
 
     @Override
     public void OnTopRightClick() {
-           //展示邀请弹出框
-        showShareDialog("https://www.baidu.com","百度","11111111111111111111111111111111111");
+        if (dataBean != null) {
+            //展示邀请弹出框
+            showShareDialog("http://www.vxsousuo.com/page/detail?uniqueId="+dataBean.getUniqueId(), "微信搜索", "下载APP，查找优质微信群,公众号,小程序");
+        }
     }
     /**
      * 增加浏览量
@@ -181,7 +186,7 @@ public class ProductDetailActivity extends BaseActivity {
         switch (tag) {
             case Task.PRODUCT_DETAIL:
                 if (handlerRequestErr(data)) {
-                    ProductDetailBean dataBean = (ProductDetailBean) data.getBody();
+                    dataBean = (ProductDetailBean) data.getBody();
                     if (dataBean != null) {
                         updateDetailInfo(dataBean);
                     }

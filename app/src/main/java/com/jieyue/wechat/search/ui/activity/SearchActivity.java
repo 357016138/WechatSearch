@@ -162,9 +162,7 @@ public class SearchActivity extends BaseActivity implements TextView.OnEditorAct
         params.add("pageSize", pageSize);
         params.add("pageNum", pageNum);
         params.add("sort", "1");
-
         startRequest(Task.GET_SEARCH_LIST, params, SearchBean.class);
-
     }
 
 

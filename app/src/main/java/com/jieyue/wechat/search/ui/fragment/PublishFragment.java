@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.jieyue.wechat.search.R;
 import com.jieyue.wechat.search.common.BaseFragment;
+import com.jieyue.wechat.search.ui.activity.PublishWechatGroup2Activity;
 import com.jieyue.wechat.search.ui.activity.PublishWechatGroupActivity;
 
 import butterknife.BindView;
@@ -23,7 +24,6 @@ import butterknife.Unbinder;
 public class PublishFragment extends BaseFragment {
 
     Unbinder unbinder;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -52,7 +52,8 @@ public class PublishFragment extends BaseFragment {
                 goPage(PublishWechatGroupActivity.class);
                 break;
             case R.id.ll_publish_2:
-                toast("敬请期待");
+                if (!isLogin()) return;
+                goPage(PublishWechatGroup2Activity.class);
                 break;
             default:
                 break;

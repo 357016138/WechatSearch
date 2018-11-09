@@ -154,6 +154,7 @@ public class ForgetPassword2Activity extends BaseActivity implements View.OnFocu
         params.add("pid", DeviceUtils.getDeviceUniqueId(this));
         params.add("phoneNumber", userNameS);
         params.add("password", Md5Util.MD5(passWord));
+        params.add("code", codeStr);
         startRequest(Task.FORGET_PASSWORD, params, null);
 
     }

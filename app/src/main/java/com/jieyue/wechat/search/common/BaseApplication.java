@@ -36,7 +36,7 @@ public class BaseApplication extends Application {
         JPushInterface.init(this);    //极光推送初始化
 
         UMConfigure.init(this,"5aa62bd98f4a9d5862000174","umeng",UMConfigure.DEVICE_TYPE_PHONE,"");//友盟分享初始化
-        PlatformConfig.setWeixin("wx2f7280f725be67f2", "965244827818f81022ea89fbdef7de7d");     //微信分享設置
+        PlatformConfig.setWeixin("wxeee314e33dd5d218", "8fc040a682c9f752cca36b320b01766b");     //微信分享設置
         PlatformConfig.setQQZone("1106786821", "iBv2TRuBuTTjHhlY");                             //QQ分享設置
 
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
