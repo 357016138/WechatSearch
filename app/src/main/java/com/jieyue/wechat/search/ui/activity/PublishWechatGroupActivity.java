@@ -621,7 +621,6 @@ public class PublishWechatGroupActivity extends BaseActivity {
 
             }
         }
-
     }
 
     /**

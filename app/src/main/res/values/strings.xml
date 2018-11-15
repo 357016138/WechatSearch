@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">微信搜索</string>
+    <string name="app_name">VX搜索</string>
     <string name="text_net_error">网络出错，请检查网络设置</string>
 
     <string name="title_home">首页</string>
